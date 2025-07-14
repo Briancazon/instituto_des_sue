@@ -1,9 +1,10 @@
 
-package vista;
+package Alumnos;
 
-import controlador.alumnoControlador;
+
 import java.awt.Graphics;
 import java.awt.Image;
+import java.sql.Connection;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -16,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 public class Agregar_Alumno extends javax.swing.JPanel {
      DefaultTableModel tabla=new DefaultTableModel();
       Object[] datos=new Object[4];
+      Connection cx=Conexion.conexion.conexion();
 
     public Agregar_Alumno() {
         initComponents();
@@ -189,10 +191,17 @@ public class Agregar_Alumno extends javax.swing.JPanel {
 
     private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
         int dni= Integer.parseInt(txtDni.getText());
+        int obra_social= Integer.parseInt(txtObraSocial.getText());
         String nivel=boxNivel.getSelectedItem().toString(); // cualquiera de los tres niveles que elija el usuario se guardarà en la variable nivel
-        alumnoControlador c= new alumnoControlador();
-        c.guardarAlumno(txtNombre.getText(), txtApellido.getText(),txtFechaNac.getText(), dni, txtEscuela.getText(), txtGrado.getText(), nivel, txtObraSocial.getText()  );
-        limpiar();
+        try{
+             Clases.Alumno.cargar(cx, txtNombre.getText(), txtApellido.getText(), txtFechaNac.getText(), dni, txtEscuela.getText(), txtGrado.getText(), nivel , obra_social );
+              JOptionPane.showMessageDialog(null, "Se ha cargado correctamente al alumno"); 
+              limpiar();
+        }catch(Exception e){
+            
+        }
+            
+       
     }//GEN-LAST:event_botonGuardarActionPerformed
 
     private void boxNivelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxNivelActionPerformed

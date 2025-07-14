@@ -1,9 +1,9 @@
 
 package Menu;
 
-import vista.Agregar_Alumno;
-import vista.Eliminar_Alumno;
-import vista.Modificar_Alumno;
+import Alumnos.Agregar_Alumno;
+import Alumnos.Eliminar_Alumno;
+import Alumnos.Modificar_Alumno;
 import Profesores.Agregar_Profe;
 import Profesores.Eliminar_Profe;
 import Profesores.Modificar_Profe;

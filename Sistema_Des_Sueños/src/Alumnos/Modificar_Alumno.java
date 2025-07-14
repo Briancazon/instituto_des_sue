@@ -1,5 +1,5 @@
 
-package vista;
+package Alumnos;
 
 import controlador.alumnoControlador;
 import java.awt.Graphics;
@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.table.DefaultTableModel;
 import modelo.Alumno;
-import modelo.conexion;
+import Conexion.conexion;
 
 public class Modificar_Alumno extends javax.swing.JPanel {
      
