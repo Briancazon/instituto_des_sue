@@ -5,6 +5,7 @@ package Alumnos;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -16,12 +17,49 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Agregar_Alumno extends javax.swing.JPanel {
      DefaultTableModel tabla=new DefaultTableModel();
-      Object[] datos=new Object[4];
+      Object[] datos=new Object[7];
+      ResultSet rs;
       Connection cx=Conexion.conexion.conexion();
 
     public Agregar_Alumno() {
         initComponents();
+        mostrarAlumnos();
     }
+    void mostrarAlumnos(){
+         tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido"); 
+         tabla.addColumn("Fecha Nacimiento"); 
+         tabla.addColumn("DNi"); 
+         tabla.addColumn("Escuela"); 
+         tabla.addColumn("Grado"); 
+         tabla.addColumn("Obra Social"); 
+         
+         try{
+            
+             rs=Clases.Alumno.mostrarAlumnos(cx);
+              while(rs.next()){
+                   datos[0]=rs.getString("al.nombre");
+                   datos[1]=rs.getString("al.apellido");
+                   datos[2]=rs.getString("al.fecha_nac");
+                   datos[3]=rs.getString("al.dni");
+                   datos[4]=rs.getString("al.escuela");
+                   datos[5]=rs.getString("al.grado");
+                   datos[6]=rs.getString("os.nombre");
+                  
+                   tabla.addRow(datos);
+                   
+              }
+              
+              tablaAlumnos.setModel(tabla);
+             
+              
+          }catch(Exception e){
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los alumnos en la tabla","ERROR",ERROR_MESSAGE); 
+          }
+    }
+            
     void limpiar(){
         txtNombre.setText("");
         txtApellido.setText("");
@@ -75,7 +113,6 @@ public class Agregar_Alumno extends javax.swing.JPanel {
         botonGuardar = new javax.swing.JButton();
         boxNivel = new javax.swing.JComboBox<>();
 
-        tablaAlumnos.setForeground(new java.awt.Color(255, 102, 0));
         tablaAlumnos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -84,9 +121,17 @@ public class Agregar_Alumno extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "Fecha de Nacimiento", "DNI", "Escuela", "Grado", "Obra Social", "Borrado"
+                "Nombre", "Apellido", "Fecha de Nacimiento", "DNI", "Escuela", "Grado", "Nivel", "Obra Social"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tablaAlumnos);
 
         jPanel1.setBackground(new java.awt.Color(204, 102, 0));
@@ -172,8 +217,7 @@ public class Agregar_Alumno extends javax.swing.JPanel {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 811, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -197,6 +241,7 @@ public class Agregar_Alumno extends javax.swing.JPanel {
              Clases.Alumno.cargar(cx, txtNombre.getText(), txtApellido.getText(), txtFechaNac.getText(), dni, txtEscuela.getText(), txtGrado.getText(), nivel , obra_social );
               JOptionPane.showMessageDialog(null, "Se ha cargado correctamente al alumno"); 
               limpiar();
+              mostrarAlumnos();
         }catch(Exception e){
             
         }

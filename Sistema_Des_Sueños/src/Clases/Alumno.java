@@ -3,7 +3,9 @@ package Clases;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 public class Alumno {
     public static void cargar(Connection cx, String nombre, String apellido, String fecha_nac, int dni, String escuela, String grado, String nivel, int obra_social )throws Exception {
@@ -24,6 +26,17 @@ public class Alumno {
         }
             
             
+    }
+    
+    public static ResultSet mostrarAlumnos(Connection cx)throws Exception{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("SELECT al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre from alumno as al inner join obra_social as os on os.codigo=al.obra_social");
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
     }
             
     
