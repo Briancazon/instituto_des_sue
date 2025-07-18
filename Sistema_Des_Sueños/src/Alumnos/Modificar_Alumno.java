@@ -1,7 +1,7 @@
 
 package Alumnos;
 
-import controlador.alumnoControlador;
+
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -10,18 +10,55 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.table.DefaultTableModel;
-import modelo.Alumno;
+
 import Conexion.conexion;
+import java.sql.Connection;
+import java.sql.ResultSet;
 
 public class Modificar_Alumno extends javax.swing.JPanel {
      
      DefaultTableModel tabla=new DefaultTableModel();
-      Object[] datos=new Object[8];
+     Object[] datos=new Object[8];
+     Connection cx=Conexion.conexion.conexion();
      
 
    
     public Modificar_Alumno() {
         initComponents();
+        desactivarCampos();
+        desactivarGuardar();
+    }
+    
+    void desactivarCampos(){
+        txtNombre.setEnabled(false);
+        txtApellido.setEnabled(false);
+        txtFechaNac.setEnabled(false);
+        txtDni.setEnabled(false);
+        txtGrado.setEnabled(false);
+        boxNivel.setEnabled(false);
+        txtEscuela.setEnabled(false);
+        txtObraSocial.setEnabled(false);
+    }
+    
+    
+    void activarCampos(){
+        txtNombre.setEnabled(true);
+        txtApellido.setEnabled(true);
+        txtFechaNac.setEnabled(true);
+        txtDni.setEnabled(true);
+        txtGrado.setEnabled(true);
+        boxNivel.setEnabled(true);
+        txtEscuela.setEnabled(true);
+        txtObraSocial.setEnabled(true);
+    }
+    
+    void  desactivarGuardar(){
+        botonGuardar.setEnabled(false);
+    }
+    
+    
+    void activarGuardar(){
+        botonGuardar.setEnabled(true);
     }
 
     private Image imagen;
@@ -56,13 +93,13 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         txtGrado = new javax.swing.JTextField();
         txtEscuela = new javax.swing.JTextField();
         txtObraSocial = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        botonGuardar = new javax.swing.JButton();
+        botonEditar = new javax.swing.JButton();
         boxNivel = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaAlumnos = new javax.swing.JTable();
         txtDniBuscador = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        botonBuscar = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(204, 102, 0));
 
@@ -121,21 +158,25 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         jPanel2.add(txtEscuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 310, 420, -1));
         jPanel2.add(txtObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 400, -1));
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        botonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
+        botonGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                botonGuardarActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, 163, 134));
+        jPanel2.add(botonGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, 163, 134));
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/m.png"))); // NOI18N
-        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 163, 134));
+        botonEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/m.png"))); // NOI18N
+        botonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEditarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(botonEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 163, 134));
 
         boxNivel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Inicial", "Primario", "Secundario" }));
         jPanel2.add(boxNivel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 350, -1));
 
-        tablaAlumnos.setForeground(new java.awt.Color(255, 102, 0));
         tablaAlumnos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -154,10 +195,10 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablaAlumnos);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/b.png"))); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        botonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/b.png"))); // NOI18N
+        botonBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                botonBuscarActionPerformed(evt);
             }
         });
 
@@ -181,7 +222,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                         .addGap(13, 13, 13))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(9, 9, 9)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(botonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtDniBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -192,7 +233,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(txtDniBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -204,11 +245,12 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-     //'tabla' es el objeto creado de tipo DefaultTableModel(en donde le confuguramos un modelo) , y 'tablaProductos' es la tabla que hemos creado en el formulario.
-    alumnoControlador c= new alumnoControlador();
+    private void botonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBuscarActionPerformed
+     //'tabla' es el objeto creado de tipo DefaultTableModel(en donde le confuguramos un modelo) , y 'tablaAlumnos' es la tabla que hemos creado en el formulario.
+   
     
     int dni=Integer.parseInt(txtDniBuscador.getText());
+    ResultSet rs;
     tabla.setRowCount(0);   
     tabla.setColumnCount(0);
     tabla.addColumn("Nombre");
@@ -220,30 +262,32 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     tabla.addColumn("Nivel");
     tabla.addColumn("Obra Social"); 
 
-        try{
-           
-             Alumno a= c.buscarAlumno(dni);
-              
-                   datos[0]=a.getNombre();
-                   datos[1]=a.getApellido();
-                   datos[2]=a.getFecha_nacimiento();
-                   datos[3]=a.getDni();
-                   datos[4]=a.getEscuela();
-                   datos[5]=a.getGrado();
-                   datos[6]=a.getNivel();
-                   datos[7]=a.getObra_social();
+    try{
+         rs=Clases.Alumno.mostrarAlumno(cx, dni);
+         if(rs.next()){
+                   datos[0]=rs.getString("al.nombre");
+                   datos[1]=rs.getString("al.apellido");
+                   datos[2]=rs.getString("al.fecha_nac");
+                   datos[3]=rs.getString("al.dni");
+                   datos[4]=rs.getString("al.escuela");
+                   datos[5]=rs.getString("al.grado");
+                   datos[6]=rs.getString("al.nivel");
+                   datos[7]=rs.getString("os.nombre");
+                  
+                   tabla.addRow(datos);
+                   tablaAlumnos.setModel(tabla);
                    
-                   
-                   
-                  tabla.addRow(datos);
-                  tablaAlumnos.setModel(tabla);
+          }else{
+              JOptionPane.showMessageDialog(null, "El alumno con dni "+txtDniBuscador.getText()+" no existe","ERROR",ERROR_MESSAGE);
+         }
+                
               
              
-       }catch(Exception e){
+    }catch(Exception e){
           
             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar al alumno","ERROR",ERROR_MESSAGE);
        }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_botonBuscarActionPerformed
 
     private void tablaAlumnosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAlumnosMouseClicked
          try{
@@ -274,24 +318,22 @@ public class Modificar_Alumno extends javax.swing.JPanel {
        }
     }//GEN-LAST:event_tablaAlumnosMouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       alumnoControlador c= new alumnoControlador();
-       String nivel= boxNivel.getSelectedItem().toString();
-       int dni= Integer.parseInt(txtDni.getText());
-       try{
-           c.actualizarAlumno(txtNombre.getText(), txtApellido.getText(), txtFechaNac.getText(), dni, txtGrado.getText(), nivel, txtEscuela.getText(), txtObraSocial.getText());
-       }catch(Exception e){
-           JOptionPane.showMessageDialog(null, "Ha ocurrido un error al actualizar el alumn,","ERROR",ERROR_MESSAGE);
-       }
+    private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
+                     
        
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_botonGuardarActionPerformed
+
+    private void botonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEditarActionPerformed
+        activarCampos();
+        activarGuardar();
+    }//GEN-LAST:event_botonEditarActionPerformed
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonBuscar;
+    private javax.swing.JButton botonEditar;
+    private javax.swing.JButton botonGuardar;
     private javax.swing.JComboBox<String> boxNivel;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

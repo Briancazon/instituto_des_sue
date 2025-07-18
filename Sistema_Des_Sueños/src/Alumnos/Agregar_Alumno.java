@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Agregar_Alumno extends javax.swing.JPanel {
      DefaultTableModel tabla=new DefaultTableModel();
-      Object[] datos=new Object[7];
+      Object[] datos=new Object[8];
       ResultSet rs;
       Connection cx=Conexion.conexion.conexion();
 
@@ -33,7 +33,8 @@ public class Agregar_Alumno extends javax.swing.JPanel {
          tabla.addColumn("Fecha Nacimiento"); 
          tabla.addColumn("DNi"); 
          tabla.addColumn("Escuela"); 
-         tabla.addColumn("Grado"); 
+         tabla.addColumn("Grado");
+         tabla.addColumn("Nivel");
          tabla.addColumn("Obra Social"); 
          
          try{
@@ -46,7 +47,8 @@ public class Agregar_Alumno extends javax.swing.JPanel {
                    datos[3]=rs.getString("al.dni");
                    datos[4]=rs.getString("al.escuela");
                    datos[5]=rs.getString("al.grado");
-                   datos[6]=rs.getString("os.nombre");
+                   datos[6]=rs.getString("al.nivel");
+                   datos[7]=rs.getString("os.nombre");
                   
                    tabla.addRow(datos);
                    

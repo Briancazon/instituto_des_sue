@@ -38,6 +38,39 @@ public class Alumno {
         }
         return rs;
     }
-            
+       
+    
+      public static ResultSet mostrarAlumno(Connection cx, int dni)throws Exception{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("SELECT al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre from alumno as al inner join obra_social as os on os.codigo=al.obra_social where al.dni=?");
+        stm.setInt(1, dni);
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+    }
+      
+      public static void actualizarAlumno(Connection cx, String nombre, String apellido, String fecha_nac, int dni, String escuela, String grado, String nivel, int obra_social, int codigo)throws Exception{
+          PreparedStatement stm=cx.prepareStatement("update alumno set nombre= ?, apellido=?, fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=? where codigo=?");
+          stm.setString(1, nombre);
+          stm.setString(2, apellido);
+          stm.setString(3, fecha_nac);
+          stm.setInt(4, dni);
+          stm.setString(5, escuela);
+          stm.setString(6, grado);
+          stm.setString(7, nivel);
+          stm.setInt(8, obra_social);
+          stm.setInt(9, codigo);
+          
+          try{
+              stm.executeUpdate();
+          }catch(SQLException e){
+               JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+          
+      }
+        
     
 }
