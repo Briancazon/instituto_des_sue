@@ -71,6 +71,27 @@ public class Alumno {
           }
           
       }
+      
+      
+      //metodo para obtener el codigo de un alumno dado su dni...
+      public static int obtenerCodigo(Connection cx, int dni)throws Exception{
+          ResultSet rs=null;
+          int codigo=0;
+          PreparedStatement stm=cx.prepareStatement("SELECT codigo from alumno where dni=?");
+          stm.setInt(1, dni);
+          try{
+              rs=stm.executeQuery();
+              if(rs.next()){
+                  codigo=rs.getInt("codigo");
+              }
+          }catch(SQLException e){
+                JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+          
+          return codigo;
+              
+      }
+      
         
     
 }

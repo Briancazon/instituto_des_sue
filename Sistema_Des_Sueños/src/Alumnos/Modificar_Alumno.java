@@ -14,12 +14,16 @@ import javax.swing.table.DefaultTableModel;
 import Conexion.conexion;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.DefaultComboBoxModel;
 
 public class Modificar_Alumno extends javax.swing.JPanel {
      
      DefaultTableModel tabla=new DefaultTableModel();
      Object[] datos=new Object[8];
      Connection cx=Conexion.conexion.conexion();
+     DefaultComboBoxModel ls= new DefaultComboBoxModel();
+     ResultSet rs;
      
 
    
@@ -27,7 +31,26 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         initComponents();
         desactivarCampos();
         desactivarGuardar();
+        cargarComboObraSocial();
+        desactivarEditar();
     }
+    
+    void cargarComboObraSocial(){
+        try{
+            rs=Clases.ObraSocial.mostrarObrasSociales(cx);
+            ls.addElement("Selecione la Obra Social");
+            ls.addElement("Ninguna");
+            while(rs.next())
+                ls.addElement(rs.getString("nombre"));
+                boxObraSocial.setModel(ls);
+            
+        }catch(Exception e){
+              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las Obras Social","ERROR",ERROR_MESSAGE);
+        }
+    }
+    
+    
+    
     
     void desactivarCampos(){
         txtNombre.setEnabled(false);
@@ -37,7 +60,17 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         txtGrado.setEnabled(false);
         boxNivel.setEnabled(false);
         txtEscuela.setEnabled(false);
-        txtObraSocial.setEnabled(false);
+        boxObraSocial.setEnabled(false);
+        
+        
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtFechaNac.setText("");
+        txtDni.setText("");
+        txtGrado.setText("");
+        boxNivel.setSelectedItem("");
+        txtEscuela.setText("");
+        boxObraSocial.setSelectedItem("Seleccione la Obra Social");
     }
     
     
@@ -49,7 +82,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         txtGrado.setEnabled(true);
         boxNivel.setEnabled(true);
         txtEscuela.setEnabled(true);
-        txtObraSocial.setEnabled(true);
+        boxObraSocial.setEnabled(true);
     }
     
     void  desactivarGuardar(){
@@ -60,7 +93,23 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     void activarGuardar(){
         botonGuardar.setEnabled(true);
     }
+    
+    
+    void activarEditar(){
+        botonEditar.setEnabled(true);
+        
+    }
+    
+    void desactivarEditar(){
+        botonEditar.setEnabled(false);
+    }
 
+    
+    
+    
+    
+    
+    
     private Image imagen;
         @Override
         public void paint(Graphics g){
@@ -92,10 +141,11 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         txtDni = new javax.swing.JTextField();
         txtGrado = new javax.swing.JTextField();
         txtEscuela = new javax.swing.JTextField();
-        txtObraSocial = new javax.swing.JTextField();
         botonGuardar = new javax.swing.JButton();
         botonEditar = new javax.swing.JButton();
         boxNivel = new javax.swing.JComboBox<>();
+        boxObraSocial = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaAlumnos = new javax.swing.JTable();
         txtDniBuscador = new javax.swing.JTextField();
@@ -140,13 +190,13 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, 20));
 
         jLabel6.setText("Grado:");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 216, -1, 20));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, 20));
 
         jLabel7.setText("Escuela:");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, -1, 30));
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, -1, 30));
 
         jLabel8.setText("Nivel:");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, 20));
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, -1, 20));
 
         jLabel9.setText("Obra Social");
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, -1, 30));
@@ -154,9 +204,8 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         jPanel2.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 420, -1));
         jPanel2.add(txtFechaNac, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 350, -1));
         jPanel2.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 450, -1));
-        jPanel2.add(txtGrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, 430, -1));
-        jPanel2.add(txtEscuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 310, 420, -1));
-        jPanel2.add(txtObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 400, -1));
+        jPanel2.add(txtGrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 430, -1));
+        jPanel2.add(txtEscuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 420, -1));
 
         botonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
         botonGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -164,7 +213,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                 botonGuardarActionPerformed(evt);
             }
         });
-        jPanel2.add(botonGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, 163, 134));
+        jPanel2.add(botonGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 430, 163, 134));
 
         botonEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/m.png"))); // NOI18N
         botonEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -172,10 +221,21 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                 botonEditarActionPerformed(evt);
             }
         });
-        jPanel2.add(botonEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 163, 134));
+        jPanel2.add(botonEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, 163, 134));
 
         boxNivel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Inicial", "Primario", "Secundario" }));
-        jPanel2.add(boxNivel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 350, -1));
+        jPanel2.add(boxNivel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, 350, -1));
+
+        boxObraSocial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(boxObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 360, 280, -1));
+
+        jButton1.setText("CANCELAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 590, 170, 120));
 
         tablaAlumnos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -240,8 +300,8 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
-                .addGap(27, 27, 27))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -275,7 +335,9 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                    datos[7]=rs.getString("os.nombre");
                   
                    tabla.addRow(datos);
+                  
                    tablaAlumnos.setModel(tabla);
+                  
                    
           }else{
               JOptionPane.showMessageDialog(null, "El alumno con dni "+txtDniBuscador.getText()+" no existe","ERROR",ERROR_MESSAGE);
@@ -309,9 +371,9 @@ public class Modificar_Alumno extends javax.swing.JPanel {
             txtEscuela.setText(escuela);
             txtGrado.setText(grado);
             boxNivel.setSelectedItem(nivel);
-            txtObraSocial.setText(obra_social);
+            boxObraSocial.setSelectedItem(obra_social);
             
-            
+             activarEditar(); // se activa el boton editar , para que el usuario una vez haga clicl en los datos, se le permita editar si así lo desea
      
        }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
@@ -319,14 +381,39 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     }//GEN-LAST:event_tablaAlumnosMouseClicked
 
     private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
-                     
+        String nivel=boxNivel.getSelectedItem().toString();
+        int dni=Integer.parseInt(txtDni.getText());
+        String obra_social=boxObraSocial.getSelectedItem().toString();
+        int dniBuscador=Integer.parseInt(txtDniBuscador.getText());    ///dni del campo buscar, se lo utilizará para poder buscar cual es el código del alumno...
+        
+        try{
+                ///// encontrar el codigo de la obra social..
+               int codigoObraSocial= Clases.ObraSocial.obtenerCodigo(cx, obra_social);
+           
+               //encontrar el codgo del alumno, para posterior poder hacer el update del alumno...
+               int codigoAlumno=Clases.Alumno.obtenerCodigo(cx, dniBuscador);
+            
+               Clases.Alumno.actualizarAlumno(cx, txtNombre.getText(), txtApellido.getText(), txtFechaNac.getText(), dni, txtEscuela.getText(), txtGrado.getText(), nivel, codigoObraSocial, codigoAlumno );
+          
+              JOptionPane.showMessageDialog(null, "Se han actualizado los datos del alumno correctamente");
+          
+          }  catch(Exception e){
+              JOptionPane.showMessageDialog(null, "Error al actualizar el alumno","ERROR",ERROR_MESSAGE);
+         }                   
        
     }//GEN-LAST:event_botonGuardarActionPerformed
 
     private void botonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEditarActionPerformed
         activarCampos();
         activarGuardar();
+        desactivarEditar();
     }//GEN-LAST:event_botonEditarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       desactivarCampos();
+       desactivarGuardar();
+       
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -334,6 +421,8 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     private javax.swing.JButton botonEditar;
     private javax.swing.JButton botonGuardar;
     private javax.swing.JComboBox<String> boxNivel;
+    private javax.swing.JComboBox<String> boxObraSocial;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -354,6 +443,5 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     private javax.swing.JTextField txtFechaNac;
     private javax.swing.JTextField txtGrado;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtObraSocial;
     // End of variables declaration//GEN-END:variables
 }
