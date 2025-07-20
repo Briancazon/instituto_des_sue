@@ -41,7 +41,7 @@ public class OS extends javax.swing.JPanel {
         
         try{
             
-             rs=Clases.ObraSocial.mostrarOS(cx);
+             rs=Clases.ObraSocial.mostrarObrasSociales(cx);
               while(rs.next()){
                    datos1[0]=rs.getString("codigo");
                    datos1[1]=rs.getString("nombre");

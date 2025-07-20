@@ -21,9 +21,13 @@ public class ObraSocial {
               
     }
     
-     public static ResultSet mostrarOS(Connection cx)throws Exception{
+        
+   
+    
+       public static ResultSet mostrarObrasSociales(Connection cx)throws SQLException{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT codigo, nombre FROM obra_social");
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre from obra_social");
+      
         try{
             rs=stm.executeQuery();
         }catch(SQLException e){
@@ -31,7 +35,7 @@ public class ObraSocial {
         }
         return rs;
     }
-       
+ 
      public static ResultSet buscarOS(Connection cx, String nom)throws Exception{
         ResultSet rs=null;
         PreparedStatement stm=cx.prepareStatement("select codigo, nombre from obra_social where nombre= ? ");
@@ -45,6 +49,24 @@ public class ObraSocial {
     }
     
     
-    
+ 
+       public static int obtenerCodigo(Connection cx, String nombre) throws Exception{
+           ResultSet rs=null;
+           int codigo=0;
+           PreparedStatement stm=cx.prepareStatement("SELECT codigo from obra_social where nombre=?");
+           stm.setString(1, nombre) ;
+           try{
+               rs=stm.executeQuery();
+                if(rs.next()){
+                    codigo=rs.getInt("codigo");
+                }
+           }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+           }
+           
+           return codigo;
+           
+           }
+
     
 }
