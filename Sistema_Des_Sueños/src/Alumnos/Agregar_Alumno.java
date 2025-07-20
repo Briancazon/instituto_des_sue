@@ -184,14 +184,14 @@ public class Agregar_Alumno extends javax.swing.JPanel {
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, -1, 20));
 
         jLabel9.setText("Obra Social");
-        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, -1, 30));
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, -1, 30));
         jPanel2.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 390, -1));
         jPanel2.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 380, -1));
         jPanel2.add(txtFechaNac, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 350, -1));
         jPanel2.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 170, 360, -1));
         jPanel2.add(txtGrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 430, -1));
         jPanel2.add(txtEscuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 420, -1));
-        jPanel2.add(txtObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 470, 400, -1));
+        jPanel2.add(txtObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 450, 400, -1));
 
         botonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
         botonGuardar.addActionListener(new java.awt.event.ActionListener() {

@@ -4,6 +4,7 @@ package Menu;
 import Alumnos.Agregar_Alumno;
 import Alumnos.Eliminar_Alumno;
 import Alumnos.Modificar_Alumno;
+import Obra_social.OS;
 import Profesores.Agregar_Profe;
 import Profesores.Eliminar_Profe;
 import Profesores.Modificar_Profe;
@@ -60,7 +61,8 @@ public class Menu extends javax.swing.JFrame {
         agregarA = new javax.swing.JMenuItem();
         modificarA = new javax.swing.JMenuItem();
         eliminarA = new javax.swing.JMenuItem();
-        jMenu6 = new javax.swing.JMenu();
+        obrasocial = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
         agregarP = new javax.swing.JMenuItem();
         modificarP = new javax.swing.JMenuItem();
@@ -154,8 +156,22 @@ public class Menu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu5);
 
-        jMenu6.setText("Obra Social");
-        jMenuBar1.add(jMenu6);
+        obrasocial.setText("Obra Social");
+        obrasocial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                obrasocialActionPerformed(evt);
+            }
+        });
+
+        jMenuItem1.setText("Ver");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        obrasocial.add(jMenuItem1);
+
+        jMenuBar1.add(obrasocial);
 
         jMenu7.setText("Profesores");
 
@@ -305,6 +321,17 @@ public class Menu extends javax.swing.JFrame {
          this.revalidate();
          this.repaint();
     }//GEN-LAST:event_eliminarTActionPerformed
+
+    private void obrasocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_obrasocialActionPerformed
+       
+    }//GEN-LAST:event_obrasocialActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+         OS os= new OS();
+       this.setContentPane(os);
+         this.revalidate();
+         this.repaint();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
   
    public class FondoPanel extends JPanel {
     
@@ -370,14 +397,15 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
-    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem modificarA;
     private javax.swing.JMenuItem modificarP;
     private javax.swing.JMenuItem modificarT;
+    private javax.swing.JMenu obrasocial;
     private javax.swing.JPanel panelprincipal;
     private javax.swing.JMenuItem salir;
     // End of variables declaration//GEN-END:variables

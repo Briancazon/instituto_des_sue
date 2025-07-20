@@ -19,12 +19,14 @@ public class Modificar_Alumno extends javax.swing.JPanel {
      
      DefaultTableModel tabla=new DefaultTableModel();
      Object[] datos=new Object[8];
+      ResultSet rs;
      Connection cx=Conexion.conexion.conexion();
      
 
    
     public Modificar_Alumno() {
         initComponents();
+        mostrarAlumnos();
         desactivarCampos();
         desactivarGuardar();
     }
@@ -59,6 +61,43 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     
     void activarGuardar(){
         botonGuardar.setEnabled(true);
+        
+    }
+      void mostrarAlumnos(){
+         tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido"); 
+         tabla.addColumn("Fecha Nacimiento"); 
+         tabla.addColumn("DNi"); 
+         tabla.addColumn("Escuela"); 
+         tabla.addColumn("Grado");
+         tabla.addColumn("Nivel");
+         tabla.addColumn("Obra Social"); 
+         
+         try{
+            
+             rs=Clases.Alumno.mostrarAlumnos(cx);
+              while(rs.next()){
+                   datos[0]=rs.getString("al.nombre");
+                   datos[1]=rs.getString("al.apellido");
+                   datos[2]=rs.getString("al.fecha_nac");
+                   datos[3]=rs.getString("al.dni");
+                   datos[4]=rs.getString("al.escuela");
+                   datos[5]=rs.getString("al.grado");
+                   datos[6]=rs.getString("al.nivel");
+                   datos[7]=rs.getString("os.nombre");
+                  
+                   tabla.addRow(datos);
+                   
+              }
+              
+              tablaAlumnos.setModel(tabla);
+             
+              
+          }catch(Exception e){
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los alumnos en la tabla","ERROR",ERROR_MESSAGE); 
+          }
     }
 
     private Image imagen;
@@ -319,7 +358,6 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     }//GEN-LAST:event_tablaAlumnosMouseClicked
 
     private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
-                     
        
     }//GEN-LAST:event_botonGuardarActionPerformed
 
