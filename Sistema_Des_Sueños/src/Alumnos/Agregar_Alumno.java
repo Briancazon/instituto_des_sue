@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -16,15 +17,45 @@ import javax.swing.table.DefaultTableModel;
  * @author Mahu
  */
 public class Agregar_Alumno extends javax.swing.JPanel {
-     DefaultTableModel tabla=new DefaultTableModel();
+      DefaultTableModel tabla=new DefaultTableModel();
       Object[] datos=new Object[8];
       ResultSet rs;
       Connection cx=Conexion.conexion.conexion();
+      DefaultComboBoxModel ls= new DefaultComboBoxModel();
 
     public Agregar_Alumno() {
         initComponents();
         mostrarAlumnos();
+        cargarComboObraSocial();
+        habilitarBotonGuardar();
     }
+    
+      //metodo que valida si todos los campos estan llenos, si es asi, habilita al boton guardar, de lo contrario, seguirá inhabilitado
+    public void habilitarBotonGuardar(){
+       if( !txtNombre.getText().isEmpty() && !txtApellido.getText().isEmpty() &&  !txtFechaNac.getText().isEmpty() && !txtDni.getText().isEmpty() &&  !txtEscuela.getText().isEmpty() && !txtGrado.getText().isEmpty()){
+           botonGuardar.setEnabled(true);
+       }else{
+           botonGuardar.setEnabled(false);
+       }
+    }
+    
+    
+    void cargarComboObraSocial(){
+        try{
+            rs=Clases.ObraSocial.mostrarObrasSociales(cx);
+            ls.addElement("Sin Obra Social");
+            while(rs.next())
+                ls.addElement(rs.getString("nombre"));
+                boxObraSocial.setModel(ls);
+            
+        }catch(Exception e){
+              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las Obras Sociales","ERROR",ERROR_MESSAGE);
+        }
+    }
+    
+    
+    
+    
     void mostrarAlumnos(){
          tabla.setRowCount(0);   
          tabla.setColumnCount(0);
@@ -69,7 +100,7 @@ public class Agregar_Alumno extends javax.swing.JPanel {
         txtDni.setText("");
         txtEscuela.setText("");
         txtGrado.setText("");
-        txtObraSocial.setText("");
+        boxObraSocial.setSelectedItem("Sin Obra Social");
         
         
     }
@@ -111,9 +142,9 @@ public class Agregar_Alumno extends javax.swing.JPanel {
         txtDni = new javax.swing.JTextField();
         txtGrado = new javax.swing.JTextField();
         txtEscuela = new javax.swing.JTextField();
-        txtObraSocial = new javax.swing.JTextField();
         botonGuardar = new javax.swing.JButton();
         boxNivel = new javax.swing.JComboBox<>();
+        boxObraSocial = new javax.swing.JComboBox<>();
 
         tablaAlumnos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -185,13 +216,63 @@ public class Agregar_Alumno extends javax.swing.JPanel {
 
         jLabel9.setText("Obra Social");
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, -1, 30));
+
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 390, -1));
+
+        txtApellido.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtApellidoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 380, -1));
+
+        txtFechaNac.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtFechaNacKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtFechaNac, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 350, -1));
+
+        txtDni.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDniKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDniKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 170, 360, -1));
+
+        txtGrado.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtGradoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtGradoKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtGrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 430, -1));
+
+        txtEscuela.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtEscuelaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEscuelaKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtEscuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 420, -1));
-        jPanel2.add(txtObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 450, 400, -1));
 
         botonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
         botonGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -208,6 +289,9 @@ public class Agregar_Alumno extends javax.swing.JPanel {
             }
         });
         jPanel2.add(boxNivel, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 390, 370, -1));
+
+        boxObraSocial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(boxObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 450, 370, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -226,24 +310,27 @@ public class Agregar_Alumno extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 769, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
         int dni= Integer.parseInt(txtDni.getText());
-        int obra_social= Integer.parseInt(txtObraSocial.getText());
+        String obra_social= boxObraSocial.getSelectedItem().toString(); //cualquiera de las obras sociales que elija el usuario se guardará en la variable obra_social...
         String nivel=boxNivel.getSelectedItem().toString(); // cualquiera de los tres niveles que elija el usuario se guardarà en la variable nivel
         try{
-             Clases.Alumno.cargar(cx, txtNombre.getText(), txtApellido.getText(), txtFechaNac.getText(), dni, txtEscuela.getText(), txtGrado.getText(), nivel , obra_social );
+            int codigoObraSocial=Clases.ObraSocial.obtenerCodigo(cx, obra_social);   //obtener el codigo de la obra social, dado su nombre... para posterior poder enviar este codigo en el insert del alumno
+  
+             Clases.Alumno.cargar(cx, txtNombre.getText(), txtApellido.getText(), txtFechaNac.getText(), dni, txtEscuela.getText(), txtGrado.getText(), nivel , codigoObraSocial);
               JOptionPane.showMessageDialog(null, "Se ha cargado correctamente al alumno"); 
               limpiar();
               mostrarAlumnos();
+              habilitarBotonGuardar();
         }catch(Exception e){
             
         }
@@ -255,10 +342,75 @@ public class Agregar_Alumno extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_boxNivelActionPerformed
 
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+        char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra
+      if (!( Character.isLetter(c) || c==' ')  || txtNombre.getText().length()>21) {
+        evt.consume();  // si no es una letra, consume el evento y no permite el ingreso, tambien consumira si se pasa de 21 caracteres
+    }
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtApellidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoKeyTyped
+        char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra
+      if (!( Character.isLetter(c) || c==' ')  || txtApellido.getText().length()>21) {
+          evt.consume();  // si no es una letra, consume el evento y no permite el ingreso, tambien consumira si se pasa de 21 caracteres
+      }
+    }//GEN-LAST:event_txtApellidoKeyTyped
+
+    private void txtDniKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniKeyTyped
+         char c=evt.getKeyChar();
+       // verificar si el carácter ingresado es unicamente un numero
+      if (!Character.isDigit(c) || txtDni.getText().length()>7) {
+        evt.consume();  // si no es un numero, consume el evento y no permite el ingreso, tambien consumirá si se pasa de 7 digitos
+    }
+    }//GEN-LAST:event_txtDniKeyTyped
+
+    private void txtEscuelaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEscuelaKeyTyped
+          char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra y nùmeros
+      if (!( Character.isLetter(c) || c==' ' || Character.isDigit(c))  || txtEscuela.getText().length()>65) {
+          evt.consume();  // si no es una letra o número, consume el evento y no permite el ingreso, tambien consumira si se pasa de 65 caracteres
+      }
+    }//GEN-LAST:event_txtEscuelaKeyTyped
+
+    private void txtGradoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGradoKeyTyped
+         char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra y nùmeros
+      if (!( Character.isLetter(c) || c==' ' || Character.isDigit(c))  || txtGrado.getText().length()>15) {
+          evt.consume();  // si no es una letra o número, consume el evento y no permite el ingreso, tambien consumira si se pasa de 15 caracteres
+      }
+    }//GEN-LAST:event_txtGradoKeyTyped
+
+    private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtNombreKeyReleased
+
+    private void txtApellidoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtApellidoKeyReleased
+
+    private void txtFechaNacKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFechaNacKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtFechaNacKeyReleased
+
+    private void txtDniKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtDniKeyReleased
+
+    private void txtEscuelaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEscuelaKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtEscuelaKeyReleased
+
+    private void txtGradoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGradoKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtGradoKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonGuardar;
     private javax.swing.JComboBox<String> boxNivel;
+    private javax.swing.JComboBox<String> boxObraSocial;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -278,6 +430,5 @@ public class Agregar_Alumno extends javax.swing.JPanel {
     private javax.swing.JTextField txtFechaNac;
     private javax.swing.JTextField txtGrado;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtObraSocial;
     // End of variables declaration//GEN-END:variables
 }
