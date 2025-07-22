@@ -35,13 +35,34 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         desactivarGuardar();
         cargarComboObraSocial();
         desactivarEditar();
+        desactivarCancelar();
+        habilitarBotonBuscar();
+    }
+    
+    
+    
+       //metodo que valida si todos los campos estan llenos, si es asi, habilita al boton guardar, de lo contrario, seguirá inhabilitado
+    public void habilitarBotonGuardar(){
+       if( !txtNombre.getText().isEmpty() && !txtApellido.getText().isEmpty() &&  !txtFechaNac.getText().isEmpty() && !txtDni.getText().isEmpty() &&  !txtEscuela.getText().isEmpty() && !txtGrado.getText().isEmpty()){
+           botonGuardar.setEnabled(true);
+       }else{
+           botonGuardar.setEnabled(false);
+       }
+    }
+    
+       //metodo que valida si todos los campos estan llenos, si es asi, habilita al boton buscar, de lo contrario, seguirá inhabilitado
+    public void habilitarBotonBuscar(){
+       if( !txtDniBuscador.getText().isEmpty()){
+           botonBuscar.setEnabled(true);
+       }else{
+           botonBuscar.setEnabled(false);
+       }
     }
     
     void cargarComboObraSocial(){
         try{
             rs=Clases.ObraSocial.mostrarObrasSociales(cx);
-            ls.addElement("Selecione la Obra Social");
-            ls.addElement("Ninguna");
+            ls.addElement("Sin Obra Social");
             while(rs.next())
                 ls.addElement(rs.getString("nombre"));
                 boxObraSocial.setModel(ls);
@@ -72,7 +93,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         txtGrado.setText("");
         boxNivel.setSelectedItem("");
         txtEscuela.setText("");
-        boxObraSocial.setSelectedItem("Seleccione la Obra Social");
+        boxObraSocial.setSelectedItem("Sin Obra Social");
     }
     
     
@@ -142,6 +163,14 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     void desactivarEditar(){
         botonEditar.setEnabled(false);
     }
+    
+    void desactivarCancelar(){
+        botonCancelar.setEnabled(false);
+    }
+    
+    void activarCancelar(){
+        botonCancelar.setEnabled(true);
+    }
 
     
     
@@ -184,11 +213,12 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         botonEditar = new javax.swing.JButton();
         boxNivel = new javax.swing.JComboBox<>();
         boxObraSocial = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaAlumnos = new javax.swing.JTable();
         txtDniBuscador = new javax.swing.JTextField();
         botonBuscar = new javax.swing.JButton();
+        labelDni = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(204, 102, 0));
 
@@ -239,11 +269,61 @@ public class Modificar_Alumno extends javax.swing.JPanel {
 
         jLabel9.setText("Obra Social");
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, -1, 30));
+
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, 420, -1));
+
+        txtApellido.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtApellidoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 420, -1));
         jPanel2.add(txtFechaNac, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 350, -1));
+
+        txtDni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDniActionPerformed(evt);
+            }
+        });
+        txtDni.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDniKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDniKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 450, -1));
+
+        txtGrado.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtGradoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtGradoKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtGrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 430, -1));
+
+        txtEscuela.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtEscuelaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEscuelaKeyTyped(evt);
+            }
+        });
         jPanel2.add(txtEscuela, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 420, -1));
 
         botonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
@@ -268,13 +348,13 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         boxObraSocial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jPanel2.add(boxObraSocial, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 360, 280, -1));
 
-        jButton1.setText("CANCELAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonCancelar.setText("CANCELAR");
+        botonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botonCancelarActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 590, 170, 120));
+        jPanel2.add(botonCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 590, 170, 120));
 
         tablaAlumnos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -294,12 +374,23 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablaAlumnos);
 
+        txtDniBuscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDniBuscadorKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDniBuscadorKeyTyped(evt);
+            }
+        });
+
         botonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/b.png"))); // NOI18N
         botonBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonBuscarActionPerformed(evt);
             }
         });
+
+        labelDni.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -324,7 +415,9 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                         .addComponent(botonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtDniBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelDni)
+                        .addGap(148, 148, 148))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,7 +428,9 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                     .addComponent(botonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(txtDniBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDniBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelDni))))
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
@@ -380,6 +475,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                    
           }else{
               JOptionPane.showMessageDialog(null, "El alumno con dni "+txtDniBuscador.getText()+" no existe","ERROR",ERROR_MESSAGE);
+              mostrarAlumnos();
          }
                 
               
@@ -401,7 +497,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
             String escuela =tablaAlumnos.getValueAt(filaSeleccionada, 4).toString();
             String grado =tablaAlumnos.getValueAt(filaSeleccionada, 5).toString();
             String nivel =tablaAlumnos.getValueAt(filaSeleccionada, 6).toString();
-            String obra_social =tablaAlumnos.getValueAt(filaSeleccionada, 7).toString();
+         //   String obra_social =tablaAlumnos.getValueAt(filaSeleccionada, 7).toString();
             
             txtNombre.setText(nombre);
             txtApellido.setText(apellido);
@@ -410,9 +506,19 @@ public class Modificar_Alumno extends javax.swing.JPanel {
             txtEscuela.setText(escuela);
             txtGrado.setText(grado);
             boxNivel.setSelectedItem(nivel);
-            boxObraSocial.setSelectedItem(obra_social);
             
-             activarEditar(); // se activa el boton editar , para que el usuario una vez haga clicl en los datos, se le permita editar si así lo desea
+           Object valorObraSocial = tablaAlumnos.getValueAt(filaSeleccionada, 7);
+           boolean o_s=valorObraSocial==null;
+           if (o_s==true){
+               boxObraSocial.setSelectedItem("Sin Obra Social");
+           }else{
+               boxObraSocial.setSelectedItem(valorObraSocial);
+           }
+
+            
+            labelDni.setText(dni);
+            
+             activarEditar(); // se activa el boton editar , para que el usuario una vez haga clic en los datos, se le permita editar si así lo desea
      
        }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
@@ -422,9 +528,9 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
 
         String nivel=boxNivel.getSelectedItem().toString();
-        int dni=Integer.parseInt(txtDni.getText());
+        int dni=Integer.parseInt(txtDni.getText());    //dni que esta dentro de los campos que forman parte de los datos del alumno
         String obra_social=boxObraSocial.getSelectedItem().toString();
-        int dniBuscador=Integer.parseInt(txtDniBuscador.getText());    ///dni del campo buscar, se lo utilizará para poder buscar cual es el código del alumno...
+        int dniBuscador=Integer.parseInt(labelDni.getText());    ///dni del label, se lo utilizará para poder buscar cual es el código del alumno...
         
         try{
                 ///// encontrar el codigo de la obra social..
@@ -435,9 +541,14 @@ public class Modificar_Alumno extends javax.swing.JPanel {
             
                Clases.Alumno.actualizarAlumno(cx, txtNombre.getText(), txtApellido.getText(), txtFechaNac.getText(), dni, txtEscuela.getText(), txtGrado.getText(), nivel, codigoObraSocial, codigoAlumno );
           
-              JOptionPane.showMessageDialog(null, "Se han actualizado los datos del alumno correctamente");
+               JOptionPane.showMessageDialog(null, "Se han actualizado los datos del alumno correctamente");
+               desactivarCampos();
+               desactivarGuardar();
+               desactivarCancelar();
+               mostrarAlumnos();
+              
           
-          }  catch(Exception e){
+         }  catch(Exception e){
               JOptionPane.showMessageDialog(null, "Error al actualizar el alumno","ERROR",ERROR_MESSAGE);
          }                   
 
@@ -447,22 +558,100 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         activarCampos();
         activarGuardar();
         desactivarEditar();
+        activarCancelar();
     }//GEN-LAST:event_botonEditarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
        desactivarCampos();
        desactivarGuardar();
-       
-    }//GEN-LAST:event_jButton1ActionPerformed
+       desactivarEditar();
+       desactivarCancelar();
+    }//GEN-LAST:event_botonCancelarActionPerformed
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+         char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra
+      if (!( Character.isLetter(c) || c==' ')  || txtNombre.getText().length()>21) {
+        evt.consume();  // si no es una letra, consume el evento y no permite el ingreso, tambien consumira si se pasa de 21 caracteres
+    }
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtApellidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoKeyTyped
+       char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra
+      if (!( Character.isLetter(c) || c==' ')  || txtApellido.getText().length()>21) {
+          evt.consume();  // si no es una letra, consume el evento y no permite el ingreso, tambien consumira si se pasa de 21 caracteres
+      }
+    }//GEN-LAST:event_txtApellidoKeyTyped
+
+    private void txtDniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDniActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDniActionPerformed
+
+    private void txtDniKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniKeyTyped
+           char c=evt.getKeyChar();
+       // verificar si el carácter ingresado es unicamente un numero
+      if (!Character.isDigit(c) || txtDni.getText().length()>7) {
+        evt.consume();  // si no es un numero, consume el evento y no permite el ingreso, tambien consumirá si se pasa de 7 digitos
+    }
+    }//GEN-LAST:event_txtDniKeyTyped
+
+    private void txtEscuelaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEscuelaKeyTyped
+            char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra y nùmeros
+      if (!( Character.isLetter(c) || c==' ' || Character.isDigit(c))  || txtEscuela.getText().length()>65) {
+          evt.consume();  // si no es una letra o número, consume el evento y no permite el ingreso, tambien consumira si se pasa de 65 caracteres
+      }
+    }//GEN-LAST:event_txtEscuelaKeyTyped
+
+    private void txtGradoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGradoKeyTyped
+          char c=evt.getKeyChar();
+      // verificar si el carácter ingresado es una letra y nùmeros
+      if (!( Character.isLetter(c) || c==' ' || Character.isDigit(c))  || txtGrado.getText().length()>15) {
+          evt.consume();  // si no es una letra o número, consume el evento y no permite el ingreso, tambien consumira si se pasa de 15 caracteres
+      }
+    }//GEN-LAST:event_txtGradoKeyTyped
+
+    private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
+      habilitarBotonGuardar();
+    }//GEN-LAST:event_txtNombreKeyReleased
+
+    private void txtApellidoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtApellidoKeyReleased
+
+    private void txtDniKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniKeyReleased
+        habilitarBotonGuardar();
+    }//GEN-LAST:event_txtDniKeyReleased
+
+    private void txtEscuelaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEscuelaKeyReleased
+     habilitarBotonGuardar();
+    }//GEN-LAST:event_txtEscuelaKeyReleased
+
+    private void txtGradoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGradoKeyReleased
+       habilitarBotonGuardar();
+    }//GEN-LAST:event_txtGradoKeyReleased
+
+    private void txtDniBuscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniBuscadorKeyReleased
+        habilitarBotonBuscar();
+    }//GEN-LAST:event_txtDniBuscadorKeyReleased
+
+    private void txtDniBuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniBuscadorKeyTyped
+            char c=evt.getKeyChar();
+       // verificar si el carácter ingresado es unicamente un numero
+      if (!Character.isDigit(c) || txtDniBuscador.getText().length()>7) {
+        evt.consume();  // si no es un numero, consume el evento y no permite el ingreso, tambien consumirá si se pasa de 7 digitos
+    }
+    }//GEN-LAST:event_txtDniBuscadorKeyTyped
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonBuscar;
+    private javax.swing.JButton botonCancelar;
     private javax.swing.JButton botonEditar;
     private javax.swing.JButton botonGuardar;
     private javax.swing.JComboBox<String> boxNivel;
     private javax.swing.JComboBox<String> boxObraSocial;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -475,6 +664,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelDni;
     private javax.swing.JTable tablaAlumnos;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtDni;
