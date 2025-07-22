@@ -14,7 +14,9 @@ import Tutores.Modificar_Tutor;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
@@ -26,30 +28,39 @@ public class Menu extends javax.swing.JFrame {
 
    FondoPanel fondo= new FondoPanel();
     public Menu() {
-       // this.setContentPane(fondo);
+       this.setContentPane(fondo);
        
         initComponents();
-        
-       // this.setLocationRelativeTo(null);
        
+      // this.setLocationRelativeTo(this);
+       //SetImageLabel(fondo,"src/Imagenes/1.jpg");
         this.setExtendedState(this.MAXIMIZED_BOTH);
         
-                
+         
+        
+        
+        
+        
+        
+        
     }
-
+ 
     
-   
-
-    
-    
-    
+  
+    /*
+    private void SetImageLabel(JLabel labelName, String root){
+        ImageIcon image = new ImageIcon(root);
+        Icon icon= new ImageIcon(image.getImage().getScaledInstance(labelName.getWidth(),labelName.getHeight(),Image.SCALE_DEFAULT));
+        labelName.setIcon(icon);
+        this.repaint();
+    }
+    */
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jMenu4 = new javax.swing.JMenu();
-        panelprincipal = new FondoPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -76,23 +87,6 @@ public class Menu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
-
-        panelprincipal.addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentAdded(java.awt.event.ContainerEvent evt) {
-                panelprincipalComponentAdded(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelprincipalLayout = new javax.swing.GroupLayout(panelprincipal);
-        panelprincipal.setLayout(panelprincipalLayout);
-        panelprincipalLayout.setHorizontalGroup(
-            panelprincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1380, Short.MAX_VALUE)
-        );
-        panelprincipalLayout.setVerticalGroup(
-            panelprincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
-        );
 
         jMenu1.setText("Servicios");
         jMenuBar1.add(jMenu1);
@@ -230,19 +224,15 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelprincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 1380, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelprincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 800, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void panelprincipalComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_panelprincipalComponentAdded
-        
-    }//GEN-LAST:event_panelprincipalComponentAdded
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
        System.exit(0);
@@ -333,19 +323,7 @@ public class Menu extends javax.swing.JFrame {
          this.repaint();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
   
-   public class FondoPanel extends JPanel {
-    
-    private Image imagen;
-        @Override
-        public void paint(Graphics g){
-            imagen= new ImageIcon(getClass().getResource("/Imagenes/1.jpg")).getImage();
-            g.drawImage(imagen,0,0,getWidth(),getHeight(), this);
-            setOpaque(false);
-            super.paint(g);
-        }
-            
-    
-    }
+ 
     
     
     
@@ -383,6 +361,20 @@ public class Menu extends javax.swing.JFrame {
             }
         });
     }
+    public class FondoPanel extends JPanel {
+    
+    private Image imagen;
+        @Override
+        public void paint(Graphics g){
+            imagen= new ImageIcon(getClass().getResource("/Imagenes/1.jpg")).getImage();
+            g.drawImage(imagen,0,0,getWidth(),getHeight(), this);
+            setOpaque(false);
+            super.paint(g);
+        }
+            
+    
+    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem agregarA;
@@ -406,7 +398,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem modificarP;
     private javax.swing.JMenuItem modificarT;
     private javax.swing.JMenu obrasocial;
-    private javax.swing.JPanel panelprincipal;
     private javax.swing.JMenuItem salir;
     // End of variables declaration//GEN-END:variables
 }
