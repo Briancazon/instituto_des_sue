@@ -3,15 +3,25 @@ package Tutores;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.table.DefaultTableModel;
 
 
 public class Agregar_Tutor extends javax.swing.JPanel {
+          Connection cx=Conexion.conexion.conexion();
+            DefaultTableModel tabla=new DefaultTableModel();
+           Object[] datos=new Object[4];
+           ResultSet rs;
 
    
     public Agregar_Tutor() {
         initComponents();
         desactivarBotonGuardar();
+        mostrarTutores();
     }
      //metodo que valida si todos los campos estan llenos, si es asi, habilita al boton guardar, de lo contrario, seguirá inhabilitado
     public void habilitarBotonGuardar(){
@@ -21,6 +31,39 @@ public class Agregar_Tutor extends javax.swing.JPanel {
            botonGuardar.setEnabled(false);
        }
     }
+    
+    
+    void limpiar(){
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtDni.setText("");
+        txtTelefono.setText("");
+    }
+    
+    
+    void mostrarTutores(){
+         tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido"); 
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Teléfono");
+         try{
+             rs=Clases.Tutor.mostrarTutores(cx);
+             while(rs.next()){
+                   datos[0]=rs.getString("nombre");
+                   datos[1]=rs.getString("apellido");
+                   datos[2]=rs.getString("dni");
+                   datos[3]=rs.getString("telefono");
+                   tabla.addRow(datos);
+             }
+             tablaTutores.setModel(tabla);
+         }catch(Exception e){
+              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar la tabla de tutores","ERROR",ERROR_MESSAGE); 
+         }
+    }
+    
+    
     
     void desactivarBotonGuardar(){
         botonGuardar.setEnabled(false);
@@ -52,7 +95,7 @@ public class Agregar_Tutor extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaTutores = new javax.swing.JTable();
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 102));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -119,6 +162,11 @@ public class Agregar_Tutor extends javax.swing.JPanel {
         jPanel2.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, 370, -1));
 
         botonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
+        botonGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonGuardarActionPerformed(evt);
+            }
+        });
         jPanel2.add(botonGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 380, 163, 134));
 
         jPanel1.setBackground(new java.awt.Color(204, 102, 0));
@@ -144,18 +192,18 @@ public class Agregar_Tutor extends javax.swing.JPanel {
                 .addGap(17, 17, 17))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaTutores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "DNI", "Telefono", "Borrado"
+                "Nombre", "Apellido", "DNI", "Telefono"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaTutores);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -236,6 +284,21 @@ public class Agregar_Tutor extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_txtTelefonoKeyTyped
 
+    private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
+        int dni=Integer.parseInt(txtDni.getText());
+        try{
+              Clases.Tutor.cargar(cx, txtNombre.getText(), txtApellido.getText(), dni, txtTelefono.getText());
+              JOptionPane.showMessageDialog(null, "Se ha cargado al tutor correctamente"); 
+              limpiar();
+              mostrarTutores();
+              habilitarBotonGuardar();
+              
+        }catch(Exception e){
+              JOptionPane.showMessageDialog(null, "Ha ocurrido un error intentar cargar el tutor","ERROR",ERROR_MESSAGE); 
+        }
+      
+    }//GEN-LAST:event_botonGuardarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonGuardar;
@@ -247,7 +310,7 @@ public class Agregar_Tutor extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tablaTutores;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtNombre;
