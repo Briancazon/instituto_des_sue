@@ -3,14 +3,27 @@ package Profesores;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.table.DefaultTableModel;
 
 
 public class Modificar_Profe extends javax.swing.JPanel {
-
+    DefaultTableModel tabla=new DefaultTableModel();
+     Object[] datos=new Object[5];
+      ResultSet rs;
+      Statement st;
+     Connection cx=Conexion.conexion.conexion();
  
     public Modificar_Profe() {
         initComponents();
+        mostrarP();
     }
 
     private Image imagen;
@@ -21,7 +34,57 @@ public class Modificar_Profe extends javax.swing.JPanel {
             setOpaque(false);
             super.paint(g);
         }
+     
+      public void mostrarP(){
+         tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+        
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido");  
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Residencia"); 
+         tabla.addColumn("Titulo");
+      
+         
+         try{
+            
+             rs=Clases.Profesor.mostrarProfesor(cx);
+              while(rs.next()){
+                   datos[0]=rs.getString("nombre");
+                   datos[1]=rs.getString("apellido");
+                   datos[2]=rs.getString("dni");
+                   datos[3]=rs.getString("residencia");
+                   datos[4]=rs.getString("titulo");
+                   
+                 
+                  
+                   tabla.addRow(datos);
+                   tablaProfesor.setModel(tabla);
+                   
+              } 
+              
+          }catch(Exception e){
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los Profesores en la tabla","ERROR",ERROR_MESSAGE); 
+          }
+    }
           
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -44,7 +107,7 @@ public class Modificar_Profe extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaProfesor = new javax.swing.JTable();
         buscar = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
+        aptxt = new javax.swing.JTextField();
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 102));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -75,6 +138,11 @@ public class Modificar_Profe extends javax.swing.JPanel {
         jPanel2.add(titulotxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, 420, -1));
 
         guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/g.png"))); // NOI18N
+        guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarActionPerformed(evt);
+            }
+        });
         jPanel2.add(guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 390, 163, 134));
 
         modificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/m.png"))); // NOI18N
@@ -105,15 +173,20 @@ public class Modificar_Profe extends javax.swing.JPanel {
 
         tablaProfesor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "DNI", "Residencia", "Titulo", "Borrado"
+                "Nombre", "Apellido", "DNI", "Residencia", "Titulo"
             }
         ));
+        tablaProfesor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaProfesorMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaProfesor);
 
         buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/b.png"))); // NOI18N
@@ -133,7 +206,7 @@ public class Modificar_Profe extends javax.swing.JPanel {
                 .addGap(39, 39, 39)
                 .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(aptxt, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(40, 40, 40)
@@ -153,7 +226,7 @@ public class Modificar_Profe extends javax.swing.JPanel {
                             .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(71, 71, 71)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(aptxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(43, 43, 43)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
@@ -165,12 +238,120 @@ public class Modificar_Profe extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarActionPerformed
-        // TODO add your handling code here:
+         int dni=Integer.parseInt(aptxt.getText());
+      ResultSet rs;
+       tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido");  
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Residencia"); 
+         tabla.addColumn("Titulo");
+        try{
+         rs=Clases.Profesor.buscarProfesor(cx, dni);
+         if(rs.next()){
+                   datos[0]=rs.getString("nombre");
+                   datos[1]=rs.getString("apellido");
+                   datos[2]=rs.getString("dni");
+                   datos[3]=rs.getString("residencia");
+                   datos[4]=rs.getString("titulo");
+                  
+                  
+                   tabla.addRow(datos);
+                   tablaProfesor.setModel(tabla);
+                   
+          }else{
+              JOptionPane.showMessageDialog(null, "El profesor "+aptxt.getText()+" no existe","ERROR",ERROR_MESSAGE);
+              mostrarP();
+         }
+                
+              
+             
+    }catch(Exception e){
+          
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar al Profesor","ERROR",ERROR_MESSAGE);
+            mostrarP();
+       }
+        
+    
+              
     }//GEN-LAST:event_buscarActionPerformed
+
+    private void tablaProfesorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProfesorMouseClicked
+        try{
+            int filaSeleccionada = tablaProfesor.getSelectedRow();
+            
+            String nombre =tablaProfesor.getValueAt(filaSeleccionada, 0).toString();
+            String apellido =tablaProfesor.getValueAt(filaSeleccionada, 1).toString();
+            String dni =tablaProfesor.getValueAt(filaSeleccionada, 2).toString();
+            String residencia=tablaProfesor.getValueAt(filaSeleccionada, 3).toString();
+            String titulo =tablaProfesor.getValueAt(filaSeleccionada, 4).toString();
+          
+            
+            nombretxt.setText(nombre);
+            apellidotxt.setText(apellido);
+            dnitxt.setText(dni);
+            residenciatxt.setText(residencia);
+            titulotxt.setText(titulo);
+            
+     
+       }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
+       }
+    }//GEN-LAST:event_tablaProfesorMouseClicked
+
+    private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
+         int dni= Integer.parseInt(dnitxt.getText());
+         String nombre1= nombretxt.getText();
+         String apellido1=apellidotxt.getText();
+         String residencia1= residenciatxt.getText();
+         String titulo1=titulotxt.getText();
+       
+         
+         try{
+         
+          Clases.Profesor.modificarProfe(cx, nombre1, apellido1, dni, residencia1, titulo1);
+          
+          JOptionPane.showMessageDialog(null, "Cargado");
+          mostrarP();
+         
+             
+        }catch(Exception e){
+           JOptionPane.showMessageDialog(null, "No se pudieron cargar los datos");  
+        }
+       
+         
+         
+         
+         
+         
+         
+         
+         
+         //Este es otro metodo para poder modificar y gardar los datos.. Los dejo aqui por la duda nos sirve mas adelante :)
+         /*
+       try{
+         
+          String sql= "update profesor set nombre='"+nombre1+"',apellido='"+apellido1+"',residencia='"+residencia1+"',titulo='"+titulo1+"' where dni="+dni;
+          
+          st=cx.createStatement();
+          st.executeUpdate(sql);
+          
+          JOptionPane.showMessageDialog(null, "Cargado");
+          mostrarP();
+         
+             
+        }catch(Exception e){
+           JOptionPane.showMessageDialog(null, "No se pudieron cargar los datos");  
+        }
+       */
+       
+    }//GEN-LAST:event_guardarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField apellidotxt;
+    private javax.swing.JTextField aptxt;
     private javax.swing.JButton buscar;
     private javax.swing.JTextField dnitxt;
     private javax.swing.JButton guardar;
@@ -183,7 +364,6 @@ public class Modificar_Profe extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JButton modificar;
     private javax.swing.JTextField nombretxt;
     private javax.swing.JTextField residenciatxt;

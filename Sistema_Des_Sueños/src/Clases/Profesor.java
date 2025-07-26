@@ -51,14 +51,14 @@ public class Profesor {
         return rs;
     }
      
-      public static void modificarProfe(Connection cx, String nombre, String apellido, int dni, String residencia, String titulo, int codigo)throws Exception{
-          PreparedStatement stm=cx.prepareStatement("update alumno set nombre= ?, apellido=?, fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=? where codigo=?");
+      public static void modificarProfe(Connection cx, String nombre, String apellido, int dni, String residencia, String titulo)throws Exception{
+          PreparedStatement stm=cx.prepareStatement("update profesor set nombre=?, apellido=?, residencia=?, titulo=? where dni=?");
           stm.setString(1, nombre);
           stm.setString(2, apellido);
-          stm.setInt(3, dni);
-          stm.setString(4,residencia);
-          stm.setString(5,titulo);
-          stm.setInt(6, codigo);
+          stm.setString(3,residencia);
+          stm.setString(4,titulo);
+          stm.setInt(5,dni);
+          
           
           try{
               stm.executeUpdate();
