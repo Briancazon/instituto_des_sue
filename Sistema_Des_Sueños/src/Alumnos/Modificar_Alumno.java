@@ -86,6 +86,10 @@ public class Modificar_Alumno extends javax.swing.JPanel {
         boxObraSocial.setEnabled(false);
         
         
+  
+    }
+    
+    void limpiar(){
         txtNombre.setText("");
         txtApellido.setText("");
         txtFechaNac.setText("");
@@ -497,7 +501,8 @@ public class Modificar_Alumno extends javax.swing.JPanel {
             String escuela =tablaAlumnos.getValueAt(filaSeleccionada, 4).toString();
             String grado =tablaAlumnos.getValueAt(filaSeleccionada, 5).toString();
             String nivel =tablaAlumnos.getValueAt(filaSeleccionada, 6).toString();
-         //   String obra_social =tablaAlumnos.getValueAt(filaSeleccionada, 7).toString();
+            Object valorObraSocial = tablaAlumnos.getValueAt(filaSeleccionada, 7);
+       
             
             txtNombre.setText(nombre);
             txtApellido.setText(apellido);
@@ -507,7 +512,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
             txtGrado.setText(grado);
             boxNivel.setSelectedItem(nivel);
             
-           Object valorObraSocial = tablaAlumnos.getValueAt(filaSeleccionada, 7);
+         
            boolean o_s=valorObraSocial==null;
            if (o_s==true){
                boxObraSocial.setSelectedItem("Sin Obra Social");
@@ -518,6 +523,9 @@ public class Modificar_Alumno extends javax.swing.JPanel {
             
             labelDni.setText(dni);
             
+             desactivarGuardar();
+             desactivarCancelar();
+             desactivarCampos();
              activarEditar(); // se activa el boton editar , para que el usuario una vez haga clic en los datos, se le permita editar si así lo desea
      
        }catch(Exception e){
@@ -545,6 +553,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
                desactivarCampos();
                desactivarGuardar();
                desactivarCancelar();
+               limpiar();
                mostrarAlumnos();
               
           
@@ -565,6 +574,7 @@ public class Modificar_Alumno extends javax.swing.JPanel {
        desactivarCampos();
        desactivarGuardar();
        desactivarEditar();
+       limpiar();
        desactivarCancelar();
     }//GEN-LAST:event_botonCancelarActionPerformed
 
