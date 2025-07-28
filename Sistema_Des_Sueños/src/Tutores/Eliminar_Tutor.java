@@ -3,15 +3,48 @@ package Tutores;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import javax.swing.table.DefaultTableModel;
 
 
 public class Eliminar_Tutor extends javax.swing.JPanel {
+            Connection cx=Conexion.conexion.conexion();
+            DefaultTableModel tabla=new DefaultTableModel();
+            Object[] datos=new Object[4];
+            ResultSet rs;
 
     
     public Eliminar_Tutor() {
         initComponents();
-        desactivarBotonBuscar();
+        habilitarBotonBuscar();
+        desactivarEliminar();
+        mostrarTutores();
+    }
+    
+      void mostrarTutores(){
+         tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido"); 
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Teléfono");
+         try{
+             rs=Clases.Tutor.mostrarTutores(cx);
+             while(rs.next()){
+                   datos[0]=rs.getString("nombre");
+                   datos[1]=rs.getString("apellido");
+                   datos[2]=rs.getString("dni");
+                   datos[3]=rs.getString("telefono");
+                   tabla.addRow(datos);
+             }
+             tablaTutores.setModel(tabla);
+         }catch(Exception e){
+              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar la tabla de tutores","ERROR",ERROR_MESSAGE); 
+         }
     }
     
      //metodo que valida si todos los campos estan llenos, si es asi, habilita al boton buscar, de lo contrario, seguirá inhabilitado
@@ -23,10 +56,13 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
        }
     }
     
-    void desactivarBotonBuscar(){
-        botonBuscar.setEnabled(false);
+    void desactivarEliminar(){
+        botonEliminar.setEnabled(false);
     }
     
+     void activarEliminar(){
+        botonEliminar.setEnabled(true);
+    }
     
 
    private Image imagen;
@@ -50,6 +86,7 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
         tablaTutores = new javax.swing.JTable();
         botonEliminar = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        labelCodigoTutor = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(204, 102, 0));
 
@@ -74,6 +111,11 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
         );
 
         botonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/b.png"))); // NOI18N
+        botonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonBuscarActionPerformed(evt);
+            }
+        });
 
         txtDni.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,20 +133,32 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
 
         tablaTutores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "DNI", "Telefono", "Borrado"
+                "Nombre", "Apellido", "DNI", "Telefono"
             }
         ));
+        tablaTutores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaTutoresMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaTutores);
 
         botonEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/e.png"))); // NOI18N
+        botonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEliminarActionPerformed(evt);
+            }
+        });
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/c.png"))); // NOI18N
+
+        labelCodigoTutor.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -119,7 +173,9 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
                 .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(83, 83, 83))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(184, 184, 184)
+                .addComponent(labelCodigoTutor)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(botonEliminar)
                 .addGap(31, 31, 31)
                 .addComponent(jButton4)
@@ -145,11 +201,17 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
                         .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(46, 46, 46)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
-                .addGap(54, 54, 54)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(botonEliminar)
-                    .addComponent(jButton4))
-                .addGap(62, 62, 62))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(botonEliminar)
+                            .addComponent(jButton4))
+                        .addGap(62, 62, 62))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelCodigoTutor)
+                        .addGap(118, 118, 118))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -169,6 +231,70 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_txtDniKeyTyped
 
+    private void botonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBuscarActionPerformed
+           int dni=Integer.parseInt(txtDni.getText());
+          tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido"); 
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Teléfono");
+        try{
+            rs=Clases.Tutor.mostrarTutor(cx, dni);
+        
+            if(rs.next()){
+                   datos[0]=rs.getString("nombre");
+                   datos[1]=rs.getString("apellido");
+                   datos[2]=rs.getString("dni");
+                   datos[3]=rs.getString("telefono");
+                   tabla.addRow(datos);
+                   
+                    tablaTutores.setModel(tabla);
+            }else{
+                   JOptionPane.showMessageDialog(null, "No existe un tutor con el DNI "+txtDni.getText(),"ERROR",ERROR_MESSAGE); 
+                   mostrarTutores();
+                
+            }
+          
+            
+        }catch(Exception e){
+               JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el tutor","ERROR",ERROR_MESSAGE); 
+        }
+    }//GEN-LAST:event_botonBuscarActionPerformed
+
+    private void tablaTutoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTutoresMouseClicked
+        int filaSeleccionada = tablaTutores.getSelectedRow();
+            
+            String dni =tablaTutores.getValueAt(filaSeleccionada, 2).toString();
+            labelCodigoTutor.setText(dni);
+            activarEliminar(); // se activa el boton eliminar al hacer click en algun registro que el usuario desee eliminar..
+    }//GEN-LAST:event_tablaTutoresMouseClicked
+
+    private void botonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarActionPerformed
+         int dni=Integer.parseInt(labelCodigoTutor.getText());
+         int respuesta = JOptionPane.showConfirmDialog( null, "¿Estás seguro de que deseas eliminar a este tutor?" , "Confirmar eliminación", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
+         
+         if (respuesta == JOptionPane.YES_OPTION) {
+             
+                  try{
+                           Clases.Tutor.eliminar(cx, dni);
+                           JOptionPane.showMessageDialog(null, "Se ha eliminado el tutor correctamente");
+                           desactivarEliminar();
+                           mostrarTutores();
+                  }catch(Exception e){
+            
+                            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar eliminar el tutor","ERROR",ERROR_MESSAGE);
+                            desactivarEliminar();
+                            mostrarTutores();
+        }
+         }else{
+             JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación del tutor");
+             desactivarEliminar();
+             mostrarTutores();
+         }
+      
+    }//GEN-LAST:event_botonEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonBuscar;
@@ -177,6 +303,7 @@ public class Eliminar_Tutor extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelCodigoTutor;
     private javax.swing.JTable tablaTutores;
     private javax.swing.JTextField txtDni;
     // End of variables declaration//GEN-END:variables

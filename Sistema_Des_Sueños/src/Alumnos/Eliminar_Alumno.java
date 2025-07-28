@@ -307,7 +307,7 @@ public class Eliminar_Alumno extends javax.swing.JPanel {
                   }catch(Exception e){
             
                             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar eliminar el alumno","ERROR",ERROR_MESSAGE);
-        }
+                  }
          }else{
              JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación");
              mostrarAlumnos();

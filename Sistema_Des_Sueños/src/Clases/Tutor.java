@@ -83,6 +83,17 @@ public class Tutor {
     }
     
     
+    public static void eliminar(Connection cx, int dni)throws Exception{
+        PreparedStatement stm=cx.prepareStatement("UPDATE tutor set borrado=1 where dni = ?");
+        stm.setInt(1, dni);
+        try{
+            stm.executeUpdate();
+        }catch(SQLException e){
+              JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+    }
+    
+    
    
     
 }
