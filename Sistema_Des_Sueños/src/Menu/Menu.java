@@ -8,6 +8,7 @@ import Obra_social.OS;
 import Profesores.Agregar_Profe;
 import Profesores.Eliminar_Profe;
 import Profesores.Modificar_Profe;
+import Servicios.Servicios;
 import Tutores.Agregar_Tutor;
 import Tutores.Eliminar_Tutor;
 import Tutores.Modificar_Tutor;
@@ -63,6 +64,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         agregarT = new javax.swing.JMenuItem();
@@ -89,6 +91,20 @@ public class Menu extends javax.swing.JFrame {
         setResizable(false);
 
         jMenu1.setText("Servicios");
+        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu1ActionPerformed(evt);
+            }
+        });
+
+        jMenuItem2.setText("Ver");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Pagos");
@@ -322,6 +338,17 @@ public class Menu extends javax.swing.JFrame {
          this.revalidate();
          this.repaint();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
+         
+    }//GEN-LAST:event_jMenu1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+       Servicios ser= new Servicios();
+       this.setContentPane(ser);
+         this.revalidate();
+         this.repaint();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
   
  
     
@@ -394,6 +421,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem modificarA;
     private javax.swing.JMenuItem modificarP;
     private javax.swing.JMenuItem modificarT;
