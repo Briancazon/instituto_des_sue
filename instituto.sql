@@ -37,7 +37,7 @@ CREATE TABLE `alumno` (
   UNIQUE KEY `dni_UNIQUE` (`dni`),
   KEY `fk_alumno_obra_social1_idx` (`obra_social`),
   CONSTRAINT `fk_alumno_obra_social1` FOREIGN KEY (`obra_social`) REFERENCES `obra_social` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `alumno` (
 
 LOCK TABLES `alumno` WRITE;
 /*!40000 ALTER TABLE `alumno` DISABLE KEYS */;
-INSERT INTO `alumno` VALUES (1,'Brian','Cazón','2003-08-04',44948099,'colegio 14','quinto','Secundario',1,0),(2,'ana','mamani','2004-03-19',47152374,'tec 2','quinto','Primario',2,0);
+INSERT INTO `alumno` VALUES (1,'brian','Cazón','2003-08-04',44948099,'colegio 14','quinto','Primario',6,1),(2,'ana','mamani','2004-03-19',47152374,'tec 2','quinto','Primario',2,1),(3,'ezequiel','cazon','2024-04-04',1111111,'t perez','qunto','Inicial',1,1),(4,'rerew','fewfew','2023-04-03',432432432,'fwfdsfds','fwffwfwefwe','Inicial',4,1),(5,'ffdsf','fdfs','2023-03-03',34432432,'eerrfdsfdsfds','fdfdsf','Primario',5,1),(6,'ana','mamani','2024-03-02',2313231,'sarmiento','fwefwefew','Secundario',NULL,0),(7,'pablo','Flores','2003-04-03',121212,'perez','quinto','Secundario',105,0),(9,'bandi','cazon','2000-04-04',47152375,'nueva ciudad','quinto','Primario',105,0),(12,'rafa','aguante','2004-03-03',56565656,'sarmiento77','quinto','Inicial',75,0),(14,'bandi','cazon','2000-04-04',13456378,'Sarmiento','quinto','Primario',NULL,0),(15,'kovu','cazón','2024-12-12',77777777,'sarmiento','quinto','Inicial',NULL,0),(16,'lionel','messi','2000-03-03',14141414,'sarmiento','sexto','Inicial',NULL,1),(17,'angel','di maria','2001-03-03',88888888,'fdfdfds','fdsfdsf','Inicial',35,1),(18,'jose','Antonio','2004-03-03',432432,'fewfdsf','fdsfdsf','Secundario',35,0),(19,'fdfsdfs','ewrwrew','2004-04-04',34234234,'rrewrrewrw','fsdfsdfdsfs','Inicial',27,1),(20,'ian','ibarra','2020-09-29',43254123,'papa francisco 457','5to','Inicial',105,0);
 /*!40000 ALTER TABLE `alumno` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +200,7 @@ CREATE TABLE `modalidad_servicio` (
   `codigo` int NOT NULL AUTO_INCREMENT,
   `tipo` varchar(45) NOT NULL,
   PRIMARY KEY (`codigo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,6 +209,7 @@ CREATE TABLE `modalidad_servicio` (
 
 LOCK TABLES `modalidad_servicio` WRITE;
 /*!40000 ALTER TABLE `modalidad_servicio` DISABLE KEYS */;
+INSERT INTO `modalidad_servicio` VALUES (1,'Mensual'),(2,'Clase');
 /*!40000 ALTER TABLE `modalidad_servicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,7 +226,7 @@ CREATE TABLE `obra_social` (
   `borrado` tinyint NOT NULL,
   PRIMARY KEY (`codigo`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,6 +252,10 @@ CREATE TABLE `pagos` (
   `codigo_inscripcion` int NOT NULL,
   `fecha_pago` date NOT NULL,
   `monto_pagado` float NOT NULL,
+  `recargo` float DEFAULT '0',
+  `periodo_mes` int DEFAULT NULL,
+  `periodo_año` int DEFAULT NULL,
+  `observacion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`codigo`),
   KEY `fk_pagos_tipo_pago1_idx` (`codigo_tipo_pago`),
   KEY `fk_pagos_inscripcion1_idx` (`codigo_inscripcion`),
@@ -285,7 +290,7 @@ CREATE TABLE `profesor` (
   `borado` tinyint NOT NULL,
   PRIMARY KEY (`codigo`),
   UNIQUE KEY `dni_UNIQUE` (`dni`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -306,16 +311,14 @@ DROP TABLE IF EXISTS `servicios`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `servicios` (
   `codigo` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) NOT NULL,
+  `nombre` varchar(70) NOT NULL,
   `precio` float NOT NULL,
   `codigo_modalidad_servicio` int NOT NULL,
-  `codigo_servicio_padre` int NOT NULL,
   PRIMARY KEY (`codigo`),
+  UNIQUE KEY `nombre` (`nombre`),
   KEY `fk_servicios_tipo_modalidad_pago1_idx` (`codigo_modalidad_servicio`),
-  KEY `fk_servicios_servicios1_idx` (`codigo_servicio_padre`),
-  CONSTRAINT `fk_servicios_servicios1` FOREIGN KEY (`codigo_servicio_padre`) REFERENCES `servicios` (`codigo`),
   CONSTRAINT `fk_servicios_tipo_modalidad_pago1` FOREIGN KEY (`codigo_modalidad_servicio`) REFERENCES `modalidad_servicio` (`codigo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -324,6 +327,7 @@ CREATE TABLE `servicios` (
 
 LOCK TABLES `servicios` WRITE;
 /*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
+INSERT INTO `servicios` VALUES (2,'Educación Temprana',35000,1),(3,'Apoyo Pedagógico',30000,1),(4,'Clases Personalizadas',6500,2),(5,'Inclusión Escolar: Acompañamiento',0,2),(6,'Inclusión Escolar: Itinerancia',80000,2);
 /*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -366,7 +370,7 @@ CREATE TABLE `tutor` (
   `borrado` tinyint NOT NULL,
   PRIMARY KEY (`codigo`),
   UNIQUE KEY `dni_UNIQUE` (`dni`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,6 +379,7 @@ CREATE TABLE `tutor` (
 
 LOCK TABLES `tutor` WRITE;
 /*!40000 ALTER TABLE `tutor` DISABLE KEYS */;
+INSERT INTO `tutor` VALUES (1,'ezequiel','cazon',12345678,'3888684916',0),(2,'mario albert','kempres',34567890,'1234',1),(3,'pablo','flores',432432,'11111111111',1),(4,'lionel','messi',10101010,'123423',0);
 /*!40000 ALTER TABLE `tutor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -387,4 +392,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-13 21:10:13
+-- Dump completed on 2025-08-24 14:52:16
