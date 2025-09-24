@@ -114,4 +114,20 @@ public class ObraSocial {
         return rs;
     }
 
+       
+    public static void habilitarOS(Connection cx, int codigo)throws Exception{
+        
+          PreparedStatement stm=cx.prepareStatement("UPDATE obra_social set borrado= 0 where codigo=?");
+           stm.setInt(1, codigo);
+           try{
+               stm.executeUpdate();
+           }catch(SQLException e){
+                JOptionPane.showMessageDialog(null,e.getMessage());
+           }
+        
+        
+        
+    }    
+    
+      
 }

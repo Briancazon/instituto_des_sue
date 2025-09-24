@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -27,10 +28,116 @@ public class OS extends javax.swing.JPanel {
          desactivarCampo();
         desactivarEditar();
         desactivarEliminar();
+        desactivarcargar();
+        desactivarbuscar();
+        desactivarhabilitado();
+        
+         nomtxt.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+              
+                verificarcampo();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                 verificarcampo();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                verificarcampo();
+            }
+            private void verificarcampo(){
+                buscar.setEnabled(!nomtxt.getText().trim().isEmpty());
+                cargar.setEnabled(!nomtxt.getText().trim().isEmpty());
+            }
+                   
+         });
+        
     }
     
     private void check(){
-        if (checkInactivo.isSelected() && checkActivo.isSelected()){
+        
+      
+        
+        if( checkInactivo.isSelected()){
+            activarhabilitado();
+            desactivarEliminar();
+            desactivarEditar();
+            
+            
+            tabla1.setRowCount(0);   
+              tabla1.setColumnCount(0);
+              tabla1.addColumn("Nº");  
+              tabla1.addColumn("Obra Social");
+        
+               try{
+            
+                    rs=Clases.ObraSocial.mostrarObrasSocialesInactivas(cx);
+                    while(rs.next()){
+                        datos1[0]=rs.getString("codigo");
+                        datos1[1]=rs.getString("nombre");
+                   
+                  
+                        tabla1.addRow(datos1);
+                   
+                    }
+              
+                    tablaOS.setModel(tabla1);
+             
+              
+                  }catch(Exception e){
+                         JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
+                   }
+                   configurarColumn();  
+                   
+        }else{
+               tabla1.setRowCount(0);   
+              tabla1.setColumnCount(0);
+              tabla1.addColumn("Nº");  
+              tabla1.addColumn("Obra Social");
+        
+               try{
+            
+                    rs=Clases.ObraSocial.mostrarObrasSocialesActivas(cx);
+                    while(rs.next()){
+                        datos1[0]=rs.getString("codigo");
+                        datos1[1]=rs.getString("nombre");
+                   
+                  
+                        tabla1.addRow(datos1);
+                   
+                    }
+              
+                    tablaOS.setModel(tabla1);
+             
+              
+                  }catch(Exception e){
+                         JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
+                   }
+                   configurarColumn();  
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      /*  if (checkInactivo.isSelected() && checkActivo.isSelected()){
                 tabla1.setRowCount(0);   
         tabla1.setColumnCount(0);
         tabla1.addColumn("Nº");  
@@ -82,9 +189,11 @@ public class OS extends javax.swing.JPanel {
                    }catch(Exception e){
                          JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
                    }
-      configurarColumn();   
+      configurarColumn(); 
+         
         
-        }else{
+        }else 
+         {
               tabla1.setRowCount(0);   
               tabla1.setColumnCount(0);
               tabla1.addColumn("Nº");  
@@ -108,9 +217,11 @@ public class OS extends javax.swing.JPanel {
                   }catch(Exception e){
                          JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
                    }
-                   configurarColumn();   
+                   configurarColumn();  
+                  
         
         }
+        */
     }
 
     private void desactivarGuardar() {
@@ -152,7 +263,29 @@ public class OS extends javax.swing.JPanel {
     private void activarEliminar() {
         labelEliminar.setEnabled(true);
     }
-        
+    private void activarbuscar(){
+        buscar.setEnabled(true);
+    }
+    private void activarcargar(){
+        cargar.setEnabled(true);
+    } 
+    private void desactivarcargar(){
+        cargar.setEnabled(false);
+    }
+     private void desactivarbuscar(){
+       buscar.setEnabled(false);
+    }
+    private void activarhabilitado(){
+        habilitar.setEnabled(true);
+    }
+    private void desactivarhabilitado(){
+      habilitar.setEnabled(false);
+    }
+    
+    
+    
+    
+    
      public class FondoPanel2 extends JPanel {
     
     private Image imagen;
@@ -195,6 +328,47 @@ public class OS extends javax.swing.JPanel {
           }
       configurarColumn();   
     }
+     
+     public void inhabilitado(){
+          
+        tabla1.setRowCount(0);   
+        tabla1.setColumnCount(0);
+        tabla1.addColumn("Nº");  
+        tabla1.addColumn("Obra Social");
+        
+        try{
+            
+             rs=Clases.ObraSocial.mostrarObrasSocialesInactivas(cx);
+              while(rs.next()){
+                   datos1[0]=rs.getString("codigo");
+                   datos1[1]=rs.getString("nombre");
+                   
+                  
+                   tabla1.addRow(datos1);
+                   
+              }
+              
+              tablaOS.setModel(tabla1);
+               
+              
+          }catch(Exception e){
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
+          }
+      configurarColumn(); 
+         
+       
+     }
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
     private void configurarColumn(){
          tablaOS.getColumnModel().getColumn(0).setMinWidth(60);
         tablaOS.getColumnModel().getColumn(0).setPreferredWidth(80);
@@ -225,10 +399,10 @@ public class OS extends javax.swing.JPanel {
         jLabel19 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel13 = new javax.swing.JLabel();
+        buscar = new javax.swing.JLabel();
         nomtxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        cargar = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         labelEditar = new javax.swing.JLabel();
         labelGuardar = new javax.swing.JLabel();
@@ -236,10 +410,10 @@ public class OS extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         nombretxt = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        checkActivo = new javax.swing.JCheckBox();
         checkInactivo = new javax.swing.JCheckBox();
         labelAgregar = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        Cancelar = new javax.swing.JLabel();
+        habilitar = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaOS = new javax.swing.JTable();
         labelCodigo = new javax.swing.JLabel();
@@ -298,10 +472,10 @@ public class OS extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 204, 204));
 
-        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/Buscar_1.png"))); // NOI18N
-        jLabel13.addMouseListener(new java.awt.event.MouseAdapter() {
+        buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/Buscar_1.png"))); // NOI18N
+        buscar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel13MouseClicked(evt);
+                buscarMouseClicked(evt);
             }
         });
 
@@ -319,10 +493,10 @@ public class OS extends javax.swing.JPanel {
         jLabel7.setForeground(new java.awt.Color(255, 102, 51));
         jLabel7.setText("*********************************************************");
 
-        jButton1.setText("LISTAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        cargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/recargar.png"))); // NOI18N
+        cargar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cargarMouseClicked(evt);
             }
         });
 
@@ -331,31 +505,28 @@ public class OS extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(jButton1)
-                .addGap(29, 29, 29)
-                .addComponent(jLabel13)
+                .addGap(263, 263, 263)
+                .addComponent(buscar, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-                        .addGap(169, 169, 169))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(nomtxt)
-                        .addGap(244, 244, 244))))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                    .addComponent(nomtxt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addGap(288, 288, 288))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13)
+                    .addComponent(cargar)
+                    .addComponent(buscar)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(nomtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel7)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 102, 102));
@@ -406,15 +577,6 @@ public class OS extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(255, 204, 204));
         jLabel8.setText("*****************************************************************************");
 
-        checkActivo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        checkActivo.setForeground(new java.awt.Color(255, 255, 255));
-        checkActivo.setText("Activo");
-        checkActivo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkActivoActionPerformed(evt);
-            }
-        });
-
         checkInactivo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         checkInactivo.setForeground(new java.awt.Color(255, 255, 255));
         checkInactivo.setText("Inactivo");
@@ -424,17 +586,26 @@ public class OS extends javax.swing.JPanel {
             }
         });
 
-        labelAgregar.setText("AGREGAR");
+        labelAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/agregar.png"))); // NOI18N
         labelAgregar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 labelAgregarMouseClicked(evt);
             }
         });
 
-        jButton2.setText("Cancelar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+        Cancelar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
+        Cancelar.setForeground(new java.awt.Color(255, 255, 255));
+        Cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/c.png"))); // NOI18N
+        Cancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CancelarMouseClicked(evt);
+            }
+        });
+
+        habilitar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/activo1.png"))); // NOI18N
+        habilitar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                habilitarMouseClicked(evt);
             }
         });
 
@@ -443,56 +614,58 @@ public class OS extends javax.swing.JPanel {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(labelAgregar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelEditar)
-                .addGap(10, 10, 10)
-                .addComponent(labelEliminar)
-                .addGap(20, 20, 20)
+                .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(195, 195, 195)
+                .addComponent(labelAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelGuardar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(checkActivo)
-                .addGap(18, 18, 18)
-                .addComponent(checkInactivo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
+                .addComponent(labelGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(habilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkInactivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Cancelar)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(labelGuardar))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelEditar)
-                    .addComponent(labelEliminar)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(jLabel8))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(checkActivo)
-                            .addComponent(checkInactivo)
-                            .addComponent(jButton2))))
+                    .addComponent(labelEliminar))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(14, 14, 14)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(jLabel8)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(labelAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(habilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addComponent(labelGuardar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Cancelar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(checkInactivo)
+                        .addGap(18, 18, 18))))
         );
 
         tablaOS.setModel(new javax.swing.table.DefaultTableModel(
@@ -530,7 +703,7 @@ public class OS extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 875, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 962, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(72, 72, 72)
@@ -551,12 +724,12 @@ public class OS extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(34, 34, 34)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                         .addGap(39, 39, 39))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(91, 91, 91)
                         .addComponent(labelCodigo)
-                        .addContainerGap(201, Short.MAX_VALUE))))
+                        .addContainerGap(189, Short.MAX_VALUE))))
         );
 
         add(jPanel1, "os");
@@ -593,7 +766,17 @@ public class OS extends javax.swing.JPanel {
     }//GEN-LAST:event_labelGuardarMouseClicked
 
     private void labelEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEliminarMouseClicked
-      int codigo=Integer.parseInt(labelCodigo.getText());
+   
+      
+            
+            
+        
+        
+        
+        
+        
+        
+        int codigo=Integer.parseInt(labelCodigo.getText());
        
        int n= JOptionPane.showConfirmDialog(null, "¿Desea eliminar el registro seleccionado?","Eliminación", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE); 
        if(n==JOptionPane.YES_NO_OPTION){
@@ -607,6 +790,7 @@ public class OS extends javax.swing.JPanel {
       activarAgregar();
       desactivarCampo();
       nombretxt.setText("");
+      mostrarO();
 
               
              }catch(Exception e){
@@ -617,6 +801,7 @@ public class OS extends javax.swing.JPanel {
       activarAgregar();
       desactivarCampo();
       nombretxt.setText("");
+      mostrarO();
              }
            
            
@@ -629,10 +814,11 @@ public class OS extends javax.swing.JPanel {
       desactivarCampo();
       nombretxt.setText("");
        }
-       
+        
+      
     }//GEN-LAST:event_labelEliminarMouseClicked
 
-    private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
+    private void buscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseClicked
        String nom=nomtxt.getText();
          ResultSet rs;
     tabla1.setRowCount(0);   
@@ -661,14 +847,25 @@ public class OS extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar la Obra Social","ERROR",ERROR_MESSAGE);
             mostrarO();
        }
-    }//GEN-LAST:event_jLabel13MouseClicked
+    }//GEN-LAST:event_buscarMouseClicked
 
     private void nomtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomtxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nomtxtActionPerformed
 
     private void tablaOSMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaOSMouseClicked
-         try{
+        
+         if(checkInactivo.isSelected()){
+            
+            desactivarEliminar();
+            desactivarEditar();
+            
+         } else{    
+        
+        
+        
+        
+        try{
             int filaSeleccionada = tablaOS.getSelectedRow();
             
             String codigo =tablaOS.getValueAt(filaSeleccionada, 0).toString();
@@ -686,6 +883,7 @@ public class OS extends javax.swing.JPanel {
        }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
        }
+      }
     }//GEN-LAST:event_tablaOSMouseClicked
 
     private void labelEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditarMouseClicked
@@ -704,36 +902,70 @@ public class OS extends javax.swing.JPanel {
        labelCodigo.setText("");
     }//GEN-LAST:event_labelAgregarMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       mostrarO();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-      desactivarGuardar();
-      desactivarEditar();
-      desactivarEliminar();
-      activarAgregar();
-      desactivarCampo();
-      nombretxt.setText("");
-
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void checkActivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkActivoActionPerformed
-        check();
-    }//GEN-LAST:event_checkActivoActionPerformed
-
     private void checkInactivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkInactivoActionPerformed
-       check();
+      
+        check();
     }//GEN-LAST:event_checkInactivoActionPerformed
+
+    private void CancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelarMouseClicked
+        desactivarGuardar();
+        desactivarEditar();
+        desactivarEliminar();
+        activarAgregar();
+        desactivarCampo();
+        nombretxt.setText("");
+    }//GEN-LAST:event_CancelarMouseClicked
+
+    private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
+         mostrarO();
+    }//GEN-LAST:event_cargarMouseClicked
+
+    private void habilitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_habilitarMouseClicked
+       
+        int codigo=Integer.parseInt(labelCodigo.getText());
+       
+       int n= JOptionPane.showConfirmDialog(null, "¿Desea habilitar el registro seleccionado?","Habiliatar", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE); 
+       if(n==JOptionPane.YES_NO_OPTION){
+           
+           try{
+               Clases.ObraSocial.habilitarOS(cx, codigo);
+               JOptionPane.showMessageDialog(null, "Se ha habilitado el registro correctamente");
+              nombretxt.setText("");
+              inhabilitado();
+
+              
+             }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No se ha podido habilitar el registro seleccionado","ERROR",ERROR_MESSAGE); 
+               nombretxt.setText("");
+     
+             }
+           
+           
+       }else{
+           JOptionPane.showMessageDialog(null, "Se ha cancelado"); 
+       
+      nombretxt.setText("");
+       }
+       
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_habilitarMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox checkActivo;
+    private javax.swing.JLabel Cancelar;
+    private javax.swing.JLabel buscar;
+    private javax.swing.JLabel cargar;
     private javax.swing.JCheckBox checkInactivo;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel habilitar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;

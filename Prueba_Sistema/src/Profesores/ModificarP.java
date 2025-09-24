@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,6 +34,39 @@ public class ModificarP extends javax.swing.JPanel {
     public ModificarP() {
         initComponents();
         mostrarP();
+        desactivarguardar();
+        desactivarmodificar();
+        desactivarcampo();
+       desactivarcargar();
+        desactivarbuscar();
+        desactivareliminar();
+        desactivarhabiltar();
+        
+        aptxt.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+              
+                verificarcampo();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                 verificarcampo();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                verificarcampo();
+            }
+            private void verificarcampo(){
+                buscar.setEnabled(!aptxt.getText().trim().isEmpty());
+                cargar.setEnabled(!aptxt.getText().trim().isEmpty());
+            }
+                   
+            
+        });
+         
+        
     }
   public class FondoPanel2 extends JPanel {
     
@@ -71,7 +105,7 @@ public class ModificarP extends javax.swing.JPanel {
          
          try{
             
-             rs=Clases.Profesor.mostrarProfesor(cx);
+             rs=Clases.Profesor.mostrarprofesoresactivos(cx);
               while(rs.next()){
                    datos[0]=rs.getString("nombre");
                    datos[1]=rs.getString("apellido");
@@ -90,19 +124,114 @@ public class ModificarP extends javax.swing.JPanel {
                    JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los Profesores en la tabla","ERROR",ERROR_MESSAGE); 
           }
     }
+     public void inhabilitado(){
+         
+          tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+        
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido");  
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Residencia"); 
+         tabla.addColumn("Titulo");
+      
+         
+         try{
+            
+             rs=Clases.Profesor.mostrarprofesoresinactivos(cx);
+              while(rs.next()){
+                   datos[0]=rs.getString("nombre");
+                   datos[1]=rs.getString("apellido");
+                   datos[2]=rs.getString("dni");
+                   datos[3]=rs.getString("residencia");
+                   datos[4]=rs.getString("titulo");
+                   
+                 
+                  
+                   tabla.addRow(datos);
+                   tablaProfesor.setModel(tabla);
+                   
+              } 
+              
+          }catch(Exception e){
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los Profesores en la tabla","ERROR",ERROR_MESSAGE); 
+          }
+         
+         
+         
+         
+         
+         
+     }
           
+     public void limpiar(){
+         
+         nombretxt.setText("");
+         apellidotxt.setText("");
+         dnitxt.setText("");
+         residenciatxt.setText("");
+         titulotxt.setText("");
+           
+     }
         
+     public void desactivarguardar(){
+         guardar.setEnabled(false);
+     } 
+     public void activarguardar(){
+         guardar.setEnabled(true);
+     }
+     public void desactivarmodificar(){
+         modificar.setEnabled(false);
+     }
+    public void activarmodificar(){
+        modificar.setEnabled(true);
+    }
+    public void desactivarbuscar(){
+        buscar.setEnabled(false);
+    }
+    public void activarbuscar(){
+        buscar.setEnabled(true);
+    }
+    public void activarcampo(){
+        nombretxt.setEnabled(true);
+         apellidotxt.setEnabled(true);
+         dnitxt.setEnabled(true);
+         residenciatxt.setEnabled(true);
+         titulotxt.setEnabled(true);
+    }
+    public void desactivarcampo(){
+         nombretxt.setEnabled(false);
+         apellidotxt.setEnabled(false);
+         dnitxt.setEnabled(false);
+         residenciatxt.setEnabled(false);
+         titulotxt.setEnabled(false);
+    }
+    public void desactivaragregar(){
+        agregar.setEnabled(false);
+    }
+    public void activaragregar(){
+        agregar.setEnabled(true);
+    }
+    public void activarcargar(){
+        cargar.setEnabled(true);
+    }
+    public void desactivarcargar(){
+        cargar.setEnabled(false);
+    }
         
+       public void activareliminar(){
+         eliminar.setEnabled(true);
+     }
+     public void desactivareliminar(){
+         eliminar.setEnabled(false);
+     }   
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
+     public void activarhabilitar(){
+         Habilitar.setEnabled(true);
+     }   
+     public void desactivarhabiltar(){
+         Habilitar.setEnabled(false);
+     }
         
         
         
@@ -146,12 +275,17 @@ public class ModificarP extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaProfesor = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
-        buscar = new javax.swing.JLabel();
         aptxt = new javax.swing.JTextField();
-        eliminar = new javax.swing.JLabel();
+        Cancelar = new javax.swing.JLabel();
         modificar = new javax.swing.JLabel();
         guardar = new javax.swing.JLabel();
         prueba = new javax.swing.JLabel();
+        agregar = new javax.swing.JLabel();
+        buscar = new javax.swing.JLabel();
+        cargar = new javax.swing.JLabel();
+        eliminar = new javax.swing.JLabel();
+        Inactivo = new javax.swing.JCheckBox();
+        Habilitar = new javax.swing.JLabel();
 
         setLayout(new java.awt.CardLayout());
 
@@ -169,16 +303,16 @@ public class ModificarP extends javax.swing.JPanel {
         jPanel6.setForeground(new java.awt.Color(255, 255, 255));
         jPanel6.setPreferredSize(new java.awt.Dimension(1000, 70));
 
-        jLabel13.setFont(new java.awt.Font("Segoe Print", 1, 18)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Modificar Profesor");
+        jLabel13.setText("Registrar Profesor");
 
-        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/modificar.png"))); // NOI18N
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
 
         jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/sol.png"))); // NOI18N
         jLabel21.setPreferredSize(new java.awt.Dimension(40, 40));
 
-        jLabel15.setFont(new java.awt.Font("Segoe Print", 1, 18)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("E. P. Despertado Sueños ");
 
@@ -351,7 +485,7 @@ public class ModificarP extends javax.swing.JPanel {
                                 .addGap(97, 97, 97)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGap(47, 47, 47))
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1007, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -385,7 +519,7 @@ public class ModificarP extends javax.swing.JPanel {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
-                .addGap(0, 28, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         tablaProfesor.setModel(new javax.swing.table.DefaultTableModel(
@@ -408,16 +542,9 @@ public class ModificarP extends javax.swing.JPanel {
 
         jPanel5.setBackground(new java.awt.Color(255, 102, 102));
 
-        buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/Buscar_1.png"))); // NOI18N
-        buscar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                buscarMouseClicked(evt);
-            }
-        });
-
         aptxt.setBackground(new java.awt.Color(255, 153, 153));
-        aptxt.setFont(new java.awt.Font("Segoe Print", 1, 14)); // NOI18N
-        aptxt.setForeground(new java.awt.Color(255, 255, 255));
+        aptxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        aptxt.setForeground(new java.awt.Color(0, 0, 0));
         aptxt.setBorder(null);
         aptxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -425,13 +552,23 @@ public class ModificarP extends javax.swing.JPanel {
             }
         });
 
-        eliminar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
-        eliminar.setForeground(new java.awt.Color(255, 255, 255));
-        eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/c.png"))); // NOI18N
+        Cancelar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
+        Cancelar.setForeground(new java.awt.Color(255, 255, 255));
+        Cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/c.png"))); // NOI18N
+        Cancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CancelarMouseClicked(evt);
+            }
+        });
 
         modificar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
         modificar.setForeground(new java.awt.Color(255, 255, 255));
         modificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/m.png"))); // NOI18N
+        modificar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modificarMouseClicked(evt);
+            }
+        });
 
         guardar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
         guardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -445,40 +582,108 @@ public class ModificarP extends javax.swing.JPanel {
         prueba.setForeground(new java.awt.Color(255, 102, 102));
         prueba.setLabelFor(apellidotxt);
 
+        agregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/agregar.png"))); // NOI18N
+        agregar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                agregarMouseClicked(evt);
+            }
+        });
+
+        buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/Buscar_1.png"))); // NOI18N
+        buscar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buscarMouseClicked(evt);
+            }
+        });
+
+        cargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/recargar.png"))); // NOI18N
+        cargar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cargarMouseClicked(evt);
+            }
+        });
+
+        eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/e.png"))); // NOI18N
+        eliminar.setText("jLabel1");
+        eliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                eliminarMouseClicked(evt);
+            }
+        });
+
+        Inactivo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        Inactivo.setForeground(new java.awt.Color(255, 255, 255));
+        Inactivo.setText("Inactivo");
+        Inactivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                InactivoActionPerformed(evt);
+            }
+        });
+
+        Habilitar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/activo1.png"))); // NOI18N
+        Habilitar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                HabilitarMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(aptxt, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(modificar)
+                .addComponent(cargar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(100, 100, 100)
+                .addComponent(agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(guardar)
+                .addComponent(guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eliminar)
+                .addComponent(modificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(prueba)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 61, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Habilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Inactivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Cancelar))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(169, 169, 169)
+                .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buscar)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(buscar))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(aptxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eliminar)
-                    .addComponent(modificar)
-                    .addComponent(guardar))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(modificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cargar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createSequentialGroup()
+                                    .addGap(16, 16, 16)
+                                    .addComponent(aptxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(eliminar, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel5Layout.createSequentialGroup()
+                                    .addGap(15, 15, 15)
+                                    .addComponent(Inactivo))
+                                .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Habilitar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addComponent(prueba)
-                .addGap(15, 15, 15))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -487,7 +692,7 @@ public class ModificarP extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1007, Short.MAX_VALUE)
                 .addGap(2, 2, 2))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(104, 104, 104)
@@ -502,8 +707,8 @@ public class ModificarP extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(246, 246, 246)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                 .addGap(14, 14, 14))
         );
 
@@ -524,12 +729,13 @@ public class ModificarP extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_residenciatxtActionPerformed
 
-    private void aptxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aptxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_aptxtActionPerformed
-
     private void buscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseClicked
-    
+      
+       
+      
+       
+           
+                    
                int dni=Integer.parseInt(aptxt.getText());
       ResultSet rs;
        tabla.setRowCount(0);   
@@ -565,12 +771,31 @@ public class ModificarP extends javax.swing.JPanel {
             mostrarP();
        }
         
-   
-        
+     
+      
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
     }//GEN-LAST:event_buscarMouseClicked
 
     private void tablaProfesorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProfesorMouseClicked
        
+        if (Inactivo.isSelected()){
+            desactivareliminar();
+            desactivarmodificar();
+        }
+        
+        else{
+        
+        
+        
         try{
             int filaSeleccionada = tablaProfesor.getSelectedRow();
             
@@ -592,11 +817,18 @@ public class ModificarP extends javax.swing.JPanel {
             dnitxt.setText(dni);
             residenciatxt.setText(residencia);
             titulotxt.setText(titulo);
+            activarmodificar();
+            desactivarguardar();
+            desactivarcampo();
+            desactivaragregar();
+            activareliminar();
             
      
        }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
        }
+       
+      }
     }//GEN-LAST:event_tablaProfesorMouseClicked
 
     private void guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarMouseClicked
@@ -605,24 +837,175 @@ public class ModificarP extends javax.swing.JPanel {
          String apellido1=apellidotxt.getText();
          String residencia1= residenciatxt.getText();
          String titulo1=titulotxt.getText();
-         
+         String p= prueba.getText();
        
          
          try{
-          
-          int codigo=Integer.parseInt(prueba.getText());
-         
-          Clases.Profesor.modificarProfe(cx, nombre1, apellido1, dni, residencia1, titulo1,codigo);
-          
-          JOptionPane.showMessageDialog(null, "Cargado");
-          mostrarP();
-         
+             if(!p.isEmpty()){
+                 
+               Clases.Profesor.modificarProfe(cx, nombre1, apellido1, dni, residencia1, titulo1,Integer.parseInt(p));
+                   JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
+                   prueba.setText("");
+                   mostrarP();
+                   
+                  
+             }
+             else{
+                  
+                   
+                     Clases.Profesor.cargar(cx, nombre1, apellido1, dni, residencia1, titulo1);
+                  JOptionPane.showMessageDialog(null, "Los datos se guardaron correctamente"); 
+                  mostrarP();
+                  desactivarguardar();
+                  activaragregar();
+                  desactivarcampo();
+             }
+           
+           
              
         }catch(Exception e){
            JOptionPane.showMessageDialog(null, "No se pudieron cargar los datos");  
         }
-       
+       limpiar();
     }//GEN-LAST:event_guardarMouseClicked
+
+    private void CancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelarMouseClicked
+        desactivarguardar();
+        desactivarmodificar();
+        desactivarcampo();
+        activaragregar();
+        desactivareliminar();
+        limpiar();
+    }//GEN-LAST:event_CancelarMouseClicked
+
+    private void agregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_agregarMouseClicked
+       activarcampo();
+       activarguardar();
+       
+    }//GEN-LAST:event_agregarMouseClicked
+
+    private void modificarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificarMouseClicked
+       
+        activarcampo();
+        desactivarmodificar();
+        activarguardar();
+    }//GEN-LAST:event_modificarMouseClicked
+
+    private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
+        mostrarP();
+         aptxt.setText("");
+    }//GEN-LAST:event_cargarMouseClicked
+
+    private void InactivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InactivoActionPerformed
+      
+          if (Inactivo.isSelected()){
+        
+              activarhabilitar();
+              tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+         tabla.addColumn("Nombre");  
+         tabla.addColumn("Apellido");  
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Residencia"); 
+         tabla.addColumn("Titulo");
+      
+         
+         try{
+            
+             rs=Clases.Profesor.mostrarprofesoresinactivos(cx);
+              while(rs.next()){
+                   datos[0]=rs.getString("nombre");
+                   datos[1]=rs.getString("apellido");
+                   datos[2]=rs.getString("dni");
+                   datos[3]=rs.getString("residencia");
+                   datos[4]=rs.getString("titulo");
+                 
+                  
+                   tabla.addRow(datos);
+                   tablaProfesor.setModel(tabla);
+                   
+              } 
+              
+          }catch(Exception e){
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los Profesores en la tabla","ERROR",ERROR_MESSAGE); 
+          }
+            
+        }else {
+           mostrarP();
+          }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_InactivoActionPerformed
+
+    private void eliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarMouseClicked
+          int codigo=Integer.parseInt(prueba.getText());
+       
+       int n= JOptionPane.showConfirmDialog(null, "¿Desea eliminar el registro seleccionado?","Eliminación", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE); 
+       if(n==JOptionPane.YES_NO_OPTION){
+           
+           try{
+               Clases.Profesor.eliminar(cx, codigo);
+               JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
+                
+              mostrarP();
+
+              
+             }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No se ha podido eliminar el registro seleccionado","ERROR",ERROR_MESSAGE); 
+            
+             }
+           
+           
+       }else{
+           JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación"); 
+            mostrarP();
+       }
+       
+    }//GEN-LAST:event_eliminarMouseClicked
+
+    private void HabilitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HabilitarMouseClicked
+       
+          int codigo=Integer.parseInt(prueba.getText());
+       
+       int n= JOptionPane.showConfirmDialog(null, "¿Desea habilitar el registro seleccionado?","Habilitar", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE); 
+       if(n==JOptionPane.YES_NO_OPTION){
+           
+           try{
+               Clases.Profesor.habilitarP(cx, codigo);
+               JOptionPane.showMessageDialog(null, "Se ha habilitado el registro correctamente");
+                
+              inhabilitado();
+
+              
+             }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No se ha podido habiliar el registro seleccionado","ERROR",ERROR_MESSAGE); 
+            
+             }
+           
+           
+       }else{
+           JOptionPane.showMessageDialog(null, "Se ha cancelado "); 
+            inhabilitado();
+       }
+        
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_HabilitarMouseClicked
+
+    private void aptxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aptxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_aptxtActionPerformed
 
     
     
@@ -638,9 +1021,14 @@ public class ModificarP extends javax.swing.JPanel {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Cancelar;
+    private javax.swing.JLabel Habilitar;
+    private javax.swing.JCheckBox Inactivo;
+    private javax.swing.JLabel agregar;
     private javax.swing.JTextField apellidotxt;
     private javax.swing.JTextField aptxt;
     private javax.swing.JLabel buscar;
+    private javax.swing.JLabel cargar;
     private javax.swing.JTextField dnitxt;
     private javax.swing.JLabel eliminar;
     private javax.swing.JLabel guardar;

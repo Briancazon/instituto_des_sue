@@ -2,15 +2,10 @@
 package prueba_sistema;
 
 
-import Alumno.AgregarA;
-import Alumno.EliminarA;
+
 import Alumno.ModificarA;
 import ObraSocial.OS;
-import Profesores.AgregarP;
-import Profesores.EliminarP;
 import Profesores.ModificarP;
-import Tutores.AgregarT;
-import Tutores.EliminarT;
 import Tutores.ModificarT;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 import java.awt.BorderLayout;
@@ -33,7 +28,7 @@ public class Menu extends javax.swing.JFrame {
    
     public Menu() {
         initComponents();
-      
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
         
         
@@ -50,6 +45,7 @@ public class Menu extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu5 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         serviciobt = new javax.swing.JPanel();
@@ -69,27 +65,24 @@ public class Menu extends javax.swing.JFrame {
         panel1 = new FondoPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        agregarA = new javax.swing.JMenuItem();
         modificarA = new javax.swing.JMenuItem();
-        eliminarA = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        agregarP = new javax.swing.JMenuItem();
         modificarP = new javax.swing.JMenuItem();
-        eliminarP = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         os = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        agregarT = new javax.swing.JMenuItem();
         modificarT = new javax.swing.JMenuItem();
-        eliminarT = new javax.swing.JMenuItem();
-        jMenu6 = new javax.swing.JMenu();
-        jMenuItem11 = new javax.swing.JMenuItem();
-        salir = new javax.swing.JMenuItem();
+        jMenu7 = new javax.swing.JMenu();
+        jMenu8 = new javax.swing.JMenu();
+        jMenu9 = new javax.swing.JMenu();
 
         jMenu5.setText("jMenu5");
 
+        jMenuItem1.setText("jMenuItem1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1000, 650));
+        setResizable(false);
 
         jPanel5.setBackground(new java.awt.Color(255, 102, 102));
         jPanel5.setPreferredSize(new java.awt.Dimension(200, 800));
@@ -341,26 +334,21 @@ public class Menu extends javax.swing.JFrame {
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 788, Short.MAX_VALUE)
         );
 
         contenedor.add(panel1, "uno");
 
         getContentPane().add(contenedor, java.awt.BorderLayout.CENTER);
 
+        jMenuBar1.setBackground(new java.awt.Color(255, 204, 204));
+        jMenuBar1.setForeground(new java.awt.Color(0, 0, 0));
+
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/alumno.png"))); // NOI18N
         jMenu1.setText("Alumnos");
 
-        agregarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
-        agregarA.setText("Agregar");
-        agregarA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarAActionPerformed(evt);
-            }
-        });
-        jMenu1.add(agregarA);
-
-        modificarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/modificar.png"))); // NOI18N
-        modificarA.setText("Modificar");
+        modificarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
+        modificarA.setText("Reguistrar");
         modificarA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modificarAActionPerformed(evt);
@@ -368,30 +356,13 @@ public class Menu extends javax.swing.JFrame {
         });
         jMenu1.add(modificarA);
 
-        eliminarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/eliminar.png"))); // NOI18N
-        eliminarA.setText("Eliminar");
-        eliminarA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eliminarAActionPerformed(evt);
-            }
-        });
-        jMenu1.add(eliminarA);
-
         jMenuBar1.add(jMenu1);
 
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/profesor.png"))); // NOI18N
         jMenu2.setText("Profesores");
 
-        agregarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
-        agregarP.setText("Agregar");
-        agregarP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarPActionPerformed(evt);
-            }
-        });
-        jMenu2.add(agregarP);
-
-        modificarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/modificar.png"))); // NOI18N
-        modificarP.setText("Modificar");
+        modificarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
+        modificarP.setText("Registrar");
         modificarP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modificarPActionPerformed(evt);
@@ -399,17 +370,9 @@ public class Menu extends javax.swing.JFrame {
         });
         jMenu2.add(modificarP);
 
-        eliminarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/eliminar.png"))); // NOI18N
-        eliminarP.setText("Eliminar");
-        eliminarP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eliminarPActionPerformed(evt);
-            }
-        });
-        jMenu2.add(eliminarP);
-
         jMenuBar1.add(jMenu2);
 
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/construccion-de-comunidad.png"))); // NOI18N
         jMenu3.setText("Obra Social");
 
         os.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/os.png"))); // NOI18N
@@ -423,19 +386,11 @@ public class Menu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
+        jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/tutor.png"))); // NOI18N
         jMenu4.setText("Tutores");
 
-        agregarT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
-        agregarT.setText("Agregar");
-        agregarT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarTActionPerformed(evt);
-            }
-        });
-        jMenu4.add(agregarT);
-
-        modificarT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/modificar.png"))); // NOI18N
-        modificarT.setText("Modificar");
+        modificarT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
+        modificarT.setText("Registrar");
         modificarT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modificarTActionPerformed(evt);
@@ -443,33 +398,26 @@ public class Menu extends javax.swing.JFrame {
         });
         jMenu4.add(modificarT);
 
-        eliminarT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/eliminar.png"))); // NOI18N
-        eliminarT.setText("Eliminar");
-        eliminarT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eliminarTActionPerformed(evt);
-            }
-        });
-        jMenu4.add(eliminarT);
-
         jMenuBar1.add(jMenu4);
 
-        jMenu6.setText("Opciones");
+        jMenu7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/recursos.png"))); // NOI18N
+        jMenu7.setText("Gastos");
+        jMenuBar1.add(jMenu7);
 
-        jMenuItem11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/recursos.png"))); // NOI18N
-        jMenuItem11.setText("Gastos");
-        jMenu6.add(jMenuItem11);
+        jMenu8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/entrevista.png"))); // NOI18N
+        jMenu8.setText("Consultas");
+        jMenuBar1.add(jMenu8);
 
-        salir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/salir.png"))); // NOI18N
-        salir.setText("Salir");
-        salir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                salirActionPerformed(evt);
+        jMenu9.setBackground(new java.awt.Color(255, 153, 153));
+        jMenu9.setForeground(new java.awt.Color(0, 0, 0));
+        jMenu9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/salir.png"))); // NOI18N
+        jMenu9.setText("Salir");
+        jMenu9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu9MouseClicked(evt);
             }
         });
-        jMenu6.add(salir);
-
-        jMenuBar1.add(jMenu6);
+        jMenuBar1.add(jMenu9);
 
         setJMenuBar(jMenuBar1);
 
@@ -562,15 +510,6 @@ public class Menu extends javax.swing.JFrame {
         cardLayout.show(contenedor, "uno");
     }//GEN-LAST:event_jLabel1MouseClicked
 
-    private void agregarAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarAActionPerformed
-        AgregarA Aa = new AgregarA(); 
-        contenedor.add(Aa,"agregarA");
-        cardLayout.show(contenedor, "agregarA");
-        contenedor.setSize( 1000, 900);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_agregarAActionPerformed
-
     private void modificarAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarAActionPerformed
         ModificarA m = new ModificarA(); 
         contenedor.add(m,"modificarA");
@@ -579,24 +518,6 @@ public class Menu extends javax.swing.JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }//GEN-LAST:event_modificarAActionPerformed
-
-    private void eliminarAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarAActionPerformed
-        EliminarA e = new EliminarA(); 
-        contenedor.add(e,"eliminarA");
-        cardLayout.show(contenedor, "eliminarA");
-        contenedor.setSize( 1000, 9000);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_eliminarAActionPerformed
-
-    private void agregarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarPActionPerformed
-         AgregarP ap = new AgregarP(); 
-        contenedor.add(ap,"agregarP");
-        cardLayout.show(contenedor, "agregarP");
-        contenedor.setSize(598, 525 );
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_agregarPActionPerformed
 
     private void modificarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarPActionPerformed
         ModificarP mp = new ModificarP(); 
@@ -607,15 +528,6 @@ public class Menu extends javax.swing.JFrame {
         setVisible(true);
     }//GEN-LAST:event_modificarPActionPerformed
 
-    private void eliminarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarPActionPerformed
-        EliminarP ep = new EliminarP(); 
-        contenedor.add(ep,"eliminarP");
-        cardLayout.show(contenedor, "eliminarP");
-        contenedor.setSize( 598, 525);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_eliminarPActionPerformed
-
     private void osActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_osActionPerformed
         OS O = new OS(); 
         contenedor.add(O,"os");
@@ -624,15 +536,6 @@ public class Menu extends javax.swing.JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }//GEN-LAST:event_osActionPerformed
-
-    private void agregarTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarTActionPerformed
-        AgregarT at = new AgregarT(); 
-        contenedor.add(at,"agregarT");
-        cardLayout.show(contenedor, "agregarT");
-        contenedor.setSize( 598, 525);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_agregarTActionPerformed
 
     private void modificarTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarTActionPerformed
         ModificarT mt = new ModificarT(); 
@@ -643,18 +546,9 @@ public class Menu extends javax.swing.JFrame {
         setVisible(true);
     }//GEN-LAST:event_modificarTActionPerformed
 
-    private void eliminarTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarTActionPerformed
-        EliminarT et = new EliminarT(); 
-        contenedor.add(et,"eliminarT");
-        cardLayout.show(contenedor, "eliminarT");
-        contenedor.setSize(598, 525);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_eliminarTActionPerformed
-
-    private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
+    private void jMenu9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu9MouseClicked
         System.exit(0);
-    }//GEN-LAST:event_salirActionPerformed
+    }//GEN-LAST:event_jMenu9MouseClicked
 
     
     
@@ -735,13 +629,7 @@ public class Menu extends javax.swing.JFrame {
  
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem agregarA;
-    private javax.swing.JMenuItem agregarP;
-    private javax.swing.JMenuItem agregarT;
     private javax.swing.JPanel contenedor;
-    private javax.swing.JMenuItem eliminarA;
-    private javax.swing.JMenuItem eliminarP;
-    private javax.swing.JMenuItem eliminarT;
     private javax.swing.JPanel insbt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -758,9 +646,11 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
-    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
+    private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JMenuItem modificarA;
     private javax.swing.JMenuItem modificarP;
@@ -769,7 +659,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JPanel pagobt;
     private javax.swing.JPanel pagoinsbt;
     private javax.swing.JPanel panel1;
-    private javax.swing.JMenuItem salir;
     private javax.swing.JPanel serviciobt;
     // End of variables declaration//GEN-END:variables
 }

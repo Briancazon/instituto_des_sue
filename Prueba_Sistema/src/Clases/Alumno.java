@@ -1,0 +1,182 @@
+
+package Clases;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
+
+public class Alumno {
+    public static void cargar(Connection cx, String nombre, String apellido, String fecha_nac, int dni, String escuela, String grado, String nivel, int obra_social )throws Exception {
+        if(obra_social==0){
+               PreparedStatement stm=cx.prepareStatement("INSERT INTO alumno (nombre, apellido, fecha_nac, dni, escuela, grado, nivel, obra_social, borrado) values (?, ?, ?, ?, ?, ?, ?, null, 0)");
+               stm.setString(1, nombre);
+               stm.setString(2, apellido );
+               stm.setString(3, fecha_nac);
+               stm.setInt(4, dni);
+               stm.setString(5, escuela);
+               stm.setString(6, grado);
+               stm.setString(7, nivel);
+            
+               try{
+                       stm.executeUpdate();
+                }catch(SQLException e){
+                       JOptionPane.showMessageDialog(null,e.getMessage());
+                }
+        }else{
+                 PreparedStatement stm=cx.prepareStatement("INSERT INTO alumno (nombre, apellido, fecha_nac, dni, escuela, grado, nivel, obra_social, borrado) values (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+                 stm.setString(1, nombre);
+                 stm.setString(2, apellido );
+                 stm.setString(3, fecha_nac);
+                 stm.setInt(4, dni);
+                 stm.setString(5, escuela);
+                 stm.setString(6, grado);
+                 stm.setString(7, nivel);
+                 stm.setInt(8, obra_social);
+        
+                 try{
+                       stm.executeUpdate();
+                 }catch(SQLException e){
+                       JOptionPane.showMessageDialog(null,e.getMessage());
+                 }
+        }     
+            
+    }
+    
+    public static int obtenerCodigo(Connection cx, int dni)throws Exception{
+          ResultSet rs=null;
+          int codigo=0;
+          PreparedStatement stm=cx.prepareStatement("SELECT codigo from alumno where dni=?");
+          stm.setInt(1, dni);
+          try{
+              rs=stm.executeQuery();
+              if(rs.next()){
+                  codigo=rs.getInt("codigo");
+              }
+          }catch(SQLException e){
+                JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+          
+          return codigo;
+              
+      }
+    
+    public static ResultSet mostrarAlumnos(Connection cx)throws Exception{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement(" SELECT al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre, t.nombre, t.apellido, at.parentesco from alumno as al inner join obra_social as os on os.codigo=al.obra_social inner join alumno_tutor as at on at.codigo_alumno=al.codigo inner join tutor as t on t.codigo=at.codigo_tutor  where al.borrado=0;");
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+    } 
+    
+    
+     public static void eliminar(Connection cx, int codigo)throws Exception{
+          PreparedStatement stm=cx.prepareStatement("UPDATE alumno set borrado= 1 where codigo = ?");
+          stm.setInt(1, codigo);
+          try{
+              stm.executeUpdate();
+          }catch(SQLException e){
+               JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+      } 
+      
+        
+     public static void HabilitarA(Connection cx, int codigo)throws Exception{
+          PreparedStatement stm=cx.prepareStatement("UPDATE alumno set borrado= 0 where codigo = ?");
+          stm.setInt(1, codigo);
+          try{
+              stm.executeUpdate();
+          }catch(SQLException e){
+               JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+      } 
+      
+     
+    public static ResultSet mostrarAlumnosInactivo(Connection cx)throws Exception{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement(" SELECT al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre, t.nombre, t.apellido, at.parentesco from alumno as al inner join obra_social as os on os.codigo=al.obra_social inner join alumno_tutor as at on at.codigo_alumno=al.codigo inner join tutor as t on t.codigo=at.codigo_tutor  where al.borrado=1;");
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+    } 
+    
+    public static ResultSet buscarAlumno(Connection cx, int dni)throws Exception{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement(" SELECT al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre, t.nombre, t.apellido, at.parentesco from alumno as al inner join obra_social as os on os.codigo=al.obra_social inner join alumno_tutor as at on at.codigo_alumno=al.codigo inner join tutor as t on t.codigo=at.codigo_tutor  where al.dni=? and al.borrado=0;");
+        stm.setInt(1, dni);
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+    }
+    
+      
+      public static void actualizarAlumno(Connection cx, String nombre, String apellido, String fecha_nac, int dni, String escuela, String grado, String nivel, int obra_social, int codigo)throws Exception{
+          if (obra_social==0){
+                PreparedStatement stm=cx.prepareStatement("update alumno set nombre= ?, apellido=?, fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=null where codigo=?");
+                stm.setString(1, nombre);
+                stm.setString(2, apellido);
+                stm.setString(3, fecha_nac);
+                stm.setInt(4, dni);
+                stm.setString(5, escuela);
+                stm.setString(6, grado);
+                stm.setString(7, nivel);
+                stm.setInt(8, codigo);
+          
+                try{
+                       stm.executeUpdate();
+                }catch(SQLException e){
+                       JOptionPane.showMessageDialog(null,e.getMessage());
+                }
+          }else{
+                  PreparedStatement stm=cx.prepareStatement("update alumno set nombre= ?, apellido=?, fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=? where codigo=?");
+                  stm.setString(1, nombre);
+                  stm.setString(2, apellido);
+                  stm.setString(3, fecha_nac);
+                  stm.setInt(4, dni);
+                  stm.setString(5, escuela);
+                  stm.setString(6, grado);
+                  stm.setString(7, nivel);
+                  stm.setInt(8, obra_social);
+                  stm.setInt(9, codigo);
+          
+                  try{
+                          stm.executeUpdate();
+                  }catch(SQLException e){
+                          JOptionPane.showMessageDialog(null,e.getMessage());
+                  }
+          }
+      }
+      
+     public static void modificaralumno_tutor(Connection cx, int tutor, String parentesco, int alumno)throws Exception{
+          PreparedStatement stm=cx.prepareStatement("update alumno_tutor set  codigo_tutor=?, parentesco=?  where codigo_alumno=?");
+         stm.setInt(1, tutor);
+         stm.setString(2, parentesco);
+         stm.setInt(3, alumno);
+          
+          
+          try{
+              stm.executeUpdate();
+          }catch(SQLException e){
+              // JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+          
+      }
+    
+    
+    
+    
+    
+    
+    
+}

@@ -83,6 +83,72 @@ public class Profesor {
         return codigo;
     }
      
+    public static ResultSet mostrarprofesoresactivos(Connection cx)throws SQLException{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("SELECT nombre, apellido, dni, residencia, titulo from profesor where borado=0");
+      
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
         
+    }
     
+     public static ResultSet mostrarprofesoresinactivos(Connection cx)throws SQLException{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("SELECT nombre, apellido, dni, residencia, titulo from profesor where borado=1");
+      
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+        
+    }
+    
+    
+     public static void eliminar(Connection cx, int codigo)throws Exception{
+           PreparedStatement stm=cx.prepareStatement("UPDATE profesor set borado= 1 where codigo=?");
+           stm.setInt(1, codigo);
+           try{
+               stm.executeUpdate();
+           }catch(SQLException e){
+                JOptionPane.showMessageDialog(null,e.getMessage());
+           }
+       }
+    
+   public static void habilitarP(Connection cx, int codigo) throws Exception{
+         PreparedStatement stm=cx.prepareStatement("UPDATE profesor set borado= 0 where codigo=?");
+           stm.setInt(1, codigo);
+           try{
+               stm.executeUpdate();
+           }catch(SQLException e){
+                JOptionPane.showMessageDialog(null,e.getMessage());
+           }
+       
+       
+       
+       
+       
+       
+       
+   }
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
 }
