@@ -45,10 +45,23 @@ public class Alumno {
             
     }
     
+    
+    public static void cargarAlumnoTutor(Connection cx, int codigoAlumno, int codigoTutor, String parentesco)throws Exception{
+        PreparedStatement stm=cx.prepareStatement("INSERT INTO alumno_tutor (codigo_alumno, codigo_tutor, parentesco) VALUES (?, ?, ?)");
+        stm.setInt(1, codigoAlumno);
+        stm.setInt(2, codigoTutor);
+        stm.setString(3, parentesco);
+        try{
+            stm.executeUpdate();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+    }
+    
     public static int obtenerCodigo(Connection cx, int dni)throws Exception{
           ResultSet rs=null;
           int codigo=0;
-          PreparedStatement stm=cx.prepareStatement("SELECT codigo from alumno where dni=?");
+          PreparedStatement stm=cx.prepareStatement("SELECT codigo from alumno where dni=? and borrado=0");
           stm.setInt(1, dni);
           try{
               rs=stm.executeQuery();
@@ -65,7 +78,7 @@ public class Alumno {
     
     public static ResultSet mostrarAlumnos(Connection cx)throws Exception{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement(" SELECT al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre, t.nombre, t.apellido, at.parentesco from alumno as al inner join obra_social as os on os.codigo=al.obra_social inner join alumno_tutor as at on at.codigo_alumno=al.codigo inner join tutor as t on t.codigo=at.codigo_tutor  where al.borrado=0;");
+        PreparedStatement stm=cx.prepareStatement(" SELECT al.codigo, al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre, t.nombre, t.apellido, t.telefono, at.parentesco from alumno as al left join obra_social as os on os.codigo=al.obra_social left join alumno_tutor as at on at.codigo_alumno=al.codigo left join tutor as t on t.codigo=at.codigo_tutor  where al.borrado=0 order by al.codigo desc");
         try{
             rs=stm.executeQuery();
         }catch(SQLException e){

@@ -85,7 +85,7 @@ public class Profesor {
      
     public static ResultSet mostrarprofesoresactivos(Connection cx)throws SQLException{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT nombre, apellido, dni, residencia, titulo from profesor where borado=0");
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo, nombre, apellido, dni, residencia, titulo from profesor where borrado=0");
       
         try{
             rs=stm.executeQuery();

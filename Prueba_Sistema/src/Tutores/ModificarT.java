@@ -16,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
 public class ModificarT extends javax.swing.JPanel {
 
     DefaultTableModel tabla=new DefaultTableModel();
-     Object[] datos=new Object[4];
+     Object[] datos=new Object[5];
       ResultSet rs;
       Statement st;
      Connection cx=Conexion.conexion.conexion();
@@ -29,6 +29,8 @@ public class ModificarT extends javax.swing.JPanel {
         desactivarcampo();
        desactivarcargar();
         desactivarbuscar();
+        desactivarHabilitar();
+        desactivareliminar();
         
         campotxt.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
             @Override
@@ -86,6 +88,7 @@ public class ModificarT extends javax.swing.JPanel {
          tabla.addColumn("Apellido");  
          tabla.addColumn("DNI"); 
          tabla.addColumn("Telefono"); 
+         tabla.addColumn("Estado"); 
         
          
          try{
@@ -96,17 +99,23 @@ public class ModificarT extends javax.swing.JPanel {
                    datos[1]=rs.getString("apellido");
                    datos[2]=rs.getString("dni");
                    datos[3]=rs.getString("telefono");
+                   datos[4]=rs.getString("borrado");
                   
-                   
+                    if( datos[4].equals("0")){
+                        datos[4]="ACTIVO";
+                   }else{
+                        datos[4]="INACTIVO";
+                   }
                  
                   
                    tabla.addRow(datos);
-                   tablaTutor.setModel(tabla);
+             
                    
               } 
+               tablaTutor.setModel(tabla);
               
           }catch(Exception e){
-                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los Profesores en la tabla","ERROR",ERROR_MESSAGE); 
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los tutores en la tabla","ERROR",ERROR_MESSAGE); 
           }
         
     }
@@ -119,6 +128,7 @@ public class ModificarT extends javax.swing.JPanel {
          tabla.addColumn("Apellido");  
          tabla.addColumn("DNI"); 
          tabla.addColumn("Telefono"); 
+         tabla.addColumn("Estado");
         
          
          try{
@@ -129,8 +139,13 @@ public class ModificarT extends javax.swing.JPanel {
                    datos[1]=rs.getString("apellido");
                    datos[2]=rs.getString("dni");
                    datos[3]=rs.getString("telefono");
+                   datos[4]=rs.getString("borrado");
                   
-                   
+                    if( datos[4].equals("0")){
+                        datos[4]="ACTIVO";
+                   }else{
+                        datos[4]="INACTIVO";
+                   }
                  
                   
                    tabla.addRow(datos);
@@ -139,7 +154,7 @@ public class ModificarT extends javax.swing.JPanel {
               } 
               
           }catch(Exception e){
-                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los Profesores en la tabla","ERROR",ERROR_MESSAGE); 
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los tutores en la tabla","ERROR",ERROR_MESSAGE); 
           }
         
         
@@ -156,7 +171,13 @@ public class ModificarT extends javax.swing.JPanel {
     
     
     
+    void activarHabilitar(){
+         habilitar.setEnabled(true);
+    }
     
+     void desactivarHabilitar(){
+         habilitar.setEnabled(false);
+    }
     
     
     
@@ -607,13 +628,13 @@ public class ModificarT extends javax.swing.JPanel {
 
         tablaTutor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "DNI", "Telefono"
+                "Nombre", "Apellido", "DNI", "Telefono", "Estado"
             }
         ));
         tablaTutor.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -652,7 +673,7 @@ public class ModificarT extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -697,6 +718,9 @@ public class ModificarT extends javax.swing.JPanel {
                    cod.setText("");
                    limpiar();
                   mostrarT();
+                  desactivarguardar();
+                  activaragregar();
+                  desactivarcampo();
                  
              }
              else{
@@ -707,6 +731,7 @@ public class ModificarT extends javax.swing.JPanel {
                     desactivarguardar();
                   activaragregar();
                   desactivarcampo();
+                  
              }
             
          }catch(Exception e){
@@ -719,15 +744,31 @@ public class ModificarT extends javax.swing.JPanel {
     private void tablaTutorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTutorMouseClicked
          
         if(inactivo.isSelected()){
-            desactivareliminar();
-            desactivarmodificar();            
+            try{
+                  int filaSeleccionada = tablaTutor.getSelectedRow();
+                  String dni =tablaTutor.getValueAt(filaSeleccionada, 2).toString();
+                  int codigo= Clases.Tutor.buscarCodigo(cx, Integer.parseInt(dni));
+                  cod.setText(String.valueOf(codigo));
+                  String estado=tablaTutor.getValueAt(filaSeleccionada, 4).toString();
+                  if(estado.equalsIgnoreCase("INACTIVO")){
+                     activarHabilitar();
+                     desactivaragregar();
+                  }
+            }catch(Exception e){
+                
+            }
+             
+               desactivareliminar();
+               desactivarmodificar();     
+          
+               
             
             
             
         } else{
-            
-        
-        
+                       
+        desactivarHabilitar();
+       
         try{
             int filaSeleccionada = tablaTutor.getSelectedRow();
             
@@ -742,7 +783,7 @@ public class ModificarT extends javax.swing.JPanel {
                 cod.setText(String.valueOf(codigo));
                 
             }catch(Exception e){
-               JOptionPane.showMessageDialog(null, "Error al seleccionar un registro");   
+               JOptionPane.showMessageDialog(null, "Error al obtener el código");   
             }
             nombretxt.setText(nombre);
             apellidotxt.setText(apellido);
@@ -765,28 +806,34 @@ public class ModificarT extends javax.swing.JPanel {
       ResultSet rs;
        tabla.setRowCount(0);   
          tabla.setColumnCount(0);
+        
          tabla.addColumn("Nombre");  
          tabla.addColumn("Apellido");  
          tabla.addColumn("DNI"); 
          tabla.addColumn("Telefono"); 
+          tabla.addColumn("Estado");  
          
         try{
              rs=Clases.Tutor.buscarTutor(cx, dni);
          if(rs.next()){
+                  
                    datos[0]=rs.getString("nombre");
                    datos[1]=rs.getString("apellido");
                    datos[2]=rs.getString("dni");
                    datos[3]=rs.getString("telefono");
-                   
+                   datos[4]=rs.getString("borrado");
+                  
+                    if( datos[4].equals("0")){
+                        datos[4]="ACTIVO";
+                   }else{
+                        datos[4]="INACTIVO";
+                   }
                   
                   
                    tabla.addRow(datos);
                    tablaTutor.setModel(tabla);
                    
-          }else{
-              JOptionPane.showMessageDialog(null, "El profesor "+campotxt.getText()+" no existe","ERROR",ERROR_MESSAGE);
-              mostrarT();
-         }
+          }
             
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, "El profesor "+campotxt.getText()+" no existe","ERROR",ERROR_MESSAGE);
@@ -796,7 +843,7 @@ public class ModificarT extends javax.swing.JPanel {
     }//GEN-LAST:event_buscarMouseClicked
 
     private void cancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarMouseClicked
-        
+        desactivarHabilitar();
         desactivarguardar();
         desactivarmodificar();
         desactivarcampo();
@@ -813,6 +860,9 @@ public class ModificarT extends javax.swing.JPanel {
     private void agregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_agregarMouseClicked
        activarcampo();
        activarguardar();
+       desactivaragregar();
+       desactivarmodificar();
+       desactivareliminar();
                
     }//GEN-LAST:event_agregarMouseClicked
 
@@ -820,6 +870,8 @@ public class ModificarT extends javax.swing.JPanel {
          activarcampo();
         desactivarmodificar();
         activarguardar();
+        desactivareliminar();
+        desactivaragregar();
     }//GEN-LAST:event_modificarMouseClicked
 
     private void inactivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inactivoActionPerformed
@@ -833,6 +885,7 @@ public class ModificarT extends javax.swing.JPanel {
          tabla.addColumn("Apellido");  
          tabla.addColumn("DNI"); 
          tabla.addColumn("Telefono"); 
+         tabla.addColumn("Estado"); 
          
          
          try{
@@ -843,8 +896,14 @@ public class ModificarT extends javax.swing.JPanel {
                    datos[1]=rs.getString("apellido");
                    datos[2]=rs.getString("dni");
                    datos[3]=rs.getString("telefono");
-                 
-                 
+                   datos[4]=rs.getString("borrado");
+                  
+                    if( datos[4].equals("0")){
+                        datos[4]="ACTIVO";
+                   }else{
+                        datos[4]="INACTIVO";
+                   }
+                
                   
                    tabla.addRow(datos);
                    tablaTutor.setModel(tabla);
@@ -874,37 +933,57 @@ public class ModificarT extends javax.swing.JPanel {
                Clases.Tutor.eliminar(cx, codigo);
                JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
                  mostrarT();
+                 desactivareliminar();
+                 desactivarmodificar();
+                 activaragregar();
+                 limpiar();
       
 
               
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido eliminar el registro seleccionado","ERROR",ERROR_MESSAGE); 
+              mostrarT();
+                 desactivareliminar();
+                 desactivarmodificar();
+                 activaragregar();
+                 limpiar();
             
              }
            
            
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación"); 
-          mostrarT();
+           mostrarT();
+                 desactivareliminar();
+                 desactivarmodificar();
+                 activaragregar();
+                 limpiar();
        }
     }//GEN-LAST:event_eliminarMouseClicked
 
     private void habilitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_habilitarMouseClicked
        
-           int codigo=Integer.parseInt(cod.getText());
+          
        
        int n= JOptionPane.showConfirmDialog(null, "¿Desea habilitar el registro seleccionado?","Habilitar", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE); 
        if(n==JOptionPane.YES_NO_OPTION){
            
            try{
-               Clases.Tutor.habilitarT(cx, codigo);
+               Clases.Tutor.habilitarT(cx, Integer.parseInt(cod.getText()));
                JOptionPane.showMessageDialog(null, "Se ha habilitado el registro correctamente");
                 inhabilitado();
+                desactivarHabilitar();
+                limpiar();
+                activaragregar();
       
 
               
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido habilitar el registro seleccionado","ERROR",ERROR_MESSAGE); 
+                inhabilitado();
+                desactivarHabilitar();
+                limpiar();
+                activaragregar();
             
              }
            
@@ -912,6 +991,9 @@ public class ModificarT extends javax.swing.JPanel {
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado "); 
           inhabilitado();
+                desactivarHabilitar();
+                limpiar();
+                activaragregar();
        }
          
     }//GEN-LAST:event_habilitarMouseClicked

@@ -4,18 +4,27 @@ package Alumno;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+
+
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.JPanel;
+
+
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+
+import prueba_sistema.buscarObraSocial;
+import prueba_sistema.buscarTutor;
 
 public class ModificarA extends javax.swing.JPanel {
  DefaultTableModel tabla=new DefaultTableModel();
-      Object[] datos=new Object[11];
+      Object[] datos=new Object[12];
       ResultSet rs;
       Connection cx=Conexion.conexion.conexion();
       DefaultComboBoxModel ls= new DefaultComboBoxModel();
@@ -23,14 +32,14 @@ public class ModificarA extends javax.swing.JPanel {
   
     public ModificarA() {
         initComponents();
-        
-        cargarTutor();
-        cargarObraSocial();
+
+
         MostrarAlumno();
         desactivarmodificar();
         desactivareliminar();
         desactivarCampo();
         desactivarguardar();
+        activarMas();
         
     }
  public class FondoPanel2 extends JPanel {
@@ -47,32 +56,8 @@ public class ModificarA extends javax.swing.JPanel {
     }
     
     
-    void cargarObraSocial(){
-        try{
-            rs=Clases.ObraSocial.mostrarObrasSocialesActivas(cx);
-            ls.addElement("Sin Obra Social");
-            while(rs.next())
-                ls.addElement(rs.getString("nombre"));
-                obrasocial.setModel(ls);
-            
-        }catch(Exception e){
-              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las Obras Sociales","ERROR",ERROR_MESSAGE);
-        }
-    }
+   
  
-     void cargarTutor(){
-        try{
-            rs=Clases.Tutor.mostrartutoresactivos(cx);
-            lp.addElement("Seleccionar");
-            while(rs.next())
-                lp.addElement(rs.getString("apellido"));
-             
-                tutorcombo.setModel(lp);
-            
-        }catch(Exception e){
-              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar tutores","ERROR",ERROR_MESSAGE);
-        }
-    }
  
     public void MostrarAlumno(){
          tabla.setRowCount(0);   
@@ -88,6 +73,7 @@ public class ModificarA extends javax.swing.JPanel {
          tabla.addColumn("Obra Social");
          tabla.addColumn("Nombre del Tutor");
          tabla.addColumn("Apellido del Tutor");
+          tabla.addColumn("Teléfono del Tutor");
          tabla.addColumn("Parentesco");
         
          
@@ -105,16 +91,19 @@ public class ModificarA extends javax.swing.JPanel {
                    datos[7]=rs.getString("os.nombre");
                    datos[8]=rs.getString("t.nombre");
                    datos[9]=rs.getString("t.apellido");
-                   datos[10]=rs.getString("at.parentesco");
+                   datos[10]=rs.getString("t.telefono");
+                   datos[11]=rs.getString("at.parentesco");
                  
-                  
+                  if(datos[7]==null){
+                      datos[7]="Sin Obra Social";
+                  }
                    tabla.addRow(datos);
                    TablaAlumno.setModel(tabla);
                    
               } 
               
           }catch(Exception e){
-                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los Profesores en la tabla","ERROR",ERROR_MESSAGE); 
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los alumnos en la tabla","ERROR",ERROR_MESSAGE); 
           }
         
     }
@@ -151,7 +140,9 @@ public class ModificarA extends javax.swing.JPanel {
                    datos[9]=rs.getString("t.apellido");
                    datos[10]=rs.getString("at.parentesco");
                  
-                  
+                        if(datos[7]==null){
+                      datos[7]="Sin Obra Social";
+                  }
                    tabla.addRow(datos);
                    TablaAlumno.setModel(tabla);
                    
@@ -169,10 +160,12 @@ public class ModificarA extends javax.swing.JPanel {
          fechatxt.setText("");
          dnitxt.setText("");
          escuelatxt.setText("");
-         gradotxt.setText("");
+         txtOS.setText("");
          nivel.setSelectedItem("Seleccionar");
-         obrasocial.setSelectedItem("Sin Obra Social");
-         tutorcombo.setSelectedItem("seleccionar tutor");
+         gradotxt.setText("");
+         txtTutor.setText("");
+         labelCodigoTutor.setText("");
+         labelCodigoOS.setText("");
          parentescotxt.setText("");
          
          
@@ -214,6 +207,15 @@ public class ModificarA extends javax.swing.JPanel {
     public void desactivarhabilitar(){
         habilitar.setEnabled(false);
     }
+    
+   void desactivarMas(){
+       mas.setEnabled(false);
+   }
+   
+    void activarMas(){
+       mas.setEnabled(true);
+   }
+   
  
     public void activarCampo(){
         nombretxt.setEnabled(true);
@@ -221,10 +223,10 @@ public class ModificarA extends javax.swing.JPanel {
          fechatxt.setEnabled(true);
          dnitxt.setEnabled(true);
          escuelatxt.setEnabled(true);
-         gradotxt.setEnabled(true);
+
          nivel.setEnabled(true);
-         obrasocial.setEnabled(true);
-         tutorcombo.setEnabled(true);
+      
+        
          parentescotxt.setEnabled(true);
          
     }
@@ -235,10 +237,10 @@ public class ModificarA extends javax.swing.JPanel {
          fechatxt.setEnabled(false);
          dnitxt.setEnabled(false);
          escuelatxt.setEnabled(false);
-         gradotxt.setEnabled(false);
+         txtOS.setEnabled(false);
          nivel.setEnabled(false);
-         obrasocial.setEnabled(false);
-         tutorcombo.setEnabled(false);
+         txtOS.setEnabled(false);
+         txtTutor.setEnabled(false);
          parentescotxt.setEnabled(false);
          
     }
@@ -287,15 +289,21 @@ public class ModificarA extends javax.swing.JPanel {
         jLabel13 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        obrasocial = new javax.swing.JComboBox<>();
         jLabel20 = new javax.swing.JLabel();
-        tutorcombo = new javax.swing.JComboBox<>();
         jLabel21 = new javax.swing.JLabel();
         parentescotxt = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         nivel = new javax.swing.JComboBox<>();
-        gradotxt = new javax.swing.JTextField();
+        txtOS = new javax.swing.JTextField();
         codA = new javax.swing.JLabel();
+        gradotxt = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        labelCodigoOS = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel23 = new javax.swing.JLabel();
+        txtTutor = new javax.swing.JTextField();
+        labelCodigoTutor = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         buscar = new javax.swing.JLabel();
         cancelar = new javax.swing.JLabel();
@@ -454,23 +462,10 @@ public class ModificarA extends javax.swing.JPanel {
         jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setText("Nivel:");
 
-        obrasocial.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        obrasocial.setForeground(new java.awt.Color(0, 0, 0));
-        obrasocial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar" }));
-        obrasocial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                obrasocialActionPerformed(evt);
-            }
-        });
-
         jLabel20.setBackground(new java.awt.Color(255, 102, 0));
         jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setText("Obra Social:");
-
-        tutorcombo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        tutorcombo.setForeground(new java.awt.Color(0, 0, 0));
-        tutorcombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "seleccionar tutor" }));
 
         jLabel21.setBackground(new java.awt.Color(255, 102, 0));
         jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -490,191 +485,242 @@ public class ModificarA extends javax.swing.JPanel {
         nivel.setForeground(new java.awt.Color(0, 0, 0));
         nivel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Inicial", "Primario", "Secundario" }));
 
+        txtOS.setBackground(new java.awt.Color(255, 204, 204));
+        txtOS.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtOS.setForeground(new java.awt.Color(255, 51, 102));
+        txtOS.setBorder(null);
+
+        codA.setForeground(new java.awt.Color(0, 0, 0));
+
         gradotxt.setBackground(new java.awt.Color(255, 204, 204));
         gradotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         gradotxt.setForeground(new java.awt.Color(255, 51, 102));
         gradotxt.setBorder(null);
 
-        codA.setForeground(new java.awt.Color(255, 204, 204));
-        codA.setText("jLabel30");
+        jLabel16.setBackground(new java.awt.Color(255, 102, 51));
+        jLabel16.setForeground(new java.awt.Color(255, 102, 51));
+        jLabel16.setText("*******************************************************");
+
+        jButton1.setText("...");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel23.setBackground(new java.awt.Color(255, 102, 51));
+        jLabel23.setForeground(new java.awt.Color(255, 102, 51));
+        jLabel23.setText("*******************************************************");
+
+        txtTutor.setBackground(new java.awt.Color(255, 204, 204));
+        txtTutor.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtTutor.setForeground(new java.awt.Color(255, 51, 102));
+        txtTutor.setBorder(null);
+
+        jButton2.setText("...");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
+                        .addGap(80, 80, 80)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel5)
+                        .addGap(36, 36, 36)
+                        .addComponent(dnitxt, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(484, 484, 484))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel21)
+                        .addGap(472, 472, 472))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(60, 60, 60)
-                                .addComponent(escuelatxt))
-                            .addComponent(jLabel6)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(7, 7, 7))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(3, 3, 3)
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(7, 7, 7))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(gradotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addGap(227, 227, 227)
-                        .addComponent(codA)
-                        .addGap(78, 78, 78))
+                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel3))
+                        .addGap(475, 475, 475))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(30, 30, 30)
-                                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(40, 40, 40)
-                                        .addComponent(dnitxt)
-                                        .addGap(13, 13, 13))
-                                    .addComponent(jLabel5))
-                                .addGap(52, 52, 52)
-                                .addComponent(jLabel15))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(80, 80, 80)
-                                        .addComponent(apellidotxt))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(jLabel2)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGap(10, 10, 10)
-                                                .addComponent(nombretxt)
-                                                .addGap(3, 3, 3))
-                                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addGap(51, 51, 51)
-                                .addComponent(jLabel17))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGap(70, 70, 70)
-                                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel4)
-                                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                                        .addGap(80, 80, 80)
-                                                        .addComponent(fechatxt)))
-                                                .addGap(61, 61, 61)))
-                                        .addGap(69, 69, 69)
-                                        .addComponent(jLabel21))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGap(60, 60, 60)
-                                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addComponent(jLabel3))
-                                        .addGap(39, 39, 39)
-                                        .addComponent(jLabel20)))))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nivel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(tutorcombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(obrasocial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(48, 48, 48))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(16, 16, 16)
-                                        .addComponent(parentescotxt)
-                                        .addGap(13, 13, 13))
-                                    .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))))))
-                .addGap(17, 17, 17))
+                                        .addGap(60, 60, 60)
+                                        .addComponent(escuelatxt))
+                                    .addComponent(jLabel6)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(50, 50, 50)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(7, 7, 7)))
+                                .addGap(323, 323, 323))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel12)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(gradotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(59, 59, 59)
+                                        .addComponent(jLabel13)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(codA, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(labelCodigoTutor, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelCodigoOS, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel17))
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(45, 45, 45))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel20))))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nivel, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(parentescotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(txtOS, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtTutor, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2)))
+                        .addGap(87, 87, 87))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(80, 80, 80)
+                .addComponent(apellidotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(80, 80, 80)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(fechatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(labelCodigoOS, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(2, 2, 2)
-                                .addComponent(jLabel7))
+                                .addGap(28, 28, 28)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel17)
+                                        .addGap(2, 2, 2)
+                                        .addComponent(jLabel7))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(2, 2, 2)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel2)
+                                            .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(10, 10, 10))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(nivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(jLabel2)))
-                        .addGap(10, 10, 10))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel17)
-                            .addComponent(nivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(apellidotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel8))
-                    .addComponent(jLabel3)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(obrasocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel20)))
-                .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fechatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel9))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tutorcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel21)))
-                .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel10))
-                    .addComponent(dnitxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(parentescotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel15))
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel22)))
-                .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(escuelatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel11)))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(apellidotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel20)
+                                    .addComponent(txtOS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1))
+                                .addGap(6, 6, 6)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel16)))
+                            .addComponent(jLabel3))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(2, 2, 2)
+                                        .addComponent(txtTutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(jLabel23))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel21)
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(jLabel4)
+                                                .addComponent(fechatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel9))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jButton2)))
                         .addGap(10, 10, 10)
-                        .addComponent(jLabel12))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(gradotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(codA))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel13)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel22)))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(dnitxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel15)
+                                .addComponent(parentescotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5)))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(escuelatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel11)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel12)
+                                    .addComponent(gradotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(54, 54, 54)
+                                .addComponent(labelCodigoTutor, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addComponent(jLabel13))))
+                    .addComponent(codA, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 102, 102));
@@ -772,17 +818,17 @@ public class ModificarA extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(recargar)
                 .addGap(72, 72, 72)
-                .addComponent(mas, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                .addComponent(mas, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(guardar, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                .addComponent(guardar, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(modificar, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                .addComponent(modificar, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                .addComponent(eliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(habilitar, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                .addComponent(habilitar, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inactivo, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                .addComponent(inactivo, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
                 .addGap(25, 25, 25)
                 .addComponent(cancelar)
                 .addContainerGap())
@@ -818,13 +864,13 @@ public class ModificarA extends javax.swing.JPanel {
 
         TablaAlumno.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "Fecha Nac", "DNI", "Escuela", "Grado", "Nivel", "Obra Social", "Nombre del Tutor", "Apellido del Tutor ", "Parentesco"
+                "Nombre", "Apellido", "Fecha Nac", "DNI", "Escuela", "Grado", "Nivel", "Obra Social", "Nombre del Tutor", "Apellido del Tutor ", "Teléfono Tutor", "Parentesco"
             }
         ));
         TablaAlumno.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -838,7 +884,7 @@ public class ModificarA extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1081, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1084, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -855,21 +901,17 @@ public class ModificarA extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
                 .addGap(16, 16, 16))
         );
 
         add(jPanel1, "modificarA");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void obrasocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_obrasocialActionPerformed
-        
-    }//GEN-LAST:event_obrasocialActionPerformed
-
     private void guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarMouseClicked
         int dni= Integer.parseInt(dnitxt.getText());
-        String os= obrasocial.getSelectedItem().toString(); //cualquiera de las obras sociales que elija el usuario se guardará en la variable obra_social...
-        String tutores= tutorcombo.getSelectedItem().toString();
+        
+        
         String niveles=nivel.getSelectedItem().toString(); // cua
         String A= codA.getText();
         String Nombre= nombretxt.getText();
@@ -880,62 +922,91 @@ public class ModificarA extends javax.swing.JPanel {
         String Parentesco= parentescotxt.getText();
         
           
-          
-          
-     
-           
+       
+    
         try{
+        
+                  
+      
+                    
+                
             
-           if(!codA.getText().isEmpty()){
-                 int codigoObraSocial=Clases.ObraSocial.obtenerCodigo(cx, os);  
-                 Clases.Alumno.actualizarAlumno(cx, Nombre, Apellido, Fecha, dni, Escuela, Grado, niveles, codigoObraSocial, Integer.parseInt(A));
-                  int codigoalumno=Clases.Alumno.obtenerCodigo(cx, dni);
-                 int codigoTutor= Clases.Tutor.obtenerCodigo(cx, tutores);
-              Clases.Alumno.modificaralumno_tutor(cx,codigoTutor , Parentesco, codigoalumno);
+              if(!codA.getText().isEmpty()){
+                  int codigoOS=0;
+                  int codigoT=0;
+                  int filaSeleccionada = TablaAlumno.getSelectedRow();
+                   String os =TablaAlumno.getValueAt(filaSeleccionada, 7).toString();
+                  
+                  ////////////verificar si el label del codigo OS esta vacio, si es asi se le pone el codigo de la OS que ya tiene, buscando el codigo de su OS a traves de la tabla, en donde esta el nombre, asi obtendremos el codigo de su OS
+                  if( labelCodigoOS.getText().isEmpty()){
+                       if(os.equalsIgnoreCase("Sin Obra Social")){
+                           codigoOS=0;
+                       }else{
+                             codigoOS=Clases.ObraSocial.obtenerCodigo(cx,os );
+                             labelCodigoOS.setText(String.valueOf(codigoOS));
+                             codigoOS= Integer.parseInt(labelCodigoOS.getText());
+                       }
+                  }else{
+                   
+                          codigoOS=Integer.parseInt(labelCodigoOS.getText());
+                  }
+      
+                  /////////////verificar si el label del codigo tutor esta vacio, si es asi se le pone el codigo del tutor que ya tiene, buscando el codigo de su tutor a traves de la tabla, especifacamente por el telefono
+                  if(labelCodigoTutor.getText().isEmpty() ){
+                      String telefono_tutor =TablaAlumno.getValueAt(filaSeleccionada, 10).toString();
+                      codigoT=Clases.Tutor.obtenerCodigo(cx, telefono_tutor);
+                      labelCodigoTutor.setText(String.valueOf(codigoT));
+                      codigoT=Integer.parseInt(labelCodigoTutor.getText());
+                     
+                  }else{ /////////en caso de que este lleno, es porque ya previamente el usuario selecciono un nuevo tutor, por lo tanto el label quedo con ese el codigo del nuevo tutor
+                      
+                      codigoT=Integer.parseInt(labelCodigoTutor.getText());
+                      
+                  }
+                   Clases.Alumno.actualizarAlumno(cx, Nombre, Apellido, Fecha, dni, Escuela, Grado, niveles, codigoOS, Integer.parseInt(A));
+            
+                       Clases.Alumno.modificaralumno_tutor(cx,codigoT , Parentesco,  Integer.parseInt(A) );
              
               
-                   JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
-                   codA.setText("");
-                   MostrarAlumno();
-                   limpiar();
+                       JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
+                       codA.setText("");
+                       MostrarAlumno();
+                       limpiar();
+                       desactivarCampo();
+                       activarMas();
+                  
+                  
+                    
+                    
+                    
                 
                 
                 
-            }
-           else{ 
-          
-            int codigoObraSocial=Clases.ObraSocial.obtenerCodigo(cx, os);   //obtener el codigo de la obra social, dado su nombre... para posterior poder enviar este codigo en el insert del alumno
-            
-            
-           
-             Clases.Alumno.cargar(cx, Nombre, Apellido, Fecha, dni, Escuela, Grado, niveles, codigoObraSocial);
-       
-             
-             int codigoalumno=Clases.Alumno.obtenerCodigo(cx, dni);
-              int codigoTutor= Clases.Tutor.obtenerCodigo(cx, tutores);
-             
-               String sqlAlumnoTutor = "INSERT INTO alumno_tutor (codigo_alumno, codigo_tutor, parentesco) VALUES (?, ?, ?)";
-                PreparedStatement pstAlumnoTutor = cx.prepareStatement(sqlAlumnoTutor);
-                pstAlumnoTutor.setInt(1, codigoalumno);
-                pstAlumnoTutor.setInt(2, codigoTutor);
-                pstAlumnoTutor.setString(3, parentescotxt.getText());
-                pstAlumnoTutor.executeUpdate();
-
-
-
-             
-             
-             
-             
-             
-              JOptionPane.showMessageDialog(null, "Se ha cargado correctamente al alumno"); 
-              MostrarAlumno();
-              limpiar();
+                } else{ 
+                    int codigoOS;
+                     if(labelCodigoOS.getText().isEmpty()){
+                         codigoOS=0;
+                     }else{
+                        codigoOS=Integer.parseInt(labelCodigoOS.getText());
+                     }
+                     
+                     int codigo_tutor=Integer.parseInt(labelCodigoTutor.getText());
+                     Clases.Alumno.cargar(cx, Nombre, Apellido, Fecha, dni, Escuela, Grado, niveles, codigoOS);
+                     int codigoAlumno=Clases.Alumno.obtenerCodigo(cx, dni);
+                     
+                     Clases.Alumno.cargarAlumnoTutor(cx, codigoAlumno, codigo_tutor, Parentesco);
+                     JOptionPane.showMessageDialog(null, "Se ha cargado correctamente al alumno"); 
+                     MostrarAlumno();
+                     limpiar();
+                     codA.setText("");
+                     desactivarCampo();
+                     activarMas();
            }
              
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No ha cargado correctamente al alumno"); 
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar cargar o actualizar el alumno"); 
             MostrarAlumno();
+            e.printStackTrace();
         }
         
         
@@ -962,7 +1033,7 @@ public class ModificarA extends javax.swing.JPanel {
                            Clases.Alumno.eliminar(cx, codigo);
                            JOptionPane.showMessageDialog(null, "Se ha eliminado al alumno correctamente");
                            MostrarAlumno();
-                           
+                            codA.setText("");
                   }catch(Exception e){
             
                             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar eliminar el alumno","ERROR",ERROR_MESSAGE);
@@ -993,7 +1064,7 @@ public class ModificarA extends javax.swing.JPanel {
     private void habilitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_habilitarMouseClicked
         
         int codigo=Integer.parseInt(codA.getText());
-        int respuesta = JOptionPane.showConfirmDialog( null, "¿Estás seguro de que deseas habilitar a este alumno?" , "Confirmar eliminación", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
+        int respuesta = JOptionPane.showConfirmDialog( null, "¿Estás seguro de que deseas habilitar a este alumno?" , "Confirmar habilitación", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
         
          if (respuesta == JOptionPane.YES_OPTION) {
                   try{
@@ -1030,30 +1101,35 @@ public class ModificarA extends javax.swing.JPanel {
             String grado =TablaAlumno.getValueAt(filaSeleccionada, 5).toString();
             String nivele =TablaAlumno.getValueAt(filaSeleccionada, 6).toString();
             Object valorObraSocial=TablaAlumno.getValueAt(filaSeleccionada, 7).toString();
-            String tutor =TablaAlumno.getValueAt(filaSeleccionada, 9).toString();
-            String parentesco =TablaAlumno.getValueAt(filaSeleccionada, 10).toString();
+            String nombre_tutor =TablaAlumno.getValueAt(filaSeleccionada, 8).toString();
+            String apellido_tutor =TablaAlumno.getValueAt(filaSeleccionada, 9).toString();
+            String telefono_tutor =TablaAlumno.getValueAt(filaSeleccionada, 10).toString();
+            String parentesco =TablaAlumno.getValueAt(filaSeleccionada, 11).toString();
             try{
                  int codigo= Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(dni));
-                  codA.setText(String.valueOf(codigo));   //pone el codigo del profesor en el label prueba
+                  codA.setText(String.valueOf(codigo));   //pone el codigo del alumno en el label prueba
             }catch(Exception e){
-               JOptionPane.showMessageDialog(null, "Error al seleccionar un registro");   
+               JOptionPane.showMessageDialog(null, "Error al intentar obtener el codigo del alumno");   
             }
+            String apenomTutor=nombre_tutor+" "+apellido_tutor;
             
             nombretxt.setText(nombre);
             apellidotxt.setText(apellido);
-            dnitxt.setText(dni);
             fechatxt.setText(fecha);
+            dnitxt.setText(dni);
+            
             escuelatxt.setText(escuela);
             gradotxt.setText(grado);
             nivel.setSelectedItem(nivele);
-           tutorcombo.setSelectedItem(tutor);
+           txtTutor.setText(apenomTutor);
            parentescotxt.setText(parentesco);
             
+        
              boolean o_s=valorObraSocial==null;
            if (o_s==true){
-               obrasocial.setSelectedItem("Sin Obra Social");
+               txtOS.setText("Sin Obra Social");
            }else{
-               obrasocial.setSelectedItem(valorObraSocial);
+            txtOS.setText(valorObraSocial.toString());
            }
            
            activarmodificar();
@@ -1101,7 +1177,9 @@ public class ModificarA extends javax.swing.JPanel {
                    datos[9]=rs.getString("t.apellido");
                    datos[10]=rs.getString("at.parentesco");
                  
-                  
+                        if(datos[7]==null){
+                      datos[7]="Sin Obra Social";
+                  }
                    tabla.addRow(datos);
                    TablaAlumno.setModel(tabla);
                    
@@ -1118,6 +1196,22 @@ public class ModificarA extends javax.swing.JPanel {
         
     }//GEN-LAST:event_buscarMouseClicked
 
+    public void setTxtOS(String nombre) {
+        txtOS.setText(nombre);
+    }
+
+    public void setLabelCodigoOS(String nombre) {
+        labelCodigoOS.setText(nombre);
+    }
+
+    public void setLabelCodigoTutor(String nombre) {
+        labelCodigoTutor.setText(nombre);
+    }
+
+    public void setTxtTutor(String nombre) {
+        txtTutor.setText(nombre);
+    }
+
     private void campoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoActionPerformed
@@ -1132,11 +1226,15 @@ public class ModificarA extends javax.swing.JPanel {
        desactivarmodificar();
        desactivareliminar();
        desactivarguardar();
+       desactivarCampo();
+       activarMas();
+       codA.setText(" ");
     }//GEN-LAST:event_cancelarMouseClicked
 
     private void masMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masMouseClicked
        activarguardar();
        activarCampo();
+       desactivarMas();
     }//GEN-LAST:event_masMouseClicked
 
     private void modificarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificarMouseClicked
@@ -1144,6 +1242,20 @@ public class ModificarA extends javax.swing.JPanel {
         desactivarmodificar();
         activarguardar();
     }//GEN-LAST:event_modificarMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+       
+buscarObraSocial dialog = new buscarObraSocial(frame, true, this);
+dialog.setVisible(true);  
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+           JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+       
+buscarTutor dialog = new buscarTutor(frame, true, this);
+dialog.setVisible(true);  
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1161,6 +1273,8 @@ public class ModificarA extends javax.swing.JPanel {
     private javax.swing.JLabel guardar;
     private javax.swing.JLabel habilitar;
     private javax.swing.JCheckBox inactivo;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1168,6 +1282,7 @@ public class ModificarA extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
@@ -1175,6 +1290,7 @@ public class ModificarA extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1187,13 +1303,15 @@ public class ModificarA extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelCodigoOS;
+    private javax.swing.JLabel labelCodigoTutor;
     private javax.swing.JLabel mas;
     private javax.swing.JLabel modificar;
     private javax.swing.JComboBox<String> nivel;
     private javax.swing.JTextField nombretxt;
-    private javax.swing.JComboBox<String> obrasocial;
     private javax.swing.JTextField parentescotxt;
     private javax.swing.JLabel recargar;
-    private javax.swing.JComboBox<String> tutorcombo;
+    private javax.swing.JTextField txtOS;
+    private javax.swing.JTextField txtTutor;
     // End of variables declaration//GEN-END:variables
 }

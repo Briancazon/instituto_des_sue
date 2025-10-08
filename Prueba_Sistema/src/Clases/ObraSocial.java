@@ -50,8 +50,21 @@ public class ObraSocial {
  
      public static ResultSet buscarOS(Connection cx, String nom)throws Exception{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("select codigo, nombre from obra_social where nombre= ? ");
+        PreparedStatement stm=cx.prepareStatement("select codigo, nombre from obra_social where nombre =? ");
         stm.setString(1, nom);
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+                 JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+    }
+     
+     ////bussqueda por like y solo de las obras activas...
+     public static ResultSet buscarOS2(Connection cx, String nom)throws Exception{
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("select codigo, nombre from obra_social where nombre like ? and borrado=0 ");
+        stm.setString(1, "%"+nom+"%");
         try{
             rs=stm.executeQuery();
         }catch(SQLException e){

@@ -70,11 +70,11 @@ public class Tutor {
         }
         return codigo;
     }
-     public static int obtenerCodigo(Connection cx, String apellido)throws Exception{
+     public static int obtenerCodigo(Connection cx, String telefono)throws Exception{
         ResultSet rs=null;
          int codigo=0;
-        PreparedStatement stm=cx.prepareStatement("SELECT codigo from tutor where apellido=?");
-        stm.setString(1, apellido);
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo from tutor where telefono=?");
+        stm.setString(1, telefono);
         try{
                rs=stm.executeQuery();
                 if(rs.next()){
@@ -102,7 +102,7 @@ public class Tutor {
     
       public static ResultSet buscarTutor(Connection cx, int dni)throws Exception{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT nombre, apellido, dni, telefono FROM tutor where dni=?");
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre, apellido, dni, telefono, borrado FROM tutor where dni=? and borrado=0");
         stm.setInt(1, dni);
         try{
             rs=stm.executeQuery();
@@ -112,12 +112,49 @@ public class Tutor {
         return rs;
     }
       
+      ///busqueda por like y  actvios
+      public static ResultSet buscarTutor2(Connection cx, String nombre, String apellido)throws Exception{
+        ResultSet rs=null;
+        if(apellido.isEmpty()){
+            PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre, apellido, dni, telefono FROM tutor where nombre like ? and borrado=0");
+            stm.setString(1,"%"+nombre+"%");
+               try{
+                rs=stm.executeQuery();
+                }catch(SQLException e){
+                     JOptionPane.showMessageDialog(null,e.getMessage());
+                }
+        }else{
+            if(nombre.isEmpty()){
+                PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre, apellido, dni, telefono FROM tutor where apellido like ? and borrado=0");
+                stm.setString(1, apellido);
+                   try{
+                      rs=stm.executeQuery();
+                   }catch(SQLException e){
+                     JOptionPane.showMessageDialog(null,e.getMessage());
+                   }
+            }else{
+                PreparedStatement stm=cx.prepareStatement("SELECT codigo, nombre, apellido, dni, telefono FROM tutor where nombre like ? and apellido like ? and borrado=0");
+                stm.setString(1, "%"+nombre+"%");
+                stm.setString(2, "%"+apellido+"%");
+                   try{
+                         rs=stm.executeQuery();
+                     }catch(SQLException e){
+                        JOptionPane.showMessageDialog(null,e.getMessage());
+                     }
+                        
+             }
+          
+        }
+        
+     return rs;
+    }
+      
      
       
       
       public static ResultSet mostrartutoresactivos(Connection cx)throws SQLException{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT nombre, apellido, dni, telefono from tutor where borrado=0");
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo, nombre, apellido, dni, telefono, borrado from tutor where borrado=0 order by codigo desc");
       
         try{
             rs=stm.executeQuery();
@@ -130,7 +167,7 @@ public class Tutor {
       
      public static ResultSet mostrartutoresinactivos(Connection cx)throws SQLException{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT nombre, apellido, dni, telefono from tutor where borrado=1");
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo, nombre, apellido, dni, telefono,borrado from tutor where borrado=1");
       
         try{
             rs=stm.executeQuery();
