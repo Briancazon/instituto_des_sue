@@ -15,24 +15,28 @@ public class buscarAlumno extends javax.swing.JDialog {
     Connection cx=Conexion.conexion.conexion();
     Panel3 p3;
     asistencias a;
+    Panel5 p5;
     
     DefaultTableModel tabla=new DefaultTableModel();
      Object[] datos=new Object[5]; 
      int origen;
 
 
-    public buscarAlumno(Frame parent, boolean modal, Panel3 panel, asistencias a, int origen) {
+    public buscarAlumno(Frame parent, boolean modal, Panel3 panel, asistencias a, Panel5 panel5, int origen) {
         super(parent, "Seleccionar un alumno",modal);
         this.p3=panel;
         this.a=a;
         this.origen=origen;
+        this.p5=panel5;
         initComponents();
         setLocationRelativeTo(parent); ///centrar el dialog con respecto a la ventana 
         desactivarSeleccionar();
         if(this.origen==1){
-            cargarTablaAlumno();
+            cargarTablaAlumno(); // si viene del form inscripcion, se ejecuta el metodo que carga los alumnos activos, para su respectiva inscripcion
+        }else if(this.origen==2){
+            cargarTablaAlumnoServiciosPorMes(); /// si viene del form asistencias, se ejecuta el metodo que carga los alunos que unicamente tiene servicios mensuales, ya que solo los servicios mensuales se pueden poner asistencias de los meses que vengan o no
         }else{
-            cargarTablaAlumnoServiciosPorMes();
+             cargarTablaAlumnoServiciosMensualesYClases();  /// por ultimo, si viene del form pagos, se ejecuta el metodo que carga los alumnos con servicios mensuales y clases personalizadas, ya que solo estos servivios se pagan , los de incluion escolar estan fuera del sistema de pagos
         }
         
 
@@ -72,8 +76,43 @@ public class buscarAlumno extends javax.swing.JDialog {
     }
        }
        
+       /// este metodo se ejecutará si el origen viene del formulario pagos, ya que recordemos que solo se pagan los servicios mensuales y el de clases personalizadas, menos los de inclusion escolar
+       /// mostrando asi los alumos activos de servicios mensuales y de clases personalizadas
+        void cargarTablaAlumnoServiciosMensualesYClases(){
+        
+           tabla.setRowCount(0);   
+           tabla.setColumnCount(0);
+            tabla.addColumn("Codigo");
+           tabla.addColumn("Nombre");
+          tabla.addColumn("Apellido");
+          tabla.addColumn("DNI");
+          tabla.addColumn("Servicio");
+
+     try{
+        
+        rs=Clases.Inscripcion.mostrarIncripcionesServiciosMensualesYClases(cx);
+     
+        while(rs.next()){
+            datos[0]=rs.getString("al.codigo");
+            datos[1]=rs.getString("al.nombre");
+            datos[2]=rs.getString("al.apellido");
+            datos[3]=rs.getString("al.dni");
+            datos[4]=rs.getString("ser.nombre");
+            
+           
+            tabla.addRow(datos);
+        }
+         tablaAlumnos.setModel(tabla);
        
-       /// este metodo carga en la tabla los alumnos activos del sistema, es decir, se ejecuta si el origen viene del formulario inscripcion, ya que ahi deberá seleccionar al alumno que se desea inscribir
+    }catch(Exception e){
+          JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los alumnos con servicios mensuales o clases personalizadas","ERROR",ERROR_MESSAGE);
+        
+    }
+       }
+
+       
+       
+       /// este metodo carga en la tabla los alumnos activos del sistema, es decir, se ejecuta si el origen viene del formulario inscripcion, ya que ahi deberá seleccionar al alumno que se desea inscribir,
     void cargarTablaAlumno(){
         
            tabla.setRowCount(0);   
@@ -251,7 +290,7 @@ public class buscarAlumno extends javax.swing.JDialog {
                  JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el alumno","ERROR",ERROR_MESSAGE);
         
              }
-       }else{
+       }else if(origen==2){ 
              tabla.setRowCount(0);   
              tabla.setColumnCount(0);
              tabla.addColumn("Codigo");
@@ -280,6 +319,35 @@ public class buscarAlumno extends javax.swing.JDialog {
                  JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el alumno","ERROR",ERROR_MESSAGE);
         
              }
+       }else{
+             tabla.setRowCount(0);   
+             tabla.setColumnCount(0);
+             tabla.addColumn("Codigo");
+             tabla.addColumn("Nombre");
+             tabla.addColumn("Apellido");
+             tabla.addColumn("DNI");
+             tabla.addColumn("Servicio");
+
+             try{
+        
+                 rs=Clases.Inscripcion.buscarAlumnoServiciosMensualesYClases(cx, txtNombre.getText(), txtApellido.getText());
+     
+                 while(rs.next()){
+                    datos[0]=rs.getString("al.codigo");
+                    datos[1]=rs.getString("al.nombre");
+                    datos[2]=rs.getString("al.apellido");
+                    datos[3]=rs.getString("al.dni");
+                    datos[4]=rs.getString("ser.nombre");
+            
+           
+                    tabla.addRow(datos);
+                  }
+                  tablaAlumnos.setModel(tabla);
+       
+             }catch(Exception e){
+                 JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el alumno","ERROR",ERROR_MESSAGE);
+        
+             }
        }
           
     }//GEN-LAST:event_botonBuscarActionPerformed
@@ -294,6 +362,8 @@ public class buscarAlumno extends javax.swing.JDialog {
            String codigo=tablaAlumnos.getValueAt(filaSeleccionada, 0).toString();
            String nombre=tablaAlumnos.getValueAt(filaSeleccionada, 1).toString();
            String apellido=tablaAlumnos.getValueAt(filaSeleccionada, 2).toString();
+           String dni=tablaAlumnos.getValueAt(filaSeleccionada, 3).toString();
+           
            
            
            String apenom=nombre+" "+apellido;
@@ -306,6 +376,9 @@ public class buscarAlumno extends javax.swing.JDialog {
                  
                     a.setTxtAlumno(apenom);
                     a.setLabelCodigoAlumno(codigo);
+               }else{
+                   p5.setTxtAlumno(apenom);
+                   p5.setTxtDni(dni);
                }
               
            }
@@ -365,8 +438,9 @@ public class buscarAlumno extends javax.swing.JDialog {
                 JFrame frame = new JFrame(); // padre temporal
     Panel3 p3 = new Panel3();    // panel de prueba
     asistencias a=new asistencias();
+    Panel5 p5=new Panel5();
     int origen = 0;
-               buscarAlumno dialog = new buscarAlumno( frame, true,p3,a, origen);
+               buscarAlumno dialog = new buscarAlumno( frame, true,p3,a, p5, origen);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

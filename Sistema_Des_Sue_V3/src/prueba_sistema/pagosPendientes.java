@@ -1,60 +1,66 @@
+//
+package prueba_sistema;
 
-package Pagos;
-
-import java.awt.Graphics;
-import java.awt.Image;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 
-public class Historial extends javax.swing.JPanel {
-     DefaultTableModel tabla=new DefaultTableModel();
+public class pagosPendientes extends javax.swing.JPanel {
+       DefaultTableModel tabla=new DefaultTableModel();
       ResultSet rs;
      Connection cx=Conexion.conexion.conexion();
       Object[] datos=new Object[12];
 
-    public Historial() {
+   
+    public pagosPendientes() {
         initComponents();
+        cargarTablaPagosPendientes();
     }
-
- 
     
-   public class FondoPanel2 extends JPanel {
+    void cargarTablaPagosPendientes(){
+        
+        tabla.setRowCount(0);
+        tabla.setColumnCount(0);
 
-    private Image imagen;
-        public void paint(Graphics g){
-            imagen= new ImageIcon(getClass().getResource("/Imagenes2/2.jpg")).getImage();
-            g.drawImage(imagen,0,0,getWidth(),getHeight(), this);
-            setOpaque(false);
-            super.paint(g);
-        }
+        tabla.addColumn("Nombre Alumno");
+        tabla.addColumn("Apellido Alumno");
+        tabla.addColumn("DNI Alumno" );
+        tabla.addColumn("Servicio");
+        tabla.addColumn("Mes");
+        tabla.addColumn("Ciclo Lectivo");
+        
+
+        try{
+
+            rs=Clases.Pago.verPagosPendientes(cx);
+            while(rs.next()){
+                datos[0]=rs.getString("al.nombre");
+                datos[1]=rs.getString("al.apellido");
+                datos[2]=rs.getString("al.dni");
+                datos[3]=rs.getString("ser.nombre");
+                datos[4]=rs.getString("me.mes");
+                datos[5]=rs.getString("cl.año");
             
-    
+
+                tabla.addRow(datos);
+
+            }
+            tablaPagos.setModel(tabla);
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los pagos pendientes del alumno","ERROR",ERROR_MESSAGE);
+        }
+
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel2 = new javax.swing.JPanel();
-        jPanel1 = new FondoPanel2();
         jPanel3 = new javax.swing.JPanel();
         buscar = new javax.swing.JLabel();
         txtDni = new javax.swing.JTextField();
@@ -63,16 +69,10 @@ public class Historial extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPagos = new javax.swing.JTable();
 
-        setLayout(new java.awt.CardLayout());
-
-        panel2.setBackground(new java.awt.Color(255, 102, 102));
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(845, 456));
-
         jPanel3.setBackground(new java.awt.Color(255, 102, 102));
 
         buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/Buscar_1.png"))); // NOI18N
+        buscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         buscar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 buscarMouseClicked(evt);
@@ -94,6 +94,7 @@ public class Historial extends javax.swing.JPanel {
         jLabel7.setText("*********************************************************");
 
         cargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/recargar.png"))); // NOI18N
+        cargar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cargar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cargarMouseClicked(evt);
@@ -109,10 +110,10 @@ public class Historial extends javax.swing.JPanel {
                 .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
                     .addComponent(txtDni))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                 .addGap(94, 94, 94))
         );
         jPanel3Layout.setVerticalGroup(
@@ -131,95 +132,68 @@ public class Historial extends javax.swing.JPanel {
 
         tablaPagos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "DNI", "Servicio", "Precio", "Fecha", "Monto", "Mes", "Año", "Tipo de Pago", "Observación", "Recargo"
+                "Nombre Alumno", "Apellido Alumno", "DNI Alumno", "Servicio", "Mes", "Ciclo Lectivo"
             }
         ));
         jScrollPane1.setViewportView(tablaPagos);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 21, Short.MAX_VALUE))
         );
-
-        javax.swing.GroupLayout panel2Layout = new javax.swing.GroupLayout(panel2);
-        panel2.setLayout(panel2Layout);
-        panel2Layout.setHorizontalGroup(
-            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1006, Short.MAX_VALUE)
-        );
-        panel2Layout.setVerticalGroup(
-            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        add(panel2, "dos");
     }// </editor-fold>//GEN-END:initComponents
 
     private void buscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseClicked
-          
-          tabla.setRowCount(0);   
-         tabla.setColumnCount(0);
+
+        tabla.setRowCount(0);
+        tabla.setColumnCount(0);
+
+        tabla.addColumn("Nombre Alumno");
+        tabla.addColumn("Apellido Alumno");
+        tabla.addColumn("DNI Alumno" );
+        tabla.addColumn("Servicio");
+        tabla.addColumn("Mes");
+        tabla.addColumn("Ciclo Lectivo");
         
-         tabla.addColumn("Nombre");  
-         tabla.addColumn("Apellido");  
-         tabla.addColumn("DNI"); 
-         tabla.addColumn("Servicio"); 
-         tabla.addColumn("Precio");
-         tabla.addColumn("Fecha");
-         tabla.addColumn("Monto");
-         tabla.addColumn("Mes");
-         tabla.addColumn("Año");
-         tabla.addColumn("Tipo de Pago");
-         tabla.addColumn("Observación");
-         tabla.addColumn("Recargo");
-                
-      
-         
-         try{
+
+        try{
+
+            rs=Clases.Pago.verPagosPendientesAlumno(cx, Integer.parseInt(txtDni.getText()));
+            while(rs.next()){
+                datos[0]=rs.getString("al.nombre");
+                datos[1]=rs.getString("al.apellido");
+                datos[2]=rs.getString("al.dni");
+                datos[3]=rs.getString("ser.nombre");
+                datos[4]=rs.getString("me.mes");
+                datos[5]=rs.getString("cl.año");
             
-             rs=Clases.Pago.verPagos(cx, Integer.parseInt(txtDni.getText()));
-              while(rs.next()){
-                   datos[0]=rs.getString("al.nombre");
-                   datos[1]=rs.getString("al.apellido");
-                   datos[2]=rs.getString("al.dni");
-                   datos[3]=rs.getString("ser.nombre");
-                   datos[4]=rs.getString("ser.precio");
-                   datos[5]=rs.getString("pa.fecha_pago");
-                   datos[6]=rs.getString("pa.monto_pagado");
-                   datos[7]=rs.getString("me.mes");
-                   datos[8]=rs.getString("pa.periodo_año");
-                   datos[9]=rs.getString("tp.tipo_pago");
-                   datos[10]=rs.getString("pa.observacion");
-                   datos[11]=rs.getString("pa.recargo");
-                   
-                 
-                  
-                   tabla.addRow(datos);
-                  
-                   
-              } 
-              tablaPagos.setModel(tabla);
-              
-          }catch(Exception e){
-                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los pagos del alumno","ERROR",ERROR_MESSAGE); 
-          }
-                
+
+                tabla.addRow(datos);
+
+            }
+            tablaPagos.setModel(tabla);
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los pagos pendientes del alumno","ERROR",ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_buscarMouseClicked
 
     private void txtDniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDniActionPerformed
@@ -227,7 +201,7 @@ public class Historial extends javax.swing.JPanel {
     }//GEN-LAST:event_txtDniActionPerformed
 
     private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
-     
+            cargarTablaPagosPendientes();
     }//GEN-LAST:event_cargarMouseClicked
 
 
@@ -235,10 +209,8 @@ public class Historial extends javax.swing.JPanel {
     private javax.swing.JLabel buscar;
     private javax.swing.JLabel cargar;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel panel2;
     private javax.swing.JTable tablaPagos;
     private javax.swing.JTextField txtDni;
     // End of variables declaration//GEN-END:variables

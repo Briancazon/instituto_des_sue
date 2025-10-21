@@ -78,6 +78,42 @@ public class Inscripcion {
         return rs;
         
     }
+     
+     /// este método busca los alumnos con servicios mensuales o clases personalizadas, se ejecutará cuando quieran buscar un alumno para pagar un servicio, ahi entra este metodo, para buscar y a su vez validar que solo devolverá aquellos alumnos que unicamente tengasn
+     // esos dos servicios ya mencionadas, ya que , recordemos que solo esos servicios se pagan, los de inclusion escolar no entran en el sistema de pagos, de ahi el propósito de este método
+      public static ResultSet buscarAlumnoServiciosMensualesYClases(Connection cx, String nombre, String apellido)throws Exception{
+        ResultSet rs=null;
+        if(apellido.isEmpty()){
+            PreparedStatement stm=cx.prepareStatement("select al.codigo, al.nombre, al.apellido, al.dni, ser.nombre from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo inner join modalidad_cobro as mc on ser.codigo_modalidad_cobro=mc.codigo where (mc.codigo=1 or mc.codigo=2) and inc.estado='ACTIVO' and al.nombre like ?");
+            stm.setString(1, "%"+nombre+"%");
+            try{
+               rs= stm.executeQuery();
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null,e.getMessage());
+            }
+        }else{
+            if(nombre.isEmpty()){
+                  PreparedStatement stm=cx.prepareStatement("select al.codigo, al.nombre, al.apellido, al.dni, ser.nombre from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo inner join modalidad_cobro as mc on ser.codigo_modalidad_cobro=mc.codigo where (mc.codigo=1 or mc.codigo=2) and inc.estado='ACTIVO' and al.apellido like ?");
+                  stm.setString(1, "%"+apellido+"%");
+                 try{
+                   rs=stm.executeQuery();
+                 }catch(SQLException e){
+                  JOptionPane.showMessageDialog(null,e.getMessage());
+                 }
+            }else{
+                  PreparedStatement stm=cx.prepareStatement("select al.codigo, al.nombre, al.apellido, al.dni, ser.nombre from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo inner join modalidad_cobro as mc on ser.codigo_modalidad_cobro=mc.codigo where (mc.codigo=1 or mc.codigo=2) and inc.estado='ACTIVO' and al.nombre like ? and al.apellido like ?");
+                  stm.setString(1, "%"+nombre+"%");
+                  stm.setString(2, "%"+apellido+"%");
+                   try{
+                     rs=stm.executeQuery();
+                    }catch(SQLException e){
+                        JOptionPane.showMessageDialog(null,e.getMessage());
+                    }
+            }
+        }
+        return rs;
+        
+    }
     
 
    public static ResultSet buscarProfesor(Connection cx, String nombre, String apellido)throws Exception {
@@ -246,6 +282,20 @@ public class Inscripcion {
           }
           return rs;
       }
+        
+         /// este metodo busca las inscripciones activas de servicios mensuales y clases personalizadas , osea todos los servicios menos los de inclusion escolar
+        public static ResultSet mostrarIncripcionesServiciosMensualesYClases(Connection cx)throws Exception {
+          ResultSet rs=null;
+          PreparedStatement stm=cx.prepareStatement("select al.codigo, al.nombre, al.apellido, al.dni, ser.nombre from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join modalidad_cobro as mc on mc.codigo=ser.codigo_modalidad_cobro where (mc.codigo=1 or mc.codigo=2) and inc.estado='ACTIVO'");
+          try{
+              rs=stm.executeQuery();
+          }catch(SQLException e){
+               JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+          return rs;
+      }
+        
+        
       
       public static int verMesInscripcion(Connection cx, int codigo_inscripcion)throws Exception{
           int mes=0;
@@ -278,5 +328,22 @@ public class Inscripcion {
               return codigo;
         
     }
+          
+          /// metodo para obtener el año de inscripcion de un alumno,  
+          public static int obtenerAñoInscripcion(Connection cx, int dni)throws Exception {
+              ResultSet rs=null;
+              int año=0;
+              PreparedStatement stm=cx.prepareStatement("select cl.año from inscripcion as inc inner join ciclo_lectivo as cl on inc.codigo_ciclo_lectivo=cl.codigo inner join alumno as al on inc.codigo_alumno=al.codigo where al.dni=? and inc.estado='ACTIVO'");
+              stm.setInt(1, dni);
+              try{
+                  rs=stm.executeQuery();
+                  if(rs.next()){
+                      año=rs.getInt("cl.año");
+                  }
+              }catch(SQLException e){
+                   JOptionPane.showMessageDialog(null,e.getMessage());
+              }
+              return año;
+          }
 
     }

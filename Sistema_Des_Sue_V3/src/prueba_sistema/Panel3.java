@@ -18,6 +18,7 @@ public class Panel3 extends javax.swing.JPanel {
     Connection cx=Conexion.conexion.conexion();
     DefaultComboBoxModel ls= new DefaultComboBoxModel();
       DefaultComboBoxModel ls2= new DefaultComboBoxModel();
+      Panel5 p5;
   
      DefaultTableModel tabla=new DefaultTableModel();
      Object[] datos=new Object[10]; 
@@ -560,7 +561,7 @@ public class Panel3 extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
        
-buscarAlumno dialog = new buscarAlumno(frame, true, this, a, 1);
+buscarAlumno dialog = new buscarAlumno(frame, true, this, a, p5, 1);
 dialog.setVisible(true);
 
     }//GEN-LAST:event_jButton1ActionPerformed

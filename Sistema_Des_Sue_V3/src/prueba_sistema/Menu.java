@@ -607,11 +607,11 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_asistenciaMouseClicked
 
     private void asistenciaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_asistenciaMouseEntered
-        // TODO add your handling code here:
+          asistencia.setBackground(new Color(255,204,204));
     }//GEN-LAST:event_asistenciaMouseEntered
 
     private void asistenciaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_asistenciaMouseExited
-        // TODO add your handling code here:
+          asistencia.setBackground(new Color(255,102,102));
     }//GEN-LAST:event_asistenciaMouseExited
 
     

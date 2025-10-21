@@ -21,6 +21,7 @@ public class asistencias extends javax.swing.JPanel {
     Connection cx=Conexion.conexion.conexion();
     DefaultComboBoxModel modelo= new DefaultComboBoxModel();
     JPanel p3;
+    Panel5 p5;
      DefaultTableModel tabla=new DefaultTableModel();
      Object[] datos=new Object[7];
  
@@ -441,7 +442,7 @@ activarGuardar();
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
        
-buscarAlumno dialog = new buscarAlumno(frame, true, (Panel3) p3, this, 2);
+buscarAlumno dialog = new buscarAlumno(frame, true, (Panel3) p3, this, p5, 2);
 dialog.setVisible(true);
 if(!labelCodigoAlumno.getText().isEmpty()){
     

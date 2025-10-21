@@ -1025,23 +1025,35 @@ public class ModificarA extends javax.swing.JPanel {
     }//GEN-LAST:event_guardarMouseClicked
 
     private void eliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarMouseClicked
-        int codigo=Integer.parseInt(codA.getText());
-        int respuesta = JOptionPane.showConfirmDialog( null, "¿Estás seguro de que deseas eliminar a este alumno?" , "Confirmar eliminación", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
+        try{
+             int codigo=Integer.parseInt(codA.getText());
+             int filaSeleccionada = TablaAlumno.getSelectedRow();
+             String dni =TablaAlumno.getValueAt(filaSeleccionada, 3).toString(); /// obtenemos el dni del alumno seleccionado en la tabla
+             rs=Clases.Pago.verPagosPendientesAlumno(cx,Integer.parseInt(dni) );  /// vemos si este dni(alumno) tiene pagos pendientes..
+             
+             /// si tiene registros, es que por que tiene pagos pendientes, por lo tanto el sistema no le permitirá dar de baja al alumno no sin antes haber saldado los meses que debe
+             while(rs.next()){
+                  JOptionPane.showMessageDialog(null, "El alumno que trata de eliminar tiene pagos pendientes, el sistema no permite dar de baja a alumnos con cuotas sin saldar","ERROR",ERROR_MESSAGE);
+                  return;
+             }
+                 
+             int respuesta = JOptionPane.showConfirmDialog( null, "¿Estás seguro de que deseas eliminar a este alumno?" , "Confirmar eliminación", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
         
-         if (respuesta == JOptionPane.YES_OPTION) {
-                  try{
+             if (respuesta == JOptionPane.YES_OPTION) {
+                  
                            Clases.Alumno.eliminar(cx, codigo);
                            JOptionPane.showMessageDialog(null, "Se ha eliminado al alumno correctamente");
                            MostrarAlumno();
                             codA.setText("");
-                  }catch(Exception e){
-            
-                            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar eliminar el alumno","ERROR",ERROR_MESSAGE);
-                  }
-         }else{
-             JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación");
-            MostrarAlumno();
-         }
+                  
+             }else{
+                           JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación");
+                           MostrarAlumno();
+             }
+        }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar eliminar el alumno","ERROR",ERROR_MESSAGE);
+        }
+       
     }//GEN-LAST:event_eliminarMouseClicked
 
     private void inactivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inactivoActionPerformed
