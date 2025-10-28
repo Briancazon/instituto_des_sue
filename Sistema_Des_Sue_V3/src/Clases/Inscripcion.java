@@ -345,5 +345,66 @@ public class Inscripcion {
               }
               return año;
           }
+          
+           public static int obtenerMesInscripcion(Connection cx, int dni)throws Exception {
+              ResultSet rs=null;
+              int mes=0;
+              PreparedStatement stm=cx.prepareStatement("select month(inc.fecha_inscripcion) from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo where al.dni=? and inc.estado='ACTIVO' ");
+              stm.setInt(1, dni);
+              try{
+                  rs=stm.executeQuery();
+                  if(rs.next()){
+                      mes=rs.getInt("month(inc.fecha_inscripcion)");
+                  }
+              }catch(SQLException e){
+                   JOptionPane.showMessageDialog(null,e.getMessage());
+              }
+              return mes;
+          }
+           
+             public static int obtenerDiaInscripcion(Connection cx, int dni)throws Exception {
+              ResultSet rs=null;
+              int dia=0;
+              PreparedStatement stm=cx.prepareStatement("select day(inc.fecha_inscripcion) from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo where al.dni=? and inc.estado='ACTIVO' ");
+              stm.setInt(1, dni);
+              try{
+                  rs=stm.executeQuery();
+                  if(rs.next()){
+                      dia=rs.getInt("day(inc.fecha_inscripcion)");
+                  }
+              }catch(SQLException e){
+                   JOptionPane.showMessageDialog(null,e.getMessage());
+              }
+              return dia;
+          }
+          
+          /// metodo para validar que el usuario no haga una doble inscripcion repetida de forma consecutiva, es decir ,si ya se inscribio el alumno al servicio x de ciclo_lectivo tanto, y quiere de nuevo volver a inscribir con esos mismos valores, el sistema no le permitira hacerlo
+          // pero si se inscribi a otro, y depues quiere volver al primero, sí podrá por supuesto, esto solo valida que de forma consecutiva el ususario no vuelva a inscribir al alumno al mismo servicio del mismo ciclo lectivo dos veces de forma seguida,
+          public static ResultSet evitarDobleInscripcionConsecutiva(Connection cx, int codigo_alumno, int codigo_servicio, int codigo_ciclo_lectivo)throws Exception{
+              ResultSet rs=null;
+              PreparedStatement stm=cx.prepareStatement("select * from inscripcion where codigo_alumno=? and codigo_servicio=? and codigo_ciclo_lectivo=? and estado='ACTIVO'");
+              stm.setInt(1, codigo_alumno);
+              stm.setInt(2, codigo_servicio);
+              stm.setInt(3, codigo_ciclo_lectivo);
+              try{
+                 rs= stm.executeQuery();
+              }catch(SQLException e){
+                   JOptionPane.showMessageDialog(null,e.getMessage());
+              }
+              return rs;
+          }
+          
+          
+          public static void darBajaInscripcion(Connection cx, int dni)throws Exception {
+              PreparedStatement stm=cx.prepareStatement("UPDATE inscripcion set estado='INACTIVO' where codigo_alumno=? and estado='ACTIVO' " );
+              stm.setInt(1, dni);
+              try{
+                  stm.executeUpdate();
+              }catch(SQLException e){
+               JOptionPane.showMessageDialog(null,e.getMessage());
+          }
+          }
+          
+          
 
     }

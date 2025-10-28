@@ -16,10 +16,11 @@ public class Historial extends javax.swing.JPanel {
      DefaultTableModel tabla=new DefaultTableModel();
       ResultSet rs;
      Connection cx=Conexion.conexion.conexion();
-      Object[] datos=new Object[12];
+      Object[] datos=new Object[11];
 
     public Historial() {
         initComponents();
+        cargarHistorialPagosAlumnos();
     }
 
  
@@ -38,7 +39,53 @@ public class Historial extends javax.swing.JPanel {
     }
     
     
-    
+    void cargarHistorialPagosAlumnos(){
+          
+          tabla.setRowCount(0);   
+         tabla.setColumnCount(0);
+        
+         tabla.addColumn("Nombre Alumno");  
+         tabla.addColumn("Apellido Alumno");  
+         tabla.addColumn("DNI"); 
+         tabla.addColumn("Servicio"); 
+         tabla.addColumn("Fecha");
+         tabla.addColumn("Mes");
+         tabla.addColumn("Ciclo Lectivo");
+         tabla.addColumn("Tipo de Pago");
+         tabla.addColumn("Observación");
+         tabla.addColumn("Recargo");
+         tabla.addColumn("Total");
+                
+      
+         
+         try{
+            
+             rs=Clases.Pago.verHistorialPagos(cx);
+              while(rs.next()){
+                   datos[0]=rs.getString("al.nombre");
+                   datos[1]=rs.getString("al.apellido");
+                   datos[2]=rs.getString("al.dni");
+                   datos[3]=rs.getString("ser.nombre");
+                   datos[4]=rs.getString("pa.fecha_pago");
+                   datos[5]=rs.getString("me.mes");
+                   datos[6]=rs.getString("cl.año");
+                   datos[7]=rs.getString("tp.tipo_pago");
+                   datos[8]=rs.getString("pa.observacion");
+                   datos[9]=rs.getString("pa.recargo");
+                    datos[10]=rs.getString("pa.total");
+                   
+                 
+                  
+                   tabla.addRow(datos);
+                  
+                   
+              } 
+              tablaPagos.setModel(tabla);
+              
+          }catch(Exception e){
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar el historial de  pagos del alumno","ERROR",ERROR_MESSAGE); 
+          }
+    }
     
     
     
@@ -73,6 +120,7 @@ public class Historial extends javax.swing.JPanel {
         jPanel3.setBackground(new java.awt.Color(255, 102, 102));
 
         buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/Buscar_1.png"))); // NOI18N
+        buscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         buscar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 buscarMouseClicked(evt);
@@ -94,6 +142,7 @@ public class Historial extends javax.swing.JPanel {
         jLabel7.setText("*********************************************************");
 
         cargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/recargar.png"))); // NOI18N
+        cargar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cargar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cargarMouseClicked(evt);
@@ -112,8 +161,8 @@ public class Historial extends javax.swing.JPanel {
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
                     .addComponent(txtDni))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addGap(94, 94, 94))
+                .addComponent(cargar)
+                .addGap(272, 272, 272))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,13 +180,13 @@ public class Historial extends javax.swing.JPanel {
 
         tablaPagos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Apellido", "DNI", "Servicio", "Precio", "Fecha", "Monto", "Mes", "Año", "Tipo de Pago", "Observación", "Recargo"
+                "Nombre Alumno", "Apellido Alumno", "DNI", "Servicio", "Fecha", "Mes", "Ciclo Lectivo", "Tipo de Pago", "Observación", "Recargo", "Total"
             }
         ));
         jScrollPane1.setViewportView(tablaPagos);
@@ -176,37 +225,35 @@ public class Historial extends javax.swing.JPanel {
           tabla.setRowCount(0);   
          tabla.setColumnCount(0);
         
-         tabla.addColumn("Nombre");  
-         tabla.addColumn("Apellido");  
+         tabla.addColumn("Nombre Alumno");  
+         tabla.addColumn("Apellido Alumno");  
          tabla.addColumn("DNI"); 
          tabla.addColumn("Servicio"); 
-         tabla.addColumn("Precio");
          tabla.addColumn("Fecha");
-         tabla.addColumn("Monto");
          tabla.addColumn("Mes");
-         tabla.addColumn("Año");
+         tabla.addColumn("Ciclo Lectivo");
          tabla.addColumn("Tipo de Pago");
          tabla.addColumn("Observación");
          tabla.addColumn("Recargo");
+         tabla.addColumn("Total");
                 
       
          
          try{
             
-             rs=Clases.Pago.verPagos(cx, Integer.parseInt(txtDni.getText()));
+             rs=Clases.Pago.verHistorialPagosAlumno(cx, Integer.parseInt(txtDni.getText()));
               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
                    datos[2]=rs.getString("al.dni");
                    datos[3]=rs.getString("ser.nombre");
-                   datos[4]=rs.getString("ser.precio");
-                   datos[5]=rs.getString("pa.fecha_pago");
-                   datos[6]=rs.getString("pa.monto_pagado");
-                   datos[7]=rs.getString("me.mes");
-                   datos[8]=rs.getString("pa.periodo_año");
-                   datos[9]=rs.getString("tp.tipo_pago");
-                   datos[10]=rs.getString("pa.observacion");
-                   datos[11]=rs.getString("pa.recargo");
+                   datos[4]=rs.getString("pa.fecha_pago");
+                   datos[5]=rs.getString("me.mes");
+                   datos[6]=rs.getString("cl.año");
+                   datos[7]=rs.getString("tp.tipo_pago");
+                   datos[8]=rs.getString("pa.observacion");
+                   datos[9]=rs.getString("pa.recargo");
+                    datos[10]=rs.getString("pa.total");
                    
                  
                   
@@ -217,7 +264,7 @@ public class Historial extends javax.swing.JPanel {
               tablaPagos.setModel(tabla);
               
           }catch(Exception e){
-                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los pagos del alumno","ERROR",ERROR_MESSAGE); 
+                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar el historial de  pagos del alumno","ERROR",ERROR_MESSAGE); 
           }
                 
     }//GEN-LAST:event_buscarMouseClicked
@@ -227,7 +274,7 @@ public class Historial extends javax.swing.JPanel {
     }//GEN-LAST:event_txtDniActionPerformed
 
     private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
-     
+            cargarHistorialPagosAlumnos();      
     }//GEN-LAST:event_cargarMouseClicked
 
 

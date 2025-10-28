@@ -57,14 +57,27 @@ public class OS extends javax.swing.JPanel {
         
     }
     
+    
+    void limpiar(){
+        desactivarGuardar();
+        desactivarEditar();
+        desactivarEliminar();
+        activarAgregar();
+        desactivarCampo();
+        nombretxt.setText("");
+         labelCodigo.setText("");
+    }
+    
     private void check(){
         
       
         
         if( checkInactivo.isSelected()){
-            activarhabilitado();
+          
             desactivarEliminar();
             desactivarEditar();
+            desactivarGuardar();
+            desactivarAgregar();
             
             
             tabla1.setRowCount(0);   
@@ -93,6 +106,7 @@ public class OS extends javax.swing.JPanel {
                    configurarColumn();  
                    
         }else{
+            desactivarhabilitado();
                tabla1.setRowCount(0);   
               tabla1.setColumnCount(0);
               tabla1.addColumn("Nº");  
@@ -120,108 +134,8 @@ public class OS extends javax.swing.JPanel {
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      /*  if (checkInactivo.isSelected() && checkActivo.isSelected()){
-                tabla1.setRowCount(0);   
-        tabla1.setColumnCount(0);
-        tabla1.addColumn("Nº");  
-        tabla1.addColumn("Obra Social");
-        
-        try{
-            
-             rs=Clases.ObraSocial.mostrasTodasObrasSociales(cx);
-              while(rs.next()){
-                   datos1[0]=rs.getString("codigo");
-                   datos1[1]=rs.getString("nombre");
-                   
-                  
-                   tabla1.addRow(datos1);
-                   
-              }
-              
-              tablaOS.setModel(tabla1);
-             
-              
-          }catch(Exception e){
-                   JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
-          }
-      configurarColumn();   
-        
-      
     
-        }else if(checkActivo.isSelected()){
-                    tabla1.setRowCount(0);   
-                    tabla1.setColumnCount(0);
-                   tabla1.addColumn("Nº");  
-                   tabla1.addColumn("Obra Social");
-        
-                   try{
-            
-                      rs=Clases.ObraSocial.mostrarObrasSocialesActivas(cx);
-                      while(rs.next()){
-                          datos1[0]=rs.getString("codigo");
-                          datos1[1]=rs.getString("nombre");
-                   
-                  
-                          tabla1.addRow(datos1);
-                   
-                     }
-              
-                      tablaOS.setModel(tabla1);
-             
-              
-                   }catch(Exception e){
-                         JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
-                   }
-      configurarColumn(); 
-         
-        
-        }else 
-         {
-              tabla1.setRowCount(0);   
-              tabla1.setColumnCount(0);
-              tabla1.addColumn("Nº");  
-              tabla1.addColumn("Obra Social");
-        
-               try{
-            
-                    rs=Clases.ObraSocial.mostrarObrasSocialesInactivas(cx);
-                    while(rs.next()){
-                        datos1[0]=rs.getString("codigo");
-                        datos1[1]=rs.getString("nombre");
-                   
-                  
-                        tabla1.addRow(datos1);
-                   
-                    }
-              
-                    tablaOS.setModel(tabla1);
-             
-              
-                  }catch(Exception e){
-                         JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las obras sociales en la tabla","ERROR",ERROR_MESSAGE); 
-                   }
-                   configurarColumn();  
-                  
-        
-        }
-        */
+      
     }
 
     private void desactivarGuardar() {
@@ -488,6 +402,11 @@ public class OS extends javax.swing.JPanel {
                 nomtxtActionPerformed(evt);
             }
         });
+        nomtxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nomtxtKeyTyped(evt);
+            }
+        });
 
         jLabel7.setBackground(new java.awt.Color(255, 204, 204));
         jLabel7.setForeground(new java.awt.Color(255, 102, 51));
@@ -509,7 +428,7 @@ public class OS extends javax.swing.JPanel {
                 .addComponent(buscar, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 219, Short.MAX_VALUE)
                     .addComponent(nomtxt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
@@ -570,6 +489,11 @@ public class OS extends javax.swing.JPanel {
         nombretxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nombretxtActionPerformed(evt);
+            }
+        });
+        nombretxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nombretxtKeyTyped(evt);
             }
         });
 
@@ -740,26 +664,28 @@ public class OS extends javax.swing.JPanel {
     }//GEN-LAST:event_nombretxtActionPerformed
 
     private void labelGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelGuardarMouseClicked
-          String nombre= nombretxt.getText();
-          String codigo=labelCodigo.getText();
+          
         
         try{
+            ///validacion de campos vacios
+            if(nombretxt.getText().isEmpty()){
+                 JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                  return; // Detiene la ejecución del método
+            }
+            String nombre= nombretxt.getText();
+            String codigo=labelCodigo.getText();
             if(!codigo.isEmpty()){
                     Clases.ObraSocial.update(cx, nombre, Integer.parseInt(codigo));
                    JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
-                   labelCodigo.setText("");
-                   desactivarGuardar();
-                   desactivarCampo();
+                  limpiar();
             }else{
                   Clases.ObraSocial.cargar(cx, nombre);
                   JOptionPane.showMessageDialog(null, "Los datos se guardaron correctamente"); 
-                  desactivarGuardar();
-                  activarAgregar();
-                  desactivarCampo();
+                  limpiar();
             }
           
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No se ha cargado correctamente"); 
+             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar cargar o actualizar la obra social","ERROR",ERROR_MESSAGE); 
         }
         nombretxt.setText("");
         mostrarO();
@@ -782,52 +708,38 @@ public class OS extends javax.swing.JPanel {
        if(n==JOptionPane.YES_NO_OPTION){
            
            try{
-               Clases.ObraSocial.eliminar(cx, codigo);
-               JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
-                desactivarGuardar();
-      desactivarEditar();
-      desactivarEliminar();
-      activarAgregar();
-      desactivarCampo();
-      nombretxt.setText("");
-      mostrarO();
+                 Clases.ObraSocial.eliminar(cx, codigo);
+                 JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
+                 limpiar();
+                 mostrarO();
 
               
              }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No se ha podido eliminar el registro seleccionado","ERROR",ERROR_MESSAGE); 
-              desactivarGuardar();
-      desactivarEditar();
-      desactivarEliminar();
-      activarAgregar();
-      desactivarCampo();
-      nombretxt.setText("");
-      mostrarO();
+               JOptionPane.showMessageDialog(null, "No se ha podido eliminar el registro seleccionado","ERROR",ERROR_MESSAGE); 
+               limpiar();
+               mostrarO();
              }
            
            
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación"); 
-            desactivarGuardar();
-      desactivarEditar();
-      desactivarEliminar();
-      activarAgregar();
-      desactivarCampo();
-      nombretxt.setText("");
+            limpiar();
        }
         
       
     }//GEN-LAST:event_labelEliminarMouseClicked
 
     private void buscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseClicked
-       String nom=nomtxt.getText();
-         ResultSet rs;
+       desactivarhabilitado(); /// una simple validacion para que este label se desactive...
+        String nom=nomtxt.getText();
+
     tabla1.setRowCount(0);   
     tabla1.setColumnCount(0);
     tabla1.addColumn("Nº");
     tabla1.addColumn("Obra Social");
      try{
          rs=Clases.ObraSocial.buscarOS(cx, nom);
-         if(rs.next()){
+         while(rs.next()){
                    datos1[0]=rs.getString("codigo");
                    datos1[1]=rs.getString("nombre");
                   
@@ -835,10 +747,7 @@ public class OS extends javax.swing.JPanel {
                    tabla1.addRow(datos1);
                    tablaOS.setModel(tabla1);
                    
-          }else{
-              JOptionPane.showMessageDialog(null, "La Obra Social "+nomtxt.getText()+" no existe","ERROR",ERROR_MESSAGE);
-              mostrarO();
-         }
+          }
                 
               
              
@@ -856,9 +765,13 @@ public class OS extends javax.swing.JPanel {
     private void tablaOSMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaOSMouseClicked
         
          if(checkInactivo.isSelected()){
+             int filaSeleccionada = tablaOS.getSelectedRow();
             
-            desactivarEliminar();
-            desactivarEditar();
+             String codigo =tablaOS.getValueAt(filaSeleccionada, 0).toString();
+             labelCodigo.setText(codigo);
+       
+             activarhabilitado();
+            
             
          } else{    
         
@@ -889,6 +802,8 @@ public class OS extends javax.swing.JPanel {
     private void labelEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditarMouseClicked
        activarCampo();
        desactivarEditar();
+       desactivarEliminar();
+       desactivarAgregar();
        activarGuardar();
        
     }//GEN-LAST:event_labelEditarMouseClicked
@@ -908,43 +823,44 @@ public class OS extends javax.swing.JPanel {
     }//GEN-LAST:event_checkInactivoActionPerformed
 
     private void CancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelarMouseClicked
-        desactivarGuardar();
-        desactivarEditar();
-        desactivarEliminar();
-        activarAgregar();
-        desactivarCampo();
-        nombretxt.setText("");
+      limpiar();
     }//GEN-LAST:event_CancelarMouseClicked
 
     private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
          mostrarO();
+         desactivarhabilitado();
     }//GEN-LAST:event_cargarMouseClicked
 
     private void habilitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_habilitarMouseClicked
        
-        int codigo=Integer.parseInt(labelCodigo.getText());
+        
        
        int n= JOptionPane.showConfirmDialog(null, "¿Desea habilitar el registro seleccionado?","Habiliatar", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE); 
        if(n==JOptionPane.YES_NO_OPTION){
            
            try{
+               int codigo=Integer.parseInt(labelCodigo.getText());
                Clases.ObraSocial.habilitarOS(cx, codigo);
                JOptionPane.showMessageDialog(null, "Se ha habilitado el registro correctamente");
-              nombretxt.setText("");
+               limpiar();
+               desactivarhabilitado();
               inhabilitado();
 
               
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido habilitar el registro seleccionado","ERROR",ERROR_MESSAGE); 
-               nombretxt.setText("");
+               limpiar();
+               desactivarhabilitado();
+               inhabilitado();
      
              }
            
            
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado"); 
+           limpiar();       
+           desactivarhabilitado();
        
-      nombretxt.setText("");
        }
        
         
@@ -957,6 +873,22 @@ public class OS extends javax.swing.JPanel {
         
         
     }//GEN-LAST:event_habilitarMouseClicked
+
+    private void nombretxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombretxtKeyTyped
+      char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ')|| nombretxt.getText().length()>25) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_nombretxtKeyTyped
+
+    private void nomtxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nomtxtKeyTyped
+         char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || nomtxt.getText().length()>25) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_nomtxtKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

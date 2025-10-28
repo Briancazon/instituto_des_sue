@@ -37,12 +37,12 @@ public class ModificarP extends javax.swing.JPanel {
         desactivarguardar();
         desactivarmodificar();
         desactivarcampo();
-       desactivarcargar();
+        desactivarcargar();
         desactivarbuscar();
         desactivareliminar();
-        desactivarhabiltar();
+        desactivarhabilitar();
         
-        aptxt.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
+        txtNombreBuscador.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
             @Override
             public void insertUpdate(DocumentEvent e) {
               
@@ -59,8 +59,8 @@ public class ModificarP extends javax.swing.JPanel {
                 verificarcampo();
             }
             private void verificarcampo(){
-                buscar.setEnabled(!aptxt.getText().trim().isEmpty());
-                cargar.setEnabled(!aptxt.getText().trim().isEmpty());
+                buscar.setEnabled(!txtNombreBuscador.getText().trim().isEmpty());
+                cargar.setEnabled(!txtNombreBuscador.getText().trim().isEmpty());
             }
                    
             
@@ -92,6 +92,10 @@ public class ModificarP extends javax.swing.JPanel {
             
     
     }
+        
+        
+        
+        
      public void mostrarP(){
          tabla.setRowCount(0);   
          tabla.setColumnCount(0);
@@ -171,6 +175,11 @@ public class ModificarP extends javax.swing.JPanel {
          dnitxt.setText("");
          residenciatxt.setText("");
          titulotxt.setText("");
+         prueba.setText("");
+         desactivarguardar();
+         desactivarmodificar();
+         desactivareliminar();
+         activaragregar();
            
      }
         
@@ -229,7 +238,7 @@ public class ModificarP extends javax.swing.JPanel {
      public void activarhabilitar(){
          Habilitar.setEnabled(true);
      }   
-     public void desactivarhabiltar(){
+     public void desactivarhabilitar(){
          Habilitar.setEnabled(false);
      }
         
@@ -275,7 +284,7 @@ public class ModificarP extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaProfesor = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
-        aptxt = new javax.swing.JTextField();
+        txtNombreBuscador = new javax.swing.JTextField();
         Cancelar = new javax.swing.JLabel();
         modificar = new javax.swing.JLabel();
         guardar = new javax.swing.JLabel();
@@ -365,6 +374,11 @@ public class ModificarP extends javax.swing.JPanel {
                 nombretxtActionPerformed(evt);
             }
         });
+        nombretxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nombretxtKeyTyped(evt);
+            }
+        });
 
         jLabel4.setBackground(new java.awt.Color(255, 102, 0));
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -375,6 +389,11 @@ public class ModificarP extends javax.swing.JPanel {
         apellidotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         apellidotxt.setForeground(new java.awt.Color(255, 51, 102));
         apellidotxt.setBorder(null);
+        apellidotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                apellidotxtKeyTyped(evt);
+            }
+        });
 
         jLabel8.setBackground(new java.awt.Color(255, 102, 51));
         jLabel8.setForeground(new java.awt.Color(255, 102, 51));
@@ -389,6 +408,11 @@ public class ModificarP extends javax.swing.JPanel {
         dnitxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         dnitxt.setForeground(new java.awt.Color(255, 51, 102));
         dnitxt.setBorder(null);
+        dnitxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dnitxtKeyTyped(evt);
+            }
+        });
 
         jLabel9.setBackground(new java.awt.Color(255, 102, 51));
         jLabel9.setForeground(new java.awt.Color(255, 102, 51));
@@ -408,6 +432,11 @@ public class ModificarP extends javax.swing.JPanel {
                 titulotxtActionPerformed(evt);
             }
         });
+        titulotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                titulotxtKeyTyped(evt);
+            }
+        });
 
         jLabel11.setBackground(new java.awt.Color(255, 102, 51));
         jLabel11.setForeground(new java.awt.Color(255, 102, 51));
@@ -425,6 +454,11 @@ public class ModificarP extends javax.swing.JPanel {
         residenciatxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 residenciatxtActionPerformed(evt);
+            }
+        });
+        residenciatxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                residenciatxtKeyTyped(evt);
             }
         });
 
@@ -485,7 +519,7 @@ public class ModificarP extends javax.swing.JPanel {
                                 .addGap(97, 97, 97)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGap(47, 47, 47))
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1007, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1385, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -519,7 +553,7 @@ public class ModificarP extends javax.swing.JPanel {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         tablaProfesor.setModel(new javax.swing.table.DefaultTableModel(
@@ -542,13 +576,18 @@ public class ModificarP extends javax.swing.JPanel {
 
         jPanel5.setBackground(new java.awt.Color(255, 102, 102));
 
-        aptxt.setBackground(new java.awt.Color(255, 153, 153));
-        aptxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        aptxt.setForeground(new java.awt.Color(0, 0, 0));
-        aptxt.setBorder(null);
-        aptxt.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreBuscador.setBackground(new java.awt.Color(255, 153, 153));
+        txtNombreBuscador.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNombreBuscador.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombreBuscador.setBorder(null);
+        txtNombreBuscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aptxtActionPerformed(evt);
+                txtNombreBuscadorActionPerformed(evt);
+            }
+        });
+        txtNombreBuscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreBuscadorKeyTyped(evt);
             }
         });
 
@@ -579,7 +618,7 @@ public class ModificarP extends javax.swing.JPanel {
             }
         });
 
-        prueba.setForeground(new java.awt.Color(255, 102, 102));
+        prueba.setForeground(new java.awt.Color(0, 0, 0));
         prueba.setLabelFor(apellidotxt);
 
         agregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/agregar.png"))); // NOI18N
@@ -604,7 +643,6 @@ public class ModificarP extends javax.swing.JPanel {
         });
 
         eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/e.png"))); // NOI18N
-        eliminar.setText("jLabel1");
         eliminar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eliminarMouseClicked(evt);
@@ -631,31 +669,32 @@ public class ModificarP extends javax.swing.JPanel {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buscar)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(108, 108, 108))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(buscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cargar, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
+                .addComponent(agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(aptxt, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cargar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(100, 100, 100)
-                .addComponent(agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(modificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 61, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Habilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Inactivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Habilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Inactivo, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Cancelar))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(169, 169, 169)
-                .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -673,7 +712,7 @@ public class ModificarP extends javax.swing.JPanel {
                                 .addComponent(Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel5Layout.createSequentialGroup()
                                     .addGap(16, 16, 16)
-                                    .addComponent(aptxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(eliminar, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel5Layout.createSequentialGroup()
                                     .addGap(15, 15, 15)
@@ -692,12 +731,12 @@ public class ModificarP extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1007, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1385, Short.MAX_VALUE)
                 .addGap(2, 2, 2))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(104, 104, 104)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(143, 143, 143))
+                .addGap(125, 125, 125)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -730,14 +769,9 @@ public class ModificarP extends javax.swing.JPanel {
     }//GEN-LAST:event_residenciatxtActionPerformed
 
     private void buscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseClicked
-      
+desactivarhabilitar();      
        
-      
-       
-           
-                    
-               int dni=Integer.parseInt(aptxt.getText());
-      ResultSet rs;
+        
        tabla.setRowCount(0);   
          tabla.setColumnCount(0);
          tabla.addColumn("Nombre");  
@@ -746,8 +780,8 @@ public class ModificarP extends javax.swing.JPanel {
          tabla.addColumn("Residencia"); 
          tabla.addColumn("Titulo");
         try{
-         rs=Clases.Profesor.buscarProfesor(cx, dni);
-         if(rs.next()){
+         rs=Clases.Profesor.buscarProfesor(cx, txtNombreBuscador.getText());
+         while(rs.next()){
                    datos[0]=rs.getString("nombre");
                    datos[1]=rs.getString("apellido");
                    datos[2]=rs.getString("dni");
@@ -758,9 +792,6 @@ public class ModificarP extends javax.swing.JPanel {
                    tabla.addRow(datos);
                    tablaProfesor.setModel(tabla);
                    
-          }else{
-              JOptionPane.showMessageDialog(null, "El profesor "+aptxt.getText()+" no existe","ERROR",ERROR_MESSAGE);
-              mostrarP();
          }
                 
               
@@ -786,101 +817,106 @@ public class ModificarP extends javax.swing.JPanel {
     }//GEN-LAST:event_buscarMouseClicked
 
     private void tablaProfesorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProfesorMouseClicked
-       
-        if (Inactivo.isSelected()){
-            desactivareliminar();
-            desactivarmodificar();
-        }
-        
-        else{
-        
-        
-        
-        try{
-            int filaSeleccionada = tablaProfesor.getSelectedRow();
+        int filaSeleccionada = tablaProfesor.getSelectedRow();
             
             String nombre =tablaProfesor.getValueAt(filaSeleccionada, 0).toString();
             String apellido =tablaProfesor.getValueAt(filaSeleccionada, 1).toString();
             String dni =tablaProfesor.getValueAt(filaSeleccionada, 2).toString();
             String residencia=tablaProfesor.getValueAt(filaSeleccionada, 3).toString();
             String titulo =tablaProfesor.getValueAt(filaSeleccionada, 4).toString();
+        try{    
+              int codigo= Clases.Profesor.buscarCodigo(cx, Integer.parseInt(dni));
+              prueba.setText(String.valueOf(codigo));   //pone el codigo del profesor en el label prueba
+            if (Inactivo.isSelected()){
+              desactivareliminar();
+              desactivarmodificar();
+              activarhabilitar();
+            }else{
+        
+        
+        
+      
+           
           
-            try{
-                 int codigo= Clases.Profesor.buscarCodigo(cx, Integer.parseInt(dni));
-                  prueba.setText(String.valueOf(codigo));   //pone el codigo del profesor en el label prueba
-            }catch(Exception e){
-               JOptionPane.showMessageDialog(null, "Error al seleccionar un registro");   
-            }
-            
-            nombretxt.setText(nombre);
-            apellidotxt.setText(apellido);
-            dnitxt.setText(dni);
-            residenciatxt.setText(residencia);
-            titulotxt.setText(titulo);
-            activarmodificar();
-            desactivarguardar();
-            desactivarcampo();
-            desactivaragregar();
-            activareliminar();
+       
+              
+           
+                nombretxt.setText(nombre);
+                apellidotxt.setText(apellido);
+                dnitxt.setText(dni);
+               residenciatxt.setText(residencia);
+               titulotxt.setText(titulo);
+               activarmodificar();
+               desactivarguardar();
+               desactivarcampo();
+               desactivaragregar();
+               activareliminar();
             
      
-       }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
-       }
        
-      }
+             }
+      }catch(Exception e){
+                
+                }
     }//GEN-LAST:event_tablaProfesorMouseClicked
 
     private void guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarMouseClicked
-         int dni= Integer.parseInt(dnitxt.getText());
-         String nombre1= nombretxt.getText();
-         String apellido1=apellidotxt.getText();
-         String residencia1= residenciatxt.getText();
-         String titulo1=titulotxt.getText();
-         String p= prueba.getText();
-       
-         
+        
+      
+      
          try{
-             if(!p.isEmpty()){
+             
+             //validar campos vacios..
+             if(nombretxt.getText().isEmpty() || apellidotxt.getText().isEmpty() || dnitxt.getText().isEmpty() || residenciatxt.getText().isEmpty() || titulotxt.getText().isEmpty()){
+                   JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                  return; // Detiene la ejecución del método
+             }
+              int dni= Integer.parseInt(dnitxt.getText());
+             String nombre1= nombretxt.getText();
+             String apellido1=apellidotxt.getText();
+             String residencia1= residenciatxt.getText();
+             String titulo1=titulotxt.getText();
+             String codigoProfesor= prueba.getText();
+             if(!codigoProfesor.isEmpty()){
                  
-               Clases.Profesor.modificarProfe(cx, nombre1, apellido1, dni, residencia1, titulo1,Integer.parseInt(p));
+               Clases.Profesor.modificarProfe(cx, nombre1, apellido1, dni, residencia1, titulo1,Integer.parseInt(codigoProfesor));
                    JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
-                   prueba.setText("");
+                   limpiar();
                    mostrarP();
                    
                   
-             }
-             else{
+             }else{
                   
                    
                      Clases.Profesor.cargar(cx, nombre1, apellido1, dni, residencia1, titulo1);
                   JOptionPane.showMessageDialog(null, "Los datos se guardaron correctamente"); 
                   mostrarP();
-                  desactivarguardar();
-                  activaragregar();
+                  limpiar();
                   desactivarcampo();
              }
            
            
              
         }catch(Exception e){
-           JOptionPane.showMessageDialog(null, "No se pudieron cargar los datos");  
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar cargar o actualizar los datos","ERROR",ERROR_MESSAGE);  
+          
+
         }
        limpiar();
     }//GEN-LAST:event_guardarMouseClicked
 
     private void CancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelarMouseClicked
-        desactivarguardar();
-        desactivarmodificar();
+        
         desactivarcampo();
-        activaragregar();
-        desactivareliminar();
+        
         limpiar();
     }//GEN-LAST:event_CancelarMouseClicked
 
     private void agregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_agregarMouseClicked
        activarcampo();
        activarguardar();
+       desactivaragregar();
+       
        
     }//GEN-LAST:event_agregarMouseClicked
 
@@ -888,19 +924,22 @@ public class ModificarP extends javax.swing.JPanel {
        
         activarcampo();
         desactivarmodificar();
+        desactivareliminar();
+        desactivaragregar();
         activarguardar();
     }//GEN-LAST:event_modificarMouseClicked
 
     private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
         mostrarP();
-         aptxt.setText("");
+         txtNombreBuscador.setText("");
+         desactivarhabilitar();
     }//GEN-LAST:event_cargarMouseClicked
 
     private void InactivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InactivoActionPerformed
       
           if (Inactivo.isSelected()){
         
-              activarhabilitar();
+          
               tabla.setRowCount(0);   
          tabla.setColumnCount(0);
          tabla.addColumn("Nombre");  
@@ -931,6 +970,7 @@ public class ModificarP extends javax.swing.JPanel {
           }
             
         }else {
+              desactivarhabilitar();
            mostrarP();
           }
         
@@ -953,46 +993,49 @@ public class ModificarP extends javax.swing.JPanel {
            try{
                Clases.Profesor.eliminar(cx, codigo);
                JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
-                
+               limpiar();
               mostrarP();
 
               
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido eliminar el registro seleccionado","ERROR",ERROR_MESSAGE); 
-            
+            limpiar();
              }
            
            
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación"); 
             mostrarP();
+            limpiar();
        }
        
     }//GEN-LAST:event_eliminarMouseClicked
 
     private void HabilitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HabilitarMouseClicked
        
-          int codigo=Integer.parseInt(prueba.getText());
+         
        
        int n= JOptionPane.showConfirmDialog(null, "¿Desea habilitar el registro seleccionado?","Habilitar", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE); 
        if(n==JOptionPane.YES_NO_OPTION){
            
            try{
+                int codigo=Integer.parseInt(prueba.getText());
                Clases.Profesor.habilitarP(cx, codigo);
                JOptionPane.showMessageDialog(null, "Se ha habilitado el registro correctamente");
-                
+                desactivarhabilitar();
               inhabilitado();
 
               
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido habiliar el registro seleccionado","ERROR",ERROR_MESSAGE); 
-            
+             desactivarhabilitar();
              }
            
            
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado "); 
             inhabilitado();
+            desactivarhabilitar();
        }
         
         
@@ -1003,9 +1046,57 @@ public class ModificarP extends javax.swing.JPanel {
         
     }//GEN-LAST:event_HabilitarMouseClicked
 
-    private void aptxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aptxtActionPerformed
+    private void txtNombreBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreBuscadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_aptxtActionPerformed
+    }//GEN-LAST:event_txtNombreBuscadorActionPerformed
+
+    private void nombretxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombretxtKeyTyped
+         char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || nombretxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_nombretxtKeyTyped
+
+    private void apellidotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_apellidotxtKeyTyped
+        char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || apellidotxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_apellidotxtKeyTyped
+
+    private void dnitxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dnitxtKeyTyped
+         char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente numeros
+      if (!Character.isDigit(c) || dnitxt.getText().length()>8) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_dnitxtKeyTyped
+
+    private void residenciatxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_residenciatxtKeyTyped
+        char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra y numeros
+      if ((!Character.isLetter(c) &&  !Character.isDigit(c) && c != ' ') || apellidotxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_residenciatxtKeyTyped
+
+    private void titulotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titulotxtKeyTyped
+          char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || titulotxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_titulotxtKeyTyped
+
+    private void txtNombreBuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreBuscadorKeyTyped
+            char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c)  && c != ' ')|| txtNombreBuscador.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_txtNombreBuscadorKeyTyped
 
     
     
@@ -1026,7 +1117,6 @@ public class ModificarP extends javax.swing.JPanel {
     private javax.swing.JCheckBox Inactivo;
     private javax.swing.JLabel agregar;
     private javax.swing.JTextField apellidotxt;
-    private javax.swing.JTextField aptxt;
     private javax.swing.JLabel buscar;
     private javax.swing.JLabel cargar;
     private javax.swing.JTextField dnitxt;
@@ -1058,5 +1148,6 @@ public class ModificarP extends javax.swing.JPanel {
     private javax.swing.JTextField residenciatxt;
     private javax.swing.JTable tablaProfesor;
     private javax.swing.JTextField titulotxt;
+    private javax.swing.JTextField txtNombreBuscador;
     // End of variables declaration//GEN-END:variables
 }

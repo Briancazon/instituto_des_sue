@@ -52,11 +52,24 @@ public class Pago {
         return codigo;
     }
     
-    ///metodo para ver los pagos que tiene un alumno
-    public static ResultSet verPagos(Connection cx, int dni)throws Exception {
+    ///metodo para ver el historial de todos los pagos de un alumno tanto activos como inactivos,, incluyendo los distintos servicios que tuvo...
+    public static ResultSet verHistorialPagosAlumno(Connection cx, int dni)throws Exception {
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("select tp.tipo_pago, al.nombre, al.apellido, al.dni, pa.fecha_pago, pa.monto_pagado, ser.nombre, ser.precio , pa.recargo, me.mes, pa.periodo_año, pa.observacion from pagos as pa inner join tipo_pago as tp on pa.codigo_tipo_pago=tp.codigo inner join inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on pa.codigo_servicio=ser.codigo  inner join meses as me on pa.codigo_mes=me.codigo where al.dni=? and inc.estado='ACTIVO'");
+        PreparedStatement stm=cx.prepareStatement("select tp.tipo_pago, al.nombre, al.apellido, al.dni, pa.fecha_pago, ser.nombre , pa.recargo, me.mes, cl.año, pa.observacion, pa.total from pagos as pa left join tipo_pago as tp on pa.codigo_tipo_pago=tp.codigo left join inscripcion as inc on pa.codigo_inscripcion=inc.codigo left join alumno as al on inc.codigo_alumno=al.codigo left join servicios as ser on pa.codigo_servicio=ser.codigo  left join meses as me on pa.codigo_mes=me.codigo left join ciclo_lectivo as cl on pa.codigo_ciclo_lectivo=cl.codigo where al.dni=? order by pa.codigo desc");
         stm.setInt(1, dni);
+        try{
+           rs= stm.executeQuery();
+        }catch(SQLException e){
+              JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+    }
+    
+    //metodo para ver el historial de todos los pagos de todos los alumnos tanto activos como inactivos, incluyendo los distintos servicios que tuvo...
+    public static ResultSet verHistorialPagos(Connection cx)throws Exception {
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("select tp.tipo_pago, al.nombre, al.apellido, al.dni, pa.fecha_pago, ser.nombre , pa.recargo, me.mes, cl.año, pa.observacion, pa.total from pagos as pa left join tipo_pago as tp on pa.codigo_tipo_pago=tp.codigo left join inscripcion as inc on pa.codigo_inscripcion=inc.codigo left join alumno as al on inc.codigo_alumno=al.codigo left join servicios as ser on pa.codigo_servicio=ser.codigo  left join meses as me on pa.codigo_mes=me.codigo left join ciclo_lectivo as cl on pa.codigo_ciclo_lectivo=cl.codigo order by pa.codigo desc");
+   
         try{
            rs= stm.executeQuery();
         }catch(SQLException e){

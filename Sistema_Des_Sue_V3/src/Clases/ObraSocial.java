@@ -13,11 +13,9 @@ public class ObraSocial {
         PreparedStatement stm=cx.prepareStatement("INSERT INTO obra_social (nombre, borrado) values (?, 0)");
         stm.setString(1, nombre);
         
-        try{
+        
            stm.executeUpdate();
-        }catch(SQLException e){
-            
-        }
+      
               
     }
     
@@ -50,8 +48,8 @@ public class ObraSocial {
  
      public static ResultSet buscarOS(Connection cx, String nom)throws Exception{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("select codigo, nombre from obra_social where nombre =? ");
-        stm.setString(1, nom);
+        PreparedStatement stm=cx.prepareStatement("select codigo, nombre from obra_social where nombre like ? and borrado=0");
+        stm.setString(1, "%"+nom+"%");
         try{
             rs=stm.executeQuery();
         }catch(SQLException e){
@@ -97,11 +95,9 @@ public class ObraSocial {
            PreparedStatement stm=cx.prepareStatement("UPDATE obra_social set nombre=? where codigo =?");
            stm.setString(1, nombre);
            stm.setInt(2, codigo);
-           try{
+           
                stm.executeUpdate();
-           }catch(SQLException e){
-               JOptionPane.showMessageDialog(null,e.getMessage());
-           }
+
        }
        
        public static void eliminar(Connection cx, int codigo)throws Exception{

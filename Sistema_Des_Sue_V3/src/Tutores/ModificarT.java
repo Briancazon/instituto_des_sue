@@ -32,7 +32,7 @@ public class ModificarT extends javax.swing.JPanel {
         desactivarHabilitar();
         desactivareliminar();
         
-        campotxt.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
+        txtNombreBuscador.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
             @Override
             public void insertUpdate(DocumentEvent e) {
               
@@ -49,8 +49,8 @@ public class ModificarT extends javax.swing.JPanel {
                 verificarcampo();
             }
             private void verificarcampo(){
-                buscar.setEnabled(!campotxt.getText().trim().isEmpty());
-                cargar.setEnabled(!campotxt.getText().trim().isEmpty());
+                buscar.setEnabled(!txtNombreBuscador.getText().trim().isEmpty());
+                cargar.setEnabled(!txtNombreBuscador.getText().trim().isEmpty());
             }
                    
             
@@ -79,6 +79,8 @@ public class ModificarT extends javax.swing.JPanel {
             
     
     }
+    
+   
     
     public void mostrarT(){
          tabla.setRowCount(0);   
@@ -191,7 +193,11 @@ public class ModificarT extends javax.swing.JPanel {
          apellidotxt.setText("");
          dnitxt.setText("");
          telefonotxt.setText("");
-         
+         cod.setText("");
+         desactivareliminar();
+         desactivarmodificar();
+         desactivarguardar();
+         activaragregar();
     }
     
      public void desactivarguardar(){
@@ -248,7 +254,7 @@ public class ModificarT extends javax.swing.JPanel {
     public void activarhabilitado(){
         habilitar.setEnabled(true);
     }
-    public void desactivarhabitado(){
+    public void desactivarhabilitado(){
         habilitar.setEnabled(false);
     }
     
@@ -290,7 +296,7 @@ public class ModificarT extends javax.swing.JPanel {
         apellidotxt = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         buscar = new javax.swing.JLabel();
-        campotxt = new javax.swing.JTextField();
+        txtNombreBuscador = new javax.swing.JTextField();
         modificar = new javax.swing.JLabel();
         guardar = new javax.swing.JLabel();
         cancelar = new javax.swing.JLabel();
@@ -378,6 +384,11 @@ public class ModificarT extends javax.swing.JPanel {
                 nombretxtActionPerformed(evt);
             }
         });
+        nombretxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nombretxtKeyTyped(evt);
+            }
+        });
 
         jLabel7.setBackground(new java.awt.Color(255, 204, 204));
         jLabel7.setForeground(new java.awt.Color(255, 102, 51));
@@ -396,6 +407,11 @@ public class ModificarT extends javax.swing.JPanel {
         dnitxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         dnitxt.setForeground(new java.awt.Color(255, 51, 102));
         dnitxt.setBorder(null);
+        dnitxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dnitxtKeyTyped(evt);
+            }
+        });
 
         jLabel9.setBackground(new java.awt.Color(255, 204, 204));
         jLabel9.setForeground(new java.awt.Color(255, 102, 51));
@@ -410,6 +426,11 @@ public class ModificarT extends javax.swing.JPanel {
         telefonotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         telefonotxt.setForeground(new java.awt.Color(255, 51, 102));
         telefonotxt.setBorder(null);
+        telefonotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                telefonotxtKeyTyped(evt);
+            }
+        });
 
         jLabel11.setBackground(new java.awt.Color(255, 204, 204));
         jLabel11.setForeground(new java.awt.Color(255, 102, 51));
@@ -419,6 +440,11 @@ public class ModificarT extends javax.swing.JPanel {
         apellidotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         apellidotxt.setForeground(new java.awt.Color(255, 51, 102));
         apellidotxt.setBorder(null);
+        apellidotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                apellidotxtKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -497,13 +523,21 @@ public class ModificarT extends javax.swing.JPanel {
             }
         });
 
-        campotxt.setBackground(new java.awt.Color(255, 204, 204));
-        campotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        campotxt.setForeground(new java.awt.Color(0, 0, 0));
-        campotxt.setBorder(null);
-        campotxt.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreBuscador.setBackground(new java.awt.Color(255, 204, 204));
+        txtNombreBuscador.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNombreBuscador.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombreBuscador.setBorder(null);
+        txtNombreBuscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campotxtActionPerformed(evt);
+                txtNombreBuscadorActionPerformed(evt);
+            }
+        });
+        txtNombreBuscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreBuscadorKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreBuscadorKeyTyped(evt);
             }
         });
 
@@ -522,6 +556,9 @@ public class ModificarT extends javax.swing.JPanel {
         guardar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 guardarMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                guardarMouseEntered(evt);
             }
         });
 
@@ -579,7 +616,7 @@ public class ModificarT extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(campotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cargar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(61, 61, 61)
@@ -608,7 +645,7 @@ public class ModificarT extends javax.swing.JPanel {
                             .addComponent(buscar)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(17, 17, 17)
-                                .addComponent(campotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(cancelar)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addContainerGap()
@@ -694,28 +731,36 @@ public class ModificarT extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_nombretxtActionPerformed
 
-    private void campotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campotxtActionPerformed
+    private void txtNombreBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreBuscadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_campotxtActionPerformed
+    }//GEN-LAST:event_txtNombreBuscadorActionPerformed
 
     private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
-        
-        campotxt.setText("");
+        desactivarhabilitado();        
+        txtNombreBuscador.setText("");
         mostrarT();
     }//GEN-LAST:event_cargarMouseClicked
 
     private void guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarMouseClicked
+       try{
+            //  Validación de campos vacios
+        if (nombretxt.getText().isEmpty() || apellidotxt.getText().isEmpty() || dnitxt.getText().isEmpty() || telefonotxt.getText().isEmpty()   ) {
+            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Detiene la ejecución del método
+        }
         int dni= Integer.parseInt(dnitxt.getText());
          String nombre1= nombretxt.getText();
          String apellido1=apellidotxt.getText();
          String telefono1= telefonotxt.getText(); 
          String p= cod.getText();
-         try{
+         
+        
+                  /// si p, que es el codig del tutor, esa lleno, quiere decir que hizo click en la tabla y al hacer eso se guardo en un label e codigo del profesor al que le haya echo click, por lo tanto es una actualizacion
                if(!p.isEmpty()){
                  
                  Clases.Tutor.modificarTutor(cx, nombre1, apellido1, dni, telefono1, Integer.parseInt(p));
                    JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
-                   cod.setText("");
+                 
                    limpiar();
                   mostrarT();
                   desactivarguardar();
@@ -723,7 +768,7 @@ public class ModificarT extends javax.swing.JPanel {
                   desactivarcampo();
                  
              }
-             else{
+             else{ ///sino, quiere decir que el codigo del tutor,esta vacio, por lo tanto no hizo click en la tabla, es una carga
                   Clases.Tutor.cargar(cx, nombre1, apellido1, dni, telefono1);
                   JOptionPane.showMessageDialog(null, "Los datos se guardaron correctamente"); 
                   limpiar();
@@ -735,7 +780,7 @@ public class ModificarT extends javax.swing.JPanel {
              }
             
          }catch(Exception e){
-             JOptionPane.showMessageDialog(null, "No se pudieron cargar los datos");
+             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar cargar o actualizar los datos","ERROR",ERROR_MESSAGE); 
          }
           
         
@@ -802,8 +847,8 @@ public class ModificarT extends javax.swing.JPanel {
     }//GEN-LAST:event_tablaTutorMouseClicked
 
     private void buscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseClicked
-           int dni=Integer.parseInt(campotxt.getText());
-      ResultSet rs;
+      desactivarhabilitado();         
+      
        tabla.setRowCount(0);   
          tabla.setColumnCount(0);
         
@@ -814,8 +859,8 @@ public class ModificarT extends javax.swing.JPanel {
           tabla.addColumn("Estado");  
          
         try{
-             rs=Clases.Tutor.buscarTutor(cx, dni);
-         if(rs.next()){
+             rs=Clases.Tutor.buscarTutor(cx, txtNombreBuscador.getText());
+         while(rs.next()){
                   
                    datos[0]=rs.getString("nombre");
                    datos[1]=rs.getString("apellido");
@@ -836,7 +881,7 @@ public class ModificarT extends javax.swing.JPanel {
           }
             
         }catch (Exception e){
-            JOptionPane.showMessageDialog(null, "El profesor "+campotxt.getText()+" no existe","ERROR",ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar al profesor","ERROR",ERROR_MESSAGE);
               mostrarT();
         }
           
@@ -850,8 +895,7 @@ public class ModificarT extends javax.swing.JPanel {
         activaragregar();
         desactivareliminar();
         limpiar();
-        
-        
+   
         
         
         
@@ -917,6 +961,7 @@ public class ModificarT extends javax.swing.JPanel {
             
         }
         else{
+             desactivarhabilitado();
            mostrarT();
            
         } 
@@ -933,9 +978,7 @@ public class ModificarT extends javax.swing.JPanel {
                Clases.Tutor.eliminar(cx, codigo);
                JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
                  mostrarT();
-                 desactivareliminar();
-                 desactivarmodificar();
-                 activaragregar();
+                 
                  limpiar();
       
 
@@ -943,9 +986,7 @@ public class ModificarT extends javax.swing.JPanel {
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido eliminar el registro seleccionado","ERROR",ERROR_MESSAGE); 
               mostrarT();
-                 desactivareliminar();
-                 desactivarmodificar();
-                 activaragregar();
+                 
                  limpiar();
             
              }
@@ -954,9 +995,7 @@ public class ModificarT extends javax.swing.JPanel {
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación"); 
            mostrarT();
-                 desactivareliminar();
-                 desactivarmodificar();
-                 activaragregar();
+               
                  limpiar();
        }
     }//GEN-LAST:event_eliminarMouseClicked
@@ -998,12 +1037,59 @@ public class ModificarT extends javax.swing.JPanel {
          
     }//GEN-LAST:event_habilitarMouseClicked
 
+    private void nombretxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombretxtKeyTyped
+          char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ')|| nombretxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_nombretxtKeyTyped
+
+    private void dnitxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dnitxtKeyTyped
+          char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente numeros
+      if (!Character.isDigit(c) || dnitxt.getText().length()>8) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_dnitxtKeyTyped
+
+    private void telefonotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_telefonotxtKeyTyped
+          char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente numeros
+      if (!Character.isDigit(c) || telefonotxt.getText().length()>12) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_telefonotxtKeyTyped
+
+    private void apellidotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_apellidotxtKeyTyped
+            char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || apellidotxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_apellidotxtKeyTyped
+
+    private void txtNombreBuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreBuscadorKeyTyped
+             char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ')|| txtNombreBuscador.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_txtNombreBuscadorKeyTyped
+
+    private void txtNombreBuscadorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreBuscadorKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreBuscadorKeyReleased
+
+    private void guardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_guardarMouseEntered
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel agregar;
     private javax.swing.JTextField apellidotxt;
     private javax.swing.JLabel buscar;
-    private javax.swing.JTextField campotxt;
     private javax.swing.JLabel cancelar;
     private javax.swing.JLabel cargar;
     private javax.swing.JLabel cod;
@@ -1035,5 +1121,6 @@ public class ModificarT extends javax.swing.JPanel {
     private javax.swing.JTextField nombretxt;
     private javax.swing.JTable tablaTutor;
     private javax.swing.JTextField telefonotxt;
+    private javax.swing.JTextField txtNombreBuscador;
     // End of variables declaration//GEN-END:variables
 }

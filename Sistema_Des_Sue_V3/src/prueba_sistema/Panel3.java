@@ -591,6 +591,25 @@ dialog.setVisible(true);
                 String dias=boxDias.getSelectedItem().toString();
                 String fecha=txtFecha.getText();
                 int c_c_l=Clases.Inscripcion.obtenerCodigoCicloLectivo(cx);
+                
+                ///VALIDACION: valida que un alumno con servicio mensual no tenga pagos pendientes, si es que tiene el sistema no le permitirá registrar una nueva inscripcion no sin antes haber saldado todo lo que debe
+                int dni_alumno=Clases.Alumno.obtenerDni(cx, codigoAlumno);
+                rs=Clases.Pago.verPagosPendientesAlumno(cx, dni_alumno); ///se fija si este alumno tiene registros de pagos pendientes en caso de que se tenga un servicio mensual, si es que tiene un servicio de clase personalizada, pasa este filtro, ya que en dicho servicio no existe deuda pendiente, asi que en ese caso si podría realizar una nueva inscripcion sin problemas
+                while(rs.next()){// en caso de que si haya registros de pagos pendientes(meses en los que si vino pero no pago, osea cuotas sin pagar), el sistema no le permitirá realizar otra inscripción
+                    JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" tiene pagos de cuotas pendientes de su servicio mensual actual, deberá saldar todo lo que deba para poder realizar otra inscripcion","ERROR",ERROR_MESSAGE);
+                    return;
+                }
+                
+                ///VALIDACION: valida que no registre la misma inscripcion dos veces, es decir, que si ya se inscribió, y por accidiente quiere volver a inscribir a ese alumno de nuevo a ese servicio de ese ciclo lectivo, el sistema le bloqueará la inscripcion, 
+                /// solo en caso de que se inscriba a x servicio, y depues se pasa a m servicio, y despues se vuelve a inscribir a x servicio, asi sí se permite, pero intentar registrar x servicio dos veces de forma consecutiva no será permitido por el sistema
+                rs=Clases.Inscripcion.evitarDobleInscripcionConsecutiva(cx, codigoAlumno, codigo_servicio, c_c_l);
+                while(rs.next()){
+                      JOptionPane.showMessageDialog(null, "Ya ha registrado recientemente al "+txtAlumno.getText()+" con ese servicio y del ciclo lectivo actual","ERROR",ERROR_MESSAGE);
+                    return;
+                }
+                
+                /// una vez pasados todos los filtros, recien podra realizar la inscripcion...pero antes el sistema tendrá que dar como INACTIVO su servicio actual y, el nuevo pasaría a ser el ACTIVO..
+                Clases.Inscripcion.darBajaInscripcion(cx, codigoAlumno);
                 Clases.Inscripcion.insertarInscripcion(cx, codigoAlumno, dias, codigo_horario, codigoProfesor, codigo_servicio, fecha, c_c_l);
                  JOptionPane.showMessageDialog(null, "Se registro la inscripcion correctamente");
                  mostrarTablaInscripcion();

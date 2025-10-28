@@ -67,7 +67,7 @@ public class Asistencia {
     /// metodo para ver todas las asistencias...
     public static ResultSet verAsistencias(Connection cx)throws Exception{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT al.nombre, al.apellido, al.dni, ser.nombre, me.mes, ci.año, a.asistio from asistencias_mensuales as a inner join inscripcion as inc on a.codigo_inscripcion=inc.codigo inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo inner join meses as me on a.codigo_mes=me.codigo inner join ciclo_lectivo as ci on a.codigo_ciclo_lectivo=ci.codigo");
+        PreparedStatement stm=cx.prepareStatement("SELECT al.nombre, al.apellido, al.dni, ser.nombre, me.mes, ci.año, a.asistio, inc.estado from asistencias_mensuales as a inner join inscripcion as inc on a.codigo_inscripcion=inc.codigo inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo inner join meses as me on a.codigo_mes=me.codigo inner join ciclo_lectivo as ci on a.codigo_ciclo_lectivo=ci.codigo");
         
         try{
              rs=   stm.executeQuery();

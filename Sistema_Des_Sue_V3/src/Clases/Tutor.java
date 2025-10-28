@@ -17,12 +17,9 @@ public class Tutor {
         stm.setString(2, apellido );
         stm.setInt(3, dni);
         stm.setString(4, telefono);
-        try{
+       
            stm.executeUpdate();
-        }catch(SQLException e){
-           
-        
-        } 
+       
        
    }
    
@@ -46,12 +43,9 @@ public class Tutor {
           stm.setString(4,telefono);
           stm.setInt(5,codigo);
           
-          try{
+        
               stm.executeUpdate();
-          }catch(SQLException e){
-               JOptionPane.showMessageDialog(null,e.getMessage());
-          }
-          
+         
       }
    
    
@@ -100,10 +94,11 @@ public class Tutor {
        }
     
     
-      public static ResultSet buscarTutor(Connection cx, int dni)throws Exception{
+      /// busqueda de tutores activos a traves del nombre
+      public static ResultSet buscarTutor(Connection cx, String nombre)throws Exception{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre, apellido, dni, telefono, borrado FROM tutor where dni=? and borrado=0");
-        stm.setInt(1, dni);
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre, apellido, dni, telefono, borrado FROM tutor where nombre like ? and borrado=0");
+        stm.setString(1, "%"+nombre+"%");
         try{
             rs=stm.executeQuery();
         }catch(SQLException e){

@@ -23,7 +23,7 @@ public class asistencias extends javax.swing.JPanel {
     JPanel p3;
     Panel5 p5;
      DefaultTableModel tabla=new DefaultTableModel();
-     Object[] datos=new Object[7];
+     Object[] datos=new Object[8];
  
    
     public asistencias() {
@@ -66,6 +66,7 @@ public class asistencias extends javax.swing.JPanel {
          tabla.addColumn("Mes");
          tabla.addColumn("Ciclo Lectivo");
          tabla.addColumn("¿Asistió?");
+          tabla.addColumn("Estado");
         try{
          rs=Clases.Asistencia.verAsistencias(cx);
          while(rs.next()){
@@ -76,6 +77,7 @@ public class asistencias extends javax.swing.JPanel {
                    datos[4]=rs.getString("me.mes");
                    datos[5]=rs.getString("ci.año");
                    datos[6]=rs.getString("a.asistio");
+                   datos[7]=rs.getString("inc.estado");
                    
                   
                   
@@ -511,6 +513,7 @@ if(!labelCodigoAlumno.getText().isEmpty()){
          tabla.addColumn("Mes");
          tabla.addColumn("Ciclo Lectivo");
          tabla.addColumn("¿Asistió?");
+         tabla.addColumn("Estado");
         try{
          rs=Clases.Asistencia.buscarAsistenciasAlumno(cx, Integer.parseInt(txtDniBuscador.getText()));
          while(rs.next()){
@@ -521,6 +524,7 @@ if(!labelCodigoAlumno.getText().isEmpty()){
                    datos[4]=rs.getString("me.mes");
                    datos[5]=rs.getString("ci.año");
                    datos[6]=rs.getString("a.asistio");
+                   datos[7]=rs.getString("inc.estado");
                    
                   
                   

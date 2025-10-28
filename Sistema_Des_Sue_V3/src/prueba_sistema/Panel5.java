@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -50,7 +51,7 @@ CardLayout cardLayout;
     
    ////metodo para validar que antes de pagar, no haya campos vacios o invalidos..
     void validarCamposVacios(){
-        if(txtDni.getText().isEmpty() || txtAlumno.getText().isEmpty() || txtServicio.getText().isEmpty() || txtPrecio.getText().isEmpty() || jDateFecha.getDateFormatString().isEmpty() || boxTipoPago.getSelectedItem().equals("Seleccione un tipo de Pago") || txtRecargo.getText().isEmpty() || txtTotal.getText().isEmpty()){
+        if(txtDni.getText().isEmpty() || txtAlumno.getText().isEmpty() || txtServicio.getText().isEmpty() || txtPrecio.getText().isEmpty() || txtFecha.getText().isEmpty() || boxTipoPago.getSelectedItem().equals("Seleccione un tipo de Pago") || txtRecargo.getText().isEmpty() || txtTotal.getText().isEmpty()){
            labelPagar.setEnabled(false);
         }else{
             labelPagar.setEnabled(true);
@@ -64,7 +65,7 @@ CardLayout cardLayout;
         txtPrecio.setText("");
      
         boxMes.removeAllItems();
-        jDateFecha.setDate(null); // Limpia la fecha seleccionada
+        txtFecha.setText("");
         boxTipoPago.setSelectedItem("Seleccione un tipo de Pago");
         txtRecargo.setText("");
         txtAreaObservacion.setText("");
@@ -74,27 +75,30 @@ CardLayout cardLayout;
         desactivarCampos();
         boxMes.setEnabled(false);
         txtDni.setEnabled(true);
+        botonBuscarAlumno.setEnabled(true);
     }
     void desactivarCampos(){
-        jDateFecha.setEnabled(false);
+        txtFecha.setEnabled(false);
         boxTipoPago.setEnabled(false);
         txtAreaObservacion.setEnabled(false);
     }
     
     void activarCampos(){
        
-        jDateFecha.setEnabled(true);
+        
         boxTipoPago.setEnabled(true);
         txtAreaObservacion.setEnabled(true);
     }
     
     
     void calcularRecargoYTotal(){
-         // validamos primero que haya una fecha seleccionada
-         if (jDateFecha.getDate() == null) {
-                 // todavía no hay fecha, no hacemos nada
+        if (txtFecha.getText().trim().isEmpty()) {
                 return;
-         }
+       }
+
+       try{
+           
+       
          float total=0;
          float recargo=0;
          float precioServicio=0;
@@ -106,27 +110,42 @@ CardLayout cardLayout;
          ///si el mes esta activado quiere decir que el servicio es mensual por lo tanto se debera ver el tema del recargo
          if(boxMes.isEnabled()){
          
+             Calendar fechaSeleccionada = Calendar.getInstance();
+             String fecha_hoy=txtFecha.getText();
+             fechaSeleccionada.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(fecha_hoy));
+
             
-              Calendar fechaSeleccionada=  jDateFecha.getCalendar(); ///obtener la fecha seleccionada y guardarla en la variable fechaSeleccionada
-              int dia=fechaSeleccionada.get(Calendar.DAY_OF_MONTH);  /// obtener el dia de la fecha seleccionada, y guardarla en la variable dia
-              int mes=1+fechaSeleccionada.get(Calendar.MONTH);  //obteener el mes de la decha seleecionada y guardarla en la variable mes
-              int año=fechaSeleccionada.get(Calendar.YEAR); //obtener el año de la fecha seleccionada...
+
+            
+              int dia_pago=fechaSeleccionada.get(Calendar.DAY_OF_MONTH);  /// obtener el dia de la fecha seleccionada, y guardarla en la variable dia
+              int mes_pago=1+fechaSeleccionada.get(Calendar.MONTH);  //obteener el mes de la decha seleecionada y guardarla en la variable mes
+              int año_pago=fechaSeleccionada.get(Calendar.YEAR); //obtener el año de la fecha seleccionada...
               try{
                 
-                  int codigo_mes=Clases.Asistencia.obtenerCodigoMes(cx,  boxMes.getSelectedItem().toString());
-                  int año_inscripcion=Clases.Inscripcion.obtenerAñoInscripcion(cx, Integer.parseInt(txtDni.getText()));
-
-                  if(dia>15  || (mes>codigo_mes || año>año_inscripcion)) {
-                     recargo=(float) (precioServicio*0.20);
+                  int codigo_mes=Clases.Asistencia.obtenerCodigoMes(cx,  boxMes.getSelectedItem().toString());  ///obtenemos el codigo del mes del servicio que quiera pagar
+                  int año_inscripcion=Clases.Inscripcion.obtenerAñoInscripcion(cx, Integer.parseInt(txtDni.getText()));   ///obtenemos el año de inscripcion osea el ciclo lectivo del alumno
+                  int mes_inscripcion=Clases.Inscripcion.obtenerMesInscripcion(cx, Integer.parseInt(txtDni.getText()));  //obtenemos el mes de inscripcion del alumno
+                  int dia_inscripcion=Clases.Inscripcion.obtenerDiaInscripcion(cx, Integer.parseInt(txtDni.getText()));  ///obtenemos el dia de isncripcion del alumno
+                  
+                  ///calculo del recargo en caso de que se inscriba despues del 15 del mes de octubre por ejemplo, y quiera pagar en ese periodo, no tendria que cobrarsele un recargo, ya que recien se inscribe
+                 if(dia_inscripcion>15 && mes_inscripcion==mes_pago && año_pago==año_inscripcion){
                      txtRecargo.setText(String.valueOf(recargo));
-                  }else{
-                     txtRecargo.setText(String.valueOf(recargo));
-                  }
+                 }else{
+                       ///calculo del recargo normal
+                       if(dia_pago>15  || (mes_pago>codigo_mes || año_pago>año_inscripcion)) {
+                          recargo=(float) (precioServicio*0.20);
+                          txtRecargo.setText(String.valueOf(recargo));
+                        }else{
+                          txtRecargo.setText(String.valueOf(recargo));
+                        }
+                 }
+                 
+               
       
                   total=precioServicio+recargo;
                   txtTotal.setText(String.valueOf(total));
               }catch(Exception e){
-                       JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar obtener el codigo del mes","ERROR",ERROR_MESSAGE);
+                       JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar calcular el recargo y el total","ERROR",ERROR_MESSAGE);
                }
       
          // si el mes esta desactivado quiere decir que el servicio es por clase, por lo tanto no se cobrará ningun recargo..unicamente el precio del servicio   
@@ -137,22 +156,28 @@ CardLayout cardLayout;
               txtTotal.setText(String.valueOf(total));
          }  
         
-   
+       }catch(Exception e){
+           
+       }
        
     }
     
     ////este metodo llenara el box Mes con los meses que asistio el alumno, lo hace a traves de su inscripcion actual, pone unicamente los meses que asistió porque solo se corbran unicamente los meses que haya asistido, esto solo es para SERVICIOS MENSUALES..
-    void cargarComboBoxMeses(int codigo_inscripcion){
+    public int cargarComboBoxMeses(int codigo_inscripcion){
+        int lleno=0;
          try{
             rs=Clases.Pago.verQueMesesPaga(cx, codigo_inscripcion);
           
-            while(rs.next())
+            while(rs.next()){
                 ls2.addElement(rs.getString("me.mes"));
                 boxMes.setModel(ls2);
+                lleno=1;
+            }
             
         }catch(Exception e){
               JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los meses que debe pagar","ERROR",ERROR_MESSAGE);
         }
+         return lleno;
     }
 
     
@@ -175,8 +200,7 @@ CardLayout cardLayout;
         txtRecargo.setEnabled(false);
         txtTotal.setEnabled(false);
         txtAlumno.setEnabled(false);
-        JTextField editor = (JTextField) jDateFecha.getDateEditor().getUiComponent(); /// obtiene el editar osea el textfield que esta dentro del jDate
-        editor.setEditable(false);  ///deshabilita dicho editor, para validar que no ingrese nada raro, asi nos aseguramps que ingrese un fecha correctamente
+       txtFecha.setEnabled(false);
 
     }
 
@@ -265,11 +289,12 @@ CardLayout cardLayout;
         jLabel7 = new javax.swing.JLabel();
         boxMes = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
-        jDateFecha = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
+        botonBuscarAlumno = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         txtAlumno = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
+        txtFecha = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
         pagosPendientes = new javax.swing.JLabel();
 
         setLayout(new java.awt.CardLayout());
@@ -331,7 +356,7 @@ CardLayout cardLayout;
         Pagos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Pagos.setForeground(new java.awt.Color(255, 255, 255));
         Pagos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/prueba_sistema/output-onlinegiftools (1).gif"))); // NOI18N
-        Pagos.setText(" PAGOS");
+        Pagos.setText(" PAGAR");
         Pagos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Pagos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -575,21 +600,10 @@ CardLayout cardLayout;
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("    Fecha:");
 
-        jDateFecha.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jDateFechaPropertyChange(evt);
-            }
-        });
-        jDateFecha.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jDateFechaKeyTyped(evt);
-            }
-        });
-
-        jButton1.setText("...");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonBuscarAlumno.setText("...");
+        botonBuscarAlumno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botonBuscarAlumnoActionPerformed(evt);
             }
         });
 
@@ -611,6 +625,25 @@ CardLayout cardLayout;
         jLabel15.setBackground(new java.awt.Color(255, 102, 51));
         jLabel15.setForeground(new java.awt.Color(255, 102, 51));
         jLabel15.setText("******************************************************");
+
+        txtFecha.setBackground(new java.awt.Color(255, 204, 204));
+        txtFecha.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtFecha.setForeground(new java.awt.Color(255, 51, 102));
+        txtFecha.setBorder(null);
+        txtFecha.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txtFechaPropertyChange(evt);
+            }
+        });
+        txtFecha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtFechaKeyReleased(evt);
+            }
+        });
+
+        jLabel26.setBackground(new java.awt.Color(255, 102, 51));
+        jLabel26.setForeground(new java.awt.Color(255, 102, 51));
+        jLabel26.setText("******************************************************");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -642,7 +675,7 @@ CardLayout cardLayout;
                                         .addGap(75, 75, 75)
                                         .addComponent(jLabel11)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1))
+                                .addComponent(botonBuscarAlumno))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(8, 8, 8)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -672,16 +705,16 @@ CardLayout cardLayout;
                         .addGap(0, 83, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(boxMes, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(140, 140, 140)
                                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -708,7 +741,7 @@ CardLayout cardLayout;
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel10)
                                     .addComponent(boxTipoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton1))
+                                    .addComponent(botonBuscarAlumno))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -754,13 +787,14 @@ CardLayout cardLayout;
                             .addComponent(jLabel7)
                             .addComponent(boxMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5))
-                    .addComponent(jDateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34))
+                .addComponent(jLabel21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel26)
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -806,11 +840,11 @@ CardLayout cardLayout;
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(51, 51, 51)
                 .addComponent(Pagos, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(92, 92, 92)
                 .addComponent(Historial, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(78, 78, 78)
                 .addComponent(pagosPendientes)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(contenedor, javax.swing.GroupLayout.DEFAULT_SIZE, 1576, Short.MAX_VALUE)
@@ -862,12 +896,14 @@ CardLayout cardLayout;
            int codigo_tipo_pago=Clases.Pago.obtenerCodigoTipoPago(cx, boxTipoPago.getSelectedItem().toString());
            int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));
            int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno);
-           Date fechaSeleccionada = jDateFecha.getDate();
-            // Crear el formateador
+          Calendar fechaSeleccionada = Calendar.getInstance();
+          fechaSeleccionada.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(txtFecha.getText()));
+
+          // Crear el formateador
            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-           
-           // Convertir la fecha al formato deseado
-           String fechaFormateada = formato.format(fechaSeleccionada);
+
+            // Convertir la fecha al formato deseado
+            String fechaFormateada = formato.format(fechaSeleccionada.getTime());
            int codigo_servicio=Clases.Inscripcion.obtenerCodigoServicio(cx, txtServicio.getText());
            float recargo=Float.parseFloat(txtRecargo.getText());
            
@@ -891,13 +927,13 @@ CardLayout cardLayout;
               
                rs=Clases.Pago.evitarDoblesPagosServicioClase(cx, codigo_inscripcion, fechaFormateada, codigo_ciclo_lectivo); /// consulta para ver si ya pagó esa fecha del ciclo lectivo al que pertenezca esa inscripcion
                if(rs.next()){  ///si hay datos, quiere decir que ya pagó, por lo tanto el sistema no le debe permitir realizar de nuevo el mismo pago
-                   SimpleDateFormat formato2 = new SimpleDateFormat("dd/MM/yyyy"); /// creamos un formato de  fecha en formato dia-mes-año
+                   SimpleDateFormat formato2 = new SimpleDateFormat("dd-MM-yyyy"); /// creamos un formato de  fecha en formato dia-mes-año
                    String fechaBonita = formato2.format(fechaSeleccionada); /// a ese formato creado lo guardamos en la variable fechaBonita, mas que nada para mostrarle al usuario una fecha legible, y no un año--me-dia...
                    JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" ya tiene registrado un pago de la fecha "+fechaBonita+" del Ciclo Lectivo "+año_inscripcion,"ERROR",ERROR_MESSAGE);
                    return;
                }
            }else{///sino quiere decir que el servicio es mensual, por lo tanto la validacion es por mes y año
-               rs=Clases.Pago.evitarDoblesPagosServicioMensual(cx, codigo_inscripcion, codigo_mes, codigo_ciclo_lectivo);  //consulta para ver si ya pagó el ese mes del ciclo lectivo al que pertenezca esa isncripcion
+               rs=Clases.Pago.evitarDoblesPagosServicioMensual(cx, codigo_inscripcion, codigo_mes, codigo_ciclo_lectivo);  //consulta para ver si ya pagó ese mes del ciclo lectivo al que pertenezca esa isncripcion
               if(rs.next()){ /// si hay datos, quiere decir que ya pagó ese mes del ciclo lecctivo al que pertenezca esa inscripcion, por lo tanto el sistema no le debe permitir realizar el pago
                    JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" ya tiene registrado un pago del mes "+boxMes.getSelectedItem()+" del Ciclo Lectivo "+año_inscripcion,"ERROR",ERROR_MESSAGE);
                    return;
@@ -941,18 +977,32 @@ CardLayout cardLayout;
          txtAlumno.setText(apenom);
          txtServicio.setText(datos[2].toString());
          txtPrecio.setText(datos[3].toString());
+       // Obtener la fecha actual
+       Date fechaActual = new Date();
+
+        // Formatear la fecha al formato  dd-MM-yyyy
+        SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaFormateada = formato.format(fechaActual);
+        // Mostrarla en el JTextField
+        txtFecha.setText(fechaFormateada);
          int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
          int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
          if(modalidad_cobro==1){
-            activarBoxMes();
+            
            
-            cargarComboBoxMeses(codigo_inscripcion);
-          
+            int lleno=cargarComboBoxMeses(codigo_inscripcion);
+            if(lleno ==0){
+                  JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" tiene un servicio mensual sin asistencias cargadas, deberá realizar primero las asistencias correspondientes de dicho alumno para efectuar un pago");
+                  return;
+            }
+            
+            activarBoxMes();
          }
              
          
          activarCampos();
          txtDni.setEnabled(false);
+         botonBuscarAlumno.setEnabled(false);
                 
               
              
@@ -971,12 +1021,7 @@ CardLayout cardLayout;
        
     }//GEN-LAST:event_txtRecargoActionPerformed
 
-    private void jDateFechaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateFechaPropertyChange
-         validarCamposVacios();
-        calcularRecargoYTotal();
-    }//GEN-LAST:event_jDateFechaPropertyChange
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void botonBuscarAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBuscarAlumnoActionPerformed
           JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
           buscarAlumno dialog = new buscarAlumno(frame, true, p3, a, this, 3);
           dialog.setVisible(true);
@@ -995,6 +1040,14 @@ CardLayout cardLayout;
               
               txtServicio.setText(datos[2].toString());
               txtPrecio.setText(datos[3].toString());
+               // Obtener la fecha actual
+               Date fechaActual = new Date();
+
+               // Formatear la fecha al formato  dd-MM-yyyy
+               SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+               String fechaFormateada = formato.format(fechaActual);
+                // Mostrarla en el JTextField
+                txtFecha.setText(fechaFormateada);
               int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
               int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
               if(modalidad_cobro==1){
@@ -1006,13 +1059,14 @@ CardLayout cardLayout;
                 activarCampos();
               }
               txtDni.setEnabled(false);
+              botonBuscarAlumno.setEnabled(false);
           }catch(Exception e){
           
                JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el servicio del alumno","ERROR",ERROR_MESSAGE);
            
          }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_botonBuscarAlumnoActionPerformed
 
     private void labelCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelCancelarMouseClicked
            limpiar();        
@@ -1050,11 +1104,6 @@ CardLayout cardLayout;
          validarCamposVacios();
     }//GEN-LAST:event_txtTotalKeyReleased
 
-    private void jDateFechaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jDateFechaKeyTyped
-       
-    
-    }//GEN-LAST:event_jDateFechaKeyTyped
-
     private void pagosPendientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pagosPendientesMouseClicked
          pagosPendientes pp = new pagosPendientes();
         contenedor.add(pp,"tres");
@@ -1086,6 +1135,15 @@ CardLayout cardLayout;
          pagosPendientes.setBackground(new Color(255,102,102));
     }//GEN-LAST:event_pagosPendientesMouseExited
 
+    private void txtFechaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFechaKeyReleased
+      validarCamposVacios();
+     
+    }//GEN-LAST:event_txtFechaKeyReleased
+
+    private void txtFechaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtFechaPropertyChange
+         calcularRecargoYTotal();
+    }//GEN-LAST:event_txtFechaPropertyChange
+
     public void setTxtAlumno(String nombre) {
         txtAlumno.setText(nombre);
     }
@@ -1098,11 +1156,10 @@ CardLayout cardLayout;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Historial;
     private javax.swing.JLabel Pagos;
+    private javax.swing.JButton botonBuscarAlumno;
     private javax.swing.JComboBox<String> boxMes;
     private javax.swing.JComboBox<String> boxTipoPago;
     private javax.swing.JPanel contenedor;
-    private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateFecha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1118,6 +1175,7 @@ CardLayout cardLayout;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1137,6 +1195,7 @@ CardLayout cardLayout;
     private javax.swing.JTextField txtAlumno;
     private javax.swing.JTextArea txtAreaObservacion;
     private javax.swing.JTextField txtDni;
+    private javax.swing.JTextField txtFecha;
     private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtRecargo;
     private javax.swing.JTextField txtServicio;

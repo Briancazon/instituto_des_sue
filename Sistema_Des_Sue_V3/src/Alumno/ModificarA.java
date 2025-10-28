@@ -6,6 +6,9 @@ import java.awt.Image;
 import java.sql.Connection;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 
 import javax.swing.SwingUtilities;
@@ -40,6 +44,8 @@ public class ModificarA extends javax.swing.JPanel {
         desactivarCampo();
         desactivarguardar();
         activarMas();
+        desactivarhabilitar();
+        validarRangoFecha();
         
     }
  public class FondoPanel2 extends JPanel {
@@ -121,6 +127,7 @@ public class ModificarA extends javax.swing.JPanel {
          tabla.addColumn("Obra Social");
          tabla.addColumn("Nombre del Tutor");
          tabla.addColumn("Apellido del Tutor");
+         tabla.addColumn("Teléfono del Tutor");
          tabla.addColumn("Parentesco");
         
          
@@ -138,7 +145,8 @@ public class ModificarA extends javax.swing.JPanel {
                    datos[7]=rs.getString("os.nombre");
                    datos[8]=rs.getString("t.nombre");
                    datos[9]=rs.getString("t.apellido");
-                   datos[10]=rs.getString("at.parentesco");
+                   datos[10]=rs.getString("t.telefono");
+                   datos[11]=rs.getString("at.parentesco");
                  
                         if(datos[7]==null){
                       datos[7]="Sin Obra Social";
@@ -157,7 +165,7 @@ public class ModificarA extends javax.swing.JPanel {
      void limpiar(){
          nombretxt.setText("");
          apellidotxt.setText("");
-         fechatxt.setText("");
+         dateFecha.setDate(null);
          dnitxt.setText("");
          escuelatxt.setText("");
          txtOS.setText("");
@@ -167,7 +175,11 @@ public class ModificarA extends javax.swing.JPanel {
          labelCodigoTutor.setText("");
          labelCodigoOS.setText("");
          parentescotxt.setText("");
-         
+         desactivarguardar();
+         desactivarmodificar();
+         desactivareliminar();
+         activarMas();
+         codA.setText("");
          
      }
  
@@ -220,13 +232,13 @@ public class ModificarA extends javax.swing.JPanel {
     public void activarCampo(){
         nombretxt.setEnabled(true);
          apellidotxt.setEnabled(true);
-         fechatxt.setEnabled(true);
+         dateFecha.setEnabled(true);
          dnitxt.setEnabled(true);
          escuelatxt.setEnabled(true);
 
          nivel.setEnabled(true);
       
-        
+          gradotxt.setEnabled(true);
          parentescotxt.setEnabled(true);
          
     }
@@ -234,7 +246,7 @@ public class ModificarA extends javax.swing.JPanel {
   public void desactivarCampo(){
         nombretxt.setEnabled(false);
         apellidotxt.setEnabled(false);
-         fechatxt.setEnabled(false);
+         dateFecha.setEnabled(false);
          dnitxt.setEnabled(false);
          escuelatxt.setEnabled(false);
          txtOS.setEnabled(false);
@@ -242,12 +254,24 @@ public class ModificarA extends javax.swing.JPanel {
          txtOS.setEnabled(false);
          txtTutor.setEnabled(false);
          parentescotxt.setEnabled(false);
+         gradotxt.setEnabled(false);
+         ((JTextField) dateFecha.getDateEditor().getUiComponent()).setEditable(false); // desactiva el campo de texxto del choooser, para que unicamente solo pueda poner la fecha desde el calendario
+         
          
     }
  
  
  
- 
+ void validarRangoFecha(){
+      // Configurar rango de fechas para la fecha de nacimiento
+    Date hoy = new Date();
+    dateFecha.setMaxSelectableDate(hoy); // la fecha maxima que puede elegir es hoy, despues de eso no hay
+
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.YEAR, -20); // hace 100 años
+    dateFecha.setMinSelectableDate(cal.getTime());
+
+ }
  
  
  
@@ -277,7 +301,6 @@ public class ModificarA extends javax.swing.JPanel {
         apellidotxt = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        fechatxt = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         dnitxt = new javax.swing.JTextField();
@@ -304,6 +327,7 @@ public class ModificarA extends javax.swing.JPanel {
         txtTutor = new javax.swing.JTextField();
         labelCodigoTutor = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        dateFecha = new com.toedter.calendar.JDateChooser();
         jPanel6 = new javax.swing.JPanel();
         buscar = new javax.swing.JLabel();
         cancelar = new javax.swing.JLabel();
@@ -314,7 +338,7 @@ public class ModificarA extends javax.swing.JPanel {
         eliminar = new javax.swing.JLabel();
         habilitar = new javax.swing.JLabel();
         inactivo = new javax.swing.JCheckBox();
-        campo = new javax.swing.JTextField();
+        txtNombreBuscador = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaAlumno = new javax.swing.JTable();
 
@@ -386,6 +410,11 @@ public class ModificarA extends javax.swing.JPanel {
         nombretxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         nombretxt.setForeground(new java.awt.Color(255, 51, 102));
         nombretxt.setBorder(null);
+        nombretxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nombretxtKeyTyped(evt);
+            }
+        });
 
         jLabel3.setBackground(new java.awt.Color(255, 102, 0));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -396,6 +425,11 @@ public class ModificarA extends javax.swing.JPanel {
         apellidotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         apellidotxt.setForeground(new java.awt.Color(255, 51, 102));
         apellidotxt.setBorder(null);
+        apellidotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                apellidotxtKeyTyped(evt);
+            }
+        });
 
         jLabel8.setBackground(new java.awt.Color(255, 102, 51));
         jLabel8.setForeground(new java.awt.Color(255, 102, 51));
@@ -405,11 +439,6 @@ public class ModificarA extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Fecha Nac:");
-
-        fechatxt.setBackground(new java.awt.Color(255, 204, 204));
-        fechatxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        fechatxt.setForeground(new java.awt.Color(255, 51, 102));
-        fechatxt.setBorder(null);
 
         jLabel9.setBackground(new java.awt.Color(255, 102, 51));
         jLabel9.setForeground(new java.awt.Color(255, 102, 51));
@@ -424,6 +453,11 @@ public class ModificarA extends javax.swing.JPanel {
         dnitxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         dnitxt.setForeground(new java.awt.Color(255, 51, 102));
         dnitxt.setBorder(null);
+        dnitxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dnitxtKeyTyped(evt);
+            }
+        });
 
         jLabel10.setBackground(new java.awt.Color(255, 102, 51));
         jLabel10.setForeground(new java.awt.Color(255, 102, 51));
@@ -438,6 +472,11 @@ public class ModificarA extends javax.swing.JPanel {
         escuelatxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         escuelatxt.setForeground(new java.awt.Color(255, 51, 102));
         escuelatxt.setBorder(null);
+        escuelatxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                escuelatxtKeyTyped(evt);
+            }
+        });
 
         jLabel11.setBackground(new java.awt.Color(255, 102, 51));
         jLabel11.setForeground(new java.awt.Color(255, 102, 51));
@@ -476,6 +515,11 @@ public class ModificarA extends javax.swing.JPanel {
         parentescotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         parentescotxt.setForeground(new java.awt.Color(255, 51, 102));
         parentescotxt.setBorder(null);
+        parentescotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                parentescotxtKeyTyped(evt);
+            }
+        });
 
         jLabel22.setBackground(new java.awt.Color(255, 102, 51));
         jLabel22.setForeground(new java.awt.Color(255, 102, 51));
@@ -496,6 +540,11 @@ public class ModificarA extends javax.swing.JPanel {
         gradotxt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         gradotxt.setForeground(new java.awt.Color(255, 51, 102));
         gradotxt.setBorder(null);
+        gradotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                gradotxtKeyTyped(evt);
+            }
+        });
 
         jLabel16.setBackground(new java.awt.Color(255, 102, 51));
         jLabel16.setForeground(new java.awt.Color(255, 102, 51));
@@ -544,6 +593,8 @@ public class ModificarA extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel21)
                         .addGap(472, 472, 472))
@@ -593,7 +644,7 @@ public class ModificarA extends javax.swing.JPanel {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
                                         .addComponent(jLabel17))
                                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(45, 45, 45))
@@ -625,11 +676,7 @@ public class ModificarA extends javax.swing.JPanel {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(80, 80, 80)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(fechatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -670,24 +717,25 @@ public class ModificarA extends javax.swing.JPanel {
                             .addComponent(jLabel3))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(2, 2, 2)
-                                        .addComponent(txtTutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jLabel23))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel21)
-                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(jLabel4)
-                                                .addComponent(fechatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel9))))
+                                .addGap(12, 12, 12)
+                                .addComponent(txtTutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel23))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(20, 20, 20)
-                                .addComponent(jButton2)))
+                                .addComponent(jButton2))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(dateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel21)
+                                            .addComponent(jLabel4))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel9)))
                         .addGap(10, 10, 10)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -729,6 +777,9 @@ public class ModificarA extends javax.swing.JPanel {
         buscar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 buscarMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                buscarMouseEntered(evt);
             }
         });
 
@@ -796,13 +847,18 @@ public class ModificarA extends javax.swing.JPanel {
             }
         });
 
-        campo.setBackground(new java.awt.Color(255, 153, 153));
-        campo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        campo.setForeground(new java.awt.Color(0, 0, 0));
-        campo.setBorder(null);
-        campo.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreBuscador.setBackground(new java.awt.Color(255, 153, 153));
+        txtNombreBuscador.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNombreBuscador.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombreBuscador.setBorder(null);
+        txtNombreBuscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoActionPerformed(evt);
+                txtNombreBuscadorActionPerformed(evt);
+            }
+        });
+        txtNombreBuscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreBuscadorKeyTyped(evt);
             }
         });
 
@@ -814,7 +870,7 @@ public class ModificarA extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(campo, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(recargar)
                 .addGap(72, 72, 72)
@@ -857,7 +913,7 @@ public class ModificarA extends javax.swing.JPanel {
                                 .addComponent(inactivo))
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGap(19, 19, 19)
-                                .addComponent(campo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -909,71 +965,70 @@ public class ModificarA extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void guardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarMouseClicked
-        int dni= Integer.parseInt(dnitxt.getText());
-        
-        
-        String niveles=nivel.getSelectedItem().toString(); // cua
-        String A= codA.getText();
-        String Nombre= nombretxt.getText();
-        String Apellido=apellidotxt.getText();
-        String Fecha=fechatxt.getText();
-        String Escuela=escuelatxt.getText();
-        String Grado= gradotxt.getText();
-        String Parentesco= parentescotxt.getText();
+       
         
           
        
     
         try{
         
-                  
+                if(nombretxt.getText().isEmpty() || apellidotxt.getText().isEmpty() || dateFecha.getDate()==null || dnitxt.getText().isEmpty() || escuelatxt.getText().isEmpty() || gradotxt.getText().isEmpty() || nivel.getSelectedItem().equals("Seleccionar") || txtTutor.getText().isEmpty() || parentescotxt.getText().isEmpty()){
+                       JOptionPane.showMessageDialog(null, "Algunos campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                       return; // Detiene la ejecución del método
+                }          
       
-                    
+                int dni= Integer.parseInt(dnitxt.getText());
+                String niveles=nivel.getSelectedItem().toString(); // cua
+                String A= codA.getText();
+                String Nombre= nombretxt.getText();
+                String Apellido=apellidotxt.getText();
+                Date fecha = dateFecha.getDate(); //obtenemos la fecha que esta en formato dd-mm-aaaa
+                String Escuela=escuelatxt.getText();
+                String Grado= gradotxt.getText();
+                String Parentesco= parentescotxt.getText();   
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+                String fechaSQL = formato.format(fecha); ///pasamos nuestra fecha a formato base de datos para poder hacer el insert
+
                 
-            
-              if(!codA.getText().isEmpty()){
-                  int codigoOS=0;
-                  int codigoT=0;
-                  int filaSeleccionada = TablaAlumno.getSelectedRow();
-                   String os =TablaAlumno.getValueAt(filaSeleccionada, 7).toString();
+                if(!codA.getText().isEmpty()){
+                         int codigoOS=0;
+                         int codigoT=0;
+                         int filaSeleccionada = TablaAlumno.getSelectedRow();
+                         String os =TablaAlumno.getValueAt(filaSeleccionada, 7).toString();
                   
-                  ////////////verificar si el label del codigo OS esta vacio, si es asi se le pone el codigo de la OS que ya tiene, buscando el codigo de su OS a traves de la tabla, en donde esta el nombre, asi obtendremos el codigo de su OS
-                  if( labelCodigoOS.getText().isEmpty()){
-                       if(os.equalsIgnoreCase("Sin Obra Social")){
-                           codigoOS=0;
-                       }else{
-                             codigoOS=Clases.ObraSocial.obtenerCodigo(cx,os );
-                             labelCodigoOS.setText(String.valueOf(codigoOS));
-                             codigoOS= Integer.parseInt(labelCodigoOS.getText());
-                       }
-                  }else{
+                           ////////////verificar si el label del codigo OS esta vacio, si es asi se le pone el codigo de la OS que ya tiene, buscando el codigo de su OS a traves de la tabla, en donde esta el nombre, asi obtendremos el codigo de su OS
+                          if( labelCodigoOS.getText().isEmpty()){
+                                      if(os.equalsIgnoreCase("Sin Obra Social")){
+                                            codigoOS=0;
+                                      }else{
+                                            codigoOS=Clases.ObraSocial.obtenerCodigo(cx,os );
+                                            labelCodigoOS.setText(String.valueOf(codigoOS));
+                                            codigoOS= Integer.parseInt(labelCodigoOS.getText());
+                                      }
+                           }else{
                    
-                          codigoOS=Integer.parseInt(labelCodigoOS.getText());
-                  }
+                                      codigoOS=Integer.parseInt(labelCodigoOS.getText());
+                           }
       
-                  /////////////verificar si el label del codigo tutor esta vacio, si es asi se le pone el codigo del tutor que ya tiene, buscando el codigo de su tutor a traves de la tabla, especifacamente por el telefono
-                  if(labelCodigoTutor.getText().isEmpty() ){
-                      String telefono_tutor =TablaAlumno.getValueAt(filaSeleccionada, 10).toString();
-                      codigoT=Clases.Tutor.obtenerCodigo(cx, telefono_tutor);
-                      labelCodigoTutor.setText(String.valueOf(codigoT));
-                      codigoT=Integer.parseInt(labelCodigoTutor.getText());
+                           /////////////verificar si el label del codigo tutor esta vacio, si es asi se le pone el codigo del tutor que ya tiene, buscando el codigo de su tutor a traves de la tabla, especifacamente por el telefono
+                           if(labelCodigoTutor.getText().isEmpty() ){
+                                     String telefono_tutor =TablaAlumno.getValueAt(filaSeleccionada, 10).toString();
+                                     codigoT=Clases.Tutor.obtenerCodigo(cx, telefono_tutor);
+                                     labelCodigoTutor.setText(String.valueOf(codigoT));
+                                     codigoT=Integer.parseInt(labelCodigoTutor.getText());
                      
-                  }else{ /////////en caso de que este lleno, es porque ya previamente el usuario selecciono un nuevo tutor, por lo tanto el label quedo con ese el codigo del nuevo tutor
+                           }else{ /////////en caso de que este lleno, es porque ya previamente el usuario selecciono un nuevo tutor, por lo tanto el label quedo con ese el codigo del nuevo tutor
                       
-                      codigoT=Integer.parseInt(labelCodigoTutor.getText());
+                                     codigoT=Integer.parseInt(labelCodigoTutor.getText());
                       
-                  }
-                   Clases.Alumno.actualizarAlumno(cx, Nombre, Apellido, Fecha, dni, Escuela, Grado, niveles, codigoOS, Integer.parseInt(A));
-            
-                       Clases.Alumno.modificaralumno_tutor(cx,codigoT , Parentesco,  Integer.parseInt(A) );
-             
-              
-                       JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
-                       codA.setText("");
-                       MostrarAlumno();
-                       limpiar();
-                       desactivarCampo();
-                       activarMas();
+                           }
+                           Clases.Alumno.actualizarAlumno(cx, Nombre, Apellido, fechaSQL, dni, Escuela, Grado, niveles, codigoOS, Integer.parseInt(A));
+                           Clases.Alumno.modificaralumno_tutor(cx,codigoT , Parentesco,  Integer.parseInt(A) );
+                           JOptionPane.showMessageDialog(null, "Los datos se actualizaron correctamente"); 
+                           MostrarAlumno();
+                           limpiar();
+                           desactivarCampo();
+                       
                   
                   
                     
@@ -983,30 +1038,28 @@ public class ModificarA extends javax.swing.JPanel {
                 
                 
                 } else{ 
-                    int codigoOS;
-                     if(labelCodigoOS.getText().isEmpty()){
-                         codigoOS=0;
-                     }else{
-                        codigoOS=Integer.parseInt(labelCodigoOS.getText());
-                     }
+                            int codigoOS;
+                            if(labelCodigoOS.getText().isEmpty()){
+                                      codigoOS=0;
+                            }else{
+                                      codigoOS=Integer.parseInt(labelCodigoOS.getText());
+                            }
                      
-                     int codigo_tutor=Integer.parseInt(labelCodigoTutor.getText());
-                     Clases.Alumno.cargar(cx, Nombre, Apellido, Fecha, dni, Escuela, Grado, niveles, codigoOS);
-                     int codigoAlumno=Clases.Alumno.obtenerCodigo(cx, dni);
-                     
-                     Clases.Alumno.cargarAlumnoTutor(cx, codigoAlumno, codigo_tutor, Parentesco);
-                     JOptionPane.showMessageDialog(null, "Se ha cargado correctamente al alumno"); 
-                     MostrarAlumno();
-                     limpiar();
-                     codA.setText("");
-                     desactivarCampo();
-                     activarMas();
-           }
+                            int codigo_tutor=Integer.parseInt(labelCodigoTutor.getText());
+                            Clases.Alumno.cargar(cx, Nombre, Apellido, fechaSQL, dni, Escuela, Grado, niveles, codigoOS);
+                            int codigoAlumno=Clases.Alumno.obtenerCodigo(cx, dni);
+                            Clases.Alumno.cargarAlumnoTutor(cx, codigoAlumno, codigo_tutor, Parentesco);
+                            JOptionPane.showMessageDialog(null, "Se ha cargado correctamente al alumno"); 
+                            MostrarAlumno();
+                            limpiar();
+                            desactivarCampo();
+                 }
              
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar cargar o actualizar el alumno"); 
+           JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar cargar o actualizar los datos","ERROR",ERROR_MESSAGE);
+
             MostrarAlumno();
-            e.printStackTrace();
+           
         }
         
         
@@ -1033,7 +1086,7 @@ public class ModificarA extends javax.swing.JPanel {
              
              /// si tiene registros, es que por que tiene pagos pendientes, por lo tanto el sistema no le permitirá dar de baja al alumno no sin antes haber saldado los meses que debe
              while(rs.next()){
-                  JOptionPane.showMessageDialog(null, "El alumno que trata de eliminar tiene pagos pendientes, el sistema no permite dar de baja a alumnos con cuotas sin saldar","ERROR",ERROR_MESSAGE);
+                  JOptionPane.showMessageDialog(null, "El alumno que trata de eliminar tiene pagos pendientes de un servicio mensual, el sistema no permite dar de baja a alumnos con cuotas sin saldar","ERROR",ERROR_MESSAGE);
                   return;
              }
                  
@@ -1044,11 +1097,14 @@ public class ModificarA extends javax.swing.JPanel {
                            Clases.Alumno.eliminar(cx, codigo);
                            JOptionPane.showMessageDialog(null, "Se ha eliminado al alumno correctamente");
                            MostrarAlumno();
-                            codA.setText("");
+                           limpiar();
                   
              }else{
                            JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación");
                            MostrarAlumno();
+                          limpiar();
+                           
+                          
              }
         }catch(Exception e){
                 JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar eliminar el alumno","ERROR",ERROR_MESSAGE);
@@ -1066,6 +1122,7 @@ public class ModificarA extends javax.swing.JPanel {
             
         
         }else{
+            desactivarhabilitar();
             MostrarAlumno();
         }
         
@@ -1117,46 +1174,67 @@ public class ModificarA extends javax.swing.JPanel {
             String apellido_tutor =TablaAlumno.getValueAt(filaSeleccionada, 9).toString();
             String telefono_tutor =TablaAlumno.getValueAt(filaSeleccionada, 10).toString();
             String parentesco =TablaAlumno.getValueAt(filaSeleccionada, 11).toString();
-            try{
-                 int codigo= Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(dni));
-                  codA.setText(String.valueOf(codigo));   //pone el codigo del alumno en el label prueba
-            }catch(Exception e){
-               JOptionPane.showMessageDialog(null, "Error al intentar obtener el codigo del alumno");   
-            }
-            String apenomTutor=nombre_tutor+" "+apellido_tutor;
+            if(inactivo.isSelected()){
+                activarhabilitar();
+            }else{
+                desactivarMas();
+                desactivarguardar();
+                
+                  try{
+                     int codigo= Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(dni));
+                     codA.setText(String.valueOf(codigo));   //pone el codigo del alumno en el label prueba
+                  }catch(Exception e){
+                     JOptionPane.showMessageDialog(null, "Error al intentar obtener el codigo del alumno");   
+                  }
+                  String apenomTutor=nombre_tutor+" "+apellido_tutor;
             
-            nombretxt.setText(nombre);
-            apellidotxt.setText(apellido);
-            fechatxt.setText(fecha);
-            dnitxt.setText(dni);
+                  nombretxt.setText(nombre);
+                  apellidotxt.setText(apellido);
+                  // 1️ Convertir el texto de la base a Date
+                  SimpleDateFormat formatoBD = new SimpleDateFormat("yyyy-MM-dd");
+                  Date fechaConvertida = formatoBD.parse(fecha);
+
+                  //  Mostrar esa fecha en el JDateChooser
+                  dateFecha.setDate(fechaConvertida);
+
+                   //  Cambiar el formato visible del JDateChooser (esto es lo que lo hace "legible")
+                  dateFecha.setDateFormatString("dd-MM-yyyy");
+
+                  dnitxt.setText(dni);
             
-            escuelatxt.setText(escuela);
-            gradotxt.setText(grado);
-            nivel.setSelectedItem(nivele);
-           txtTutor.setText(apenomTutor);
-           parentescotxt.setText(parentesco);
+                  escuelatxt.setText(escuela);
+                  gradotxt.setText(grado);
+                  nivel.setSelectedItem(nivele);
+                  txtTutor.setText(apenomTutor);
+                  parentescotxt.setText(parentesco);
             
         
-             boolean o_s=valorObraSocial==null;
-           if (o_s==true){
-               txtOS.setText("Sin Obra Social");
-           }else{
-            txtOS.setText(valorObraSocial.toString());
-           }
+                   boolean o_s=valorObraSocial==null;
+                   if (o_s==true){
+                     txtOS.setText("Sin Obra Social");
+                   }else{
+                     txtOS.setText(valorObraSocial.toString());
+                   }
            
-           activarmodificar();
-           activareliminar();
+                   activarmodificar();
+                   activareliminar();
             
-     
-       }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
-       }
-      
+            }
+      }catch(Exception e){
+          JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
+           e.printStackTrace();
+            
+      }
+            
+          
+          
     }//GEN-LAST:event_TablaAlumnoMouseClicked
 
     private void buscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseClicked
-        int dni=Integer.parseInt(campo.getText());
-         ResultSet rs;
+       try{
+        desactivarhabilitar();
+       
+         
          
         tabla.setRowCount(0);  
         tabla.setColumnCount(0);
@@ -1173,10 +1251,10 @@ public class ModificarA extends javax.swing.JPanel {
          tabla.addColumn("Parentesco");
         
          
-         try{
+         
             
-             rs=Clases.Alumno.buscarAlumno(cx, dni);
-               if(rs.next()){
+             rs=Clases.Alumno.buscarAlumno(cx, txtNombreBuscador.getText());
+               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
                    datos[2]=rs.getString("al.fecha_nac");
@@ -1193,12 +1271,10 @@ public class ModificarA extends javax.swing.JPanel {
                       datos[7]="Sin Obra Social";
                   }
                    tabla.addRow(datos);
-                   TablaAlumno.setModel(tabla);
                    
-              }  else{
-              JOptionPane.showMessageDialog(null, "El alumno "+campo.getText()+" no existe","ERROR",ERROR_MESSAGE);
-              MostrarAlumno();
-         }
+                   
+              }  
+               TablaAlumno.setModel(tabla);
               
           }catch(Exception e){
                    JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar el alumno","ERROR",ERROR_MESSAGE); 
@@ -1224,13 +1300,14 @@ public class ModificarA extends javax.swing.JPanel {
         txtTutor.setText(nombre);
     }
 
-    private void campoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoActionPerformed
+    private void txtNombreBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreBuscadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_campoActionPerformed
+    }//GEN-LAST:event_txtNombreBuscadorActionPerformed
 
     private void recargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recargarMouseClicked
         MostrarAlumno();
-        campo.setText("");
+        txtNombreBuscador.setText("");
+        desactivarhabilitar();
     }//GEN-LAST:event_recargarMouseClicked
 
     private void cancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarMouseClicked
@@ -1247,12 +1324,17 @@ public class ModificarA extends javax.swing.JPanel {
        activarguardar();
        activarCampo();
        desactivarMas();
+       desactivarmodificar();
+       desactivareliminar();
+       
     }//GEN-LAST:event_masMouseClicked
 
     private void modificarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modificarMouseClicked
         activarCampo();
         desactivarmodificar();
         activarguardar();
+        desactivareliminar();
+        
     }//GEN-LAST:event_modificarMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -1269,18 +1351,77 @@ buscarTutor dialog = new buscarTutor(frame, true, this);
 dialog.setVisible(true);  
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void buscarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buscarMouseEntered
+
+    private void nombretxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombretxtKeyTyped
+        char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || nombretxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_nombretxtKeyTyped
+
+    private void apellidotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_apellidotxtKeyTyped
+        char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || apellidotxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_apellidotxtKeyTyped
+
+    private void dnitxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dnitxtKeyTyped
+         char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente numeros
+      if (!Character.isDigit(c) || dnitxt.getText().length()>8) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_dnitxtKeyTyped
+
+    private void escuelatxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_escuelatxtKeyTyped
+        char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra y numeros
+      if ((!Character.isLetter(c) &&  !Character.isDigit(c) && c != ' ') || escuelatxt.getText().length()>40) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_escuelatxtKeyTyped
+
+    private void gradotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_gradotxtKeyTyped
+         char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra y numeros
+      if ((!Character.isLetter(c) &&  !Character.isDigit(c)) || gradotxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_gradotxtKeyTyped
+
+    private void parentescotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_parentescotxtKeyTyped
+       char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if (!Character.isLetter(c) || parentescotxt.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_parentescotxtKeyTyped
+
+    private void txtNombreBuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreBuscadorKeyTyped
+         char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ')|| txtNombreBuscador.getText().length()>20) {
+        evt.consume(); 
+    }  
+    }//GEN-LAST:event_txtNombreBuscadorKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TablaAlumno;
     private javax.swing.JTextField apellidotxt;
     private javax.swing.JLabel buscar;
-    private javax.swing.JTextField campo;
     private javax.swing.JLabel cancelar;
     private javax.swing.JLabel codA;
+    private com.toedter.calendar.JDateChooser dateFecha;
     private javax.swing.JTextField dnitxt;
     private javax.swing.JLabel eliminar;
     private javax.swing.JTextField escuelatxt;
-    private javax.swing.JTextField fechatxt;
     private javax.swing.JTextField gradotxt;
     private javax.swing.JLabel guardar;
     private javax.swing.JLabel habilitar;
@@ -1323,6 +1464,7 @@ dialog.setVisible(true);
     private javax.swing.JTextField nombretxt;
     private javax.swing.JTextField parentescotxt;
     private javax.swing.JLabel recargar;
+    private javax.swing.JTextField txtNombreBuscador;
     private javax.swing.JTextField txtOS;
     private javax.swing.JTextField txtTutor;
     // End of variables declaration//GEN-END:variables
