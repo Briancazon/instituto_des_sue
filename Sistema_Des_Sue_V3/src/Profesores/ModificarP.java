@@ -246,7 +246,11 @@ public class ModificarP extends javax.swing.JPanel {
         
         
         
-        
+                     
+ public int getCantidadDocentes() {
+    return tablaProfesor.getRowCount(); // Devuelve la cantidad de filas de la tabla
+}
+   
         
         
         

@@ -1,27 +1,37 @@
 
 package prueba_sistema;
 
+
+import Consultas.consultas4;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import javax.swing.JTextField;
+
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
+import java.awt.Color;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 
 public class Panel3 extends javax.swing.JPanel {
      ResultSet rs;
+     consultas4 pp;
     Connection cx=Conexion.conexion.conexion();
     DefaultComboBoxModel ls= new DefaultComboBoxModel();
       DefaultComboBoxModel ls2= new DefaultComboBoxModel();
       Panel5 p5;
   
      DefaultTableModel tabla=new DefaultTableModel();
-     Object[] datos=new Object[10]; 
+     Object[] datos=new Object[12]; 
       asistencias a;
 
    
@@ -42,10 +52,12 @@ public class Panel3 extends javax.swing.JPanel {
            tabla.setColumnCount(0);
             tabla.addColumn("Nombre Alumno");
            tabla.addColumn("Apellido Alumno");
+           tabla.addColumn("DNI Alumno");
           tabla.addColumn("Días");
           tabla.addColumn("Horarios");
           tabla.addColumn("Nombre Profesor");
           tabla.addColumn("Apellido Profesor");
+          tabla.addColumn("DNI Profesor");
           tabla.addColumn("Servicio");
           tabla.addColumn("Fecha Inscripción");
           tabla.addColumn("Ciclo Lectivo");
@@ -59,14 +71,16 @@ public class Panel3 extends javax.swing.JPanel {
         while(rs.next()){
             datos[0]=rs.getString("al.nombre");
             datos[1]=rs.getString("al.apellido");
-            datos[2]=rs.getString("inc.dias");
-            datos[3]=rs.getString("ho.horario");
-            datos[4]=rs.getString("pro.nombre");
-            datos[5]=rs.getString("pro.apellido");
-            datos[6]=rs.getString("ser.nombre");
-            datos[7]=rs.getString("inc.fecha_inscripcion");
-            datos[8]=rs.getString("ci.año");
-            datos[9]=rs.getString("inc.estado");
+            datos[2]=rs.getString("al.dni");
+            datos[3]=rs.getString("inc.dias");
+            datos[4]=rs.getString("ho.horario");
+            datos[5]=rs.getString("pro.nombre");
+            datos[6]=rs.getString("pro.apellido");
+             datos[7]=rs.getString("pro.dni");
+            datos[8]=rs.getString("ser.nombre");
+            datos[9]=rs.getString("inc.fecha_inscripcion");
+            datos[10]=rs.getString("ci.año");
+            datos[11]=rs.getString("inc.estado");
             
                    
             
@@ -80,6 +94,8 @@ public class Panel3 extends javax.swing.JPanel {
         
     }
     }
+    
+     
     
     void validarCamposVacios(){
         if(txtAlumno.getText().isEmpty() || txtProfesor.getText().isEmpty() || txtFecha.getText().isEmpty() || boxDias.getSelectedItem().equals("Seleccione unos días") || boxServicios.getSelectedItem().equals("Seleccione un Servicio") || boxHorarios.getSelectedItem().equals("Seleccione un Horario")){
@@ -125,7 +141,9 @@ public class Panel3 extends javax.swing.JPanel {
         }
     }
 
-    
+     public int getCantidadI() {
+    return tablaInscripciones.getRowCount(); // Devuelve la cantidad de filas de la tabla
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -158,10 +176,13 @@ public class Panel3 extends javax.swing.JPanel {
         tablaInscripciones = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        txtNombreBuscador = new javax.swing.JTextField();
         botonGuardar = new javax.swing.JLabel();
         labelCodigoAlumno = new javax.swing.JLabel();
         labelCodigoProfesor = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        labelEditar = new javax.swing.JLabel();
+        txtAuxiliar = new javax.swing.JLabel();
 
         setLayout(new java.awt.CardLayout());
 
@@ -196,9 +217,9 @@ public class Panel3 extends javax.swing.JPanel {
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(38, 38, 38)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(430, 430, 430))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -382,7 +403,7 @@ public class Panel3 extends javax.swing.JPanel {
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addGap(0, 837, Short.MAX_VALUE)
+                .addGap(0, 822, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -406,7 +427,7 @@ public class Panel3 extends javax.swing.JPanel {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(52, 52, 52)
                                 .addComponent(txtFecha)))))
-                .addContainerGap(381, Short.MAX_VALUE))
+                .addContainerGap(367, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -456,28 +477,38 @@ public class Panel3 extends javax.swing.JPanel {
 
         tablaInscripciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nombre Alumno", "Apellido Alumno", "Dias", "Horarios", "Nombre Profesor", "Apellido Profesor", "Servicio", "Fecha Inscripción", "Ciclo Lectivo", "Estado"
+                "Nombre Alumno", "Apellido Alumno", "DNI Alumno", "Dias", "Horarios", "Nombre Profesor", "Apellido Profesor", "DNI Profesor", "Servicio", "Fecha Inscripción", "Ciclo Lectivo", "Estado"
             }
         ));
+        tablaInscripciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaInscripcionesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaInscripciones);
 
         jPanel4.setBackground(new java.awt.Color(255, 102, 102));
 
         jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/Buscar_1.png"))); // NOI18N
+        jLabel15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel15MouseClicked(evt);
+            }
+        });
 
-        jTextField11.setBackground(new java.awt.Color(255, 204, 204));
-        jTextField11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField11.setForeground(new java.awt.Color(0, 0, 0));
-        jTextField11.setBorder(null);
-        jTextField11.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreBuscador.setBackground(new java.awt.Color(255, 204, 204));
+        txtNombreBuscador.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNombreBuscador.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombreBuscador.setBorder(null);
+        txtNombreBuscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField11ActionPerformed(evt);
+                txtNombreBuscadorActionPerformed(evt);
             }
         });
 
@@ -492,7 +523,21 @@ public class Panel3 extends javax.swing.JPanel {
 
         labelCodigoAlumno.setText("jLabel9");
 
-        labelCodigoProfesor.setText("jLabel9");
+        jButton3.setText("IMPRIMIR ");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        labelEditar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
+        labelEditar.setForeground(new java.awt.Color(255, 255, 255));
+        labelEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/m.png"))); // NOI18N
+        labelEditar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelEditarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -502,41 +547,57 @@ public class Panel3 extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(botonGuardar)
-                .addGap(63, 63, 63)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelEditar)
+                .addGap(444, 444, 444)
                 .addComponent(labelCodigoAlumno)
-                .addGap(103, 103, 103)
-                .addComponent(labelCodigoProfesor)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70)
+                .addComponent(jButton3)
+                .addGap(150, 150, 150)
+                .addComponent(txtAuxiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(487, 487, 487))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel15)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(botonGuardar)
+                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelCodigoAlumno)
-                    .addComponent(labelCodigoProfesor))
-                .addGap(21, 21, 21))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelCodigoAlumno)
+                            .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3)
+                            .addComponent(txtAuxiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(13, 13, 13))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(botonGuardar)
+                            .addComponent(labelEditar))
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout paneltresLayout = new javax.swing.GroupLayout(paneltres);
         paneltres.setLayout(paneltresLayout);
         paneltresLayout.setHorizontalGroup(
             paneltresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1972, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1949, Short.MAX_VALUE)
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneltresLayout.createSequentialGroup()
-                .addGap(97, 97, 97)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(87, 87, 87))
+            .addGroup(paneltresLayout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(paneltresLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1674, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         paneltresLayout.setVerticalGroup(
             paneltresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -547,16 +608,16 @@ public class Panel3 extends javax.swing.JPanel {
                 .addGap(1, 1, 1)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
                 .addGap(32, 32, 32))
         );
 
         add(paneltres, "tres");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
+    private void txtNombreBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreBuscadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField11ActionPerformed
+    }//GEN-LAST:event_txtNombreBuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -567,9 +628,9 @@ dialog.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-     JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
        
-buscarProfesor dialog = new buscarProfesor(frame, true, this);
+buscarProfesor dialog = new buscarProfesor(frame, true, this, pp, 2);
 dialog.setVisible(true);
 
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -583,36 +644,59 @@ dialog.setVisible(true);
         
          
         
-        try{
-               int codigo_servicio=Clases.Inscripcion.obtenerCodigoServicio(cx, servicio);
-               int codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
-               int codigoProfesor=Integer.parseInt(labelCodigoProfesor.getText());
-               int codigoAlumno=Integer.parseInt(labelCodigoAlumno.getText());
-                String dias=boxDias.getSelectedItem().toString();
-                String fecha=txtFecha.getText();
-                int c_c_l=Clases.Inscripcion.obtenerCodigoCicloLectivo(cx);
+        try{ 
+               if(txtAuxiliar.getText().isEmpty()){
+                      int codigo_servicio=Clases.Inscripcion.obtenerCodigoServicio(cx, servicio);
+                      int codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
+                      int codigoProfesor=Integer.parseInt(labelCodigoProfesor.getText());
+                      int codigoAlumno=Integer.parseInt(labelCodigoAlumno.getText());
+                      String dias=boxDias.getSelectedItem().toString();
+                      String fecha=txtFecha.getText();
+                      int c_c_l=Clases.Inscripcion.obtenerCodigoCicloLectivo(cx);
                 
-                ///VALIDACION: valida que un alumno con servicio mensual no tenga pagos pendientes, si es que tiene el sistema no le permitirá registrar una nueva inscripcion no sin antes haber saldado todo lo que debe
-                int dni_alumno=Clases.Alumno.obtenerDni(cx, codigoAlumno);
-                rs=Clases.Pago.verPagosPendientesAlumno(cx, dni_alumno); ///se fija si este alumno tiene registros de pagos pendientes en caso de que se tenga un servicio mensual, si es que tiene un servicio de clase personalizada, pasa este filtro, ya que en dicho servicio no existe deuda pendiente, asi que en ese caso si podría realizar una nueva inscripcion sin problemas
-                while(rs.next()){// en caso de que si haya registros de pagos pendientes(meses en los que si vino pero no pago, osea cuotas sin pagar), el sistema no le permitirá realizar otra inscripción
-                    JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" tiene pagos de cuotas pendientes de su servicio mensual actual, deberá saldar todo lo que deba para poder realizar otra inscripcion","ERROR",ERROR_MESSAGE);
-                    return;
-                }
+                      ///VALIDACION: valida que un alumno con servicio mensual no tenga pagos pendientes, si es que tiene el sistema no le permitirá registrar una nueva inscripcion no sin antes haber saldado todo lo que debe
+                      int dni_alumno=Clases.Alumno.obtenerDni(cx, codigoAlumno);
+                      rs=Clases.Pago.verPagosPendientesAlumno(cx, dni_alumno); ///se fija si este alumno tiene registros de pagos pendientes en caso de que se tenga un servicio mensual, si es que tiene un servicio de clase personalizada, pasa este filtro, ya que en dicho servicio no existe deuda pendiente, asi que en ese caso si podría realizar una nueva inscripcion sin problemas
+                      while(rs.next()){// en caso de que si haya registros de pagos pendientes(meses en los que si vino pero no pago, osea cuotas sin pagar), el sistema no le permitirá realizar otra inscripción
+                               JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" tiene pagos de cuotas pendientes de su servicio mensual actual, deberá saldar todo lo que deba para poder realizar otra inscripcion","ERROR",ERROR_MESSAGE);
+                               return;
+                       }
                 
-                ///VALIDACION: valida que no registre la misma inscripcion dos veces, es decir, que si ya se inscribió, y por accidiente quiere volver a inscribir a ese alumno de nuevo a ese servicio de ese ciclo lectivo, el sistema le bloqueará la inscripcion, 
-                /// solo en caso de que se inscriba a x servicio, y depues se pasa a m servicio, y despues se vuelve a inscribir a x servicio, asi sí se permite, pero intentar registrar x servicio dos veces de forma consecutiva no será permitido por el sistema
-                rs=Clases.Inscripcion.evitarDobleInscripcionConsecutiva(cx, codigoAlumno, codigo_servicio, c_c_l);
-                while(rs.next()){
-                      JOptionPane.showMessageDialog(null, "Ya ha registrado recientemente al "+txtAlumno.getText()+" con ese servicio y del ciclo lectivo actual","ERROR",ERROR_MESSAGE);
-                    return;
-                }
+                       ///VALIDACION: valida que no registre la misma inscripcion dos veces, es decir, que si ya se inscribió, y por accidiente quiere volver a inscribir a ese alumno de nuevo a ese servicio de ese ciclo lectivo, el sistema le bloqueará la inscripcion, 
+                       /// solo en caso de que se inscriba a x servicio, y depues se pasa a m servicio, y despues se vuelve a inscribir a x servicio, asi sí se permite, pero intentar registrar x servicio dos veces de forma consecutiva no será permitido por el sistema
+                       rs=Clases.Inscripcion.evitarDobleInscripcionConsecutiva(cx, codigoAlumno, codigo_servicio, c_c_l);
+                       while(rs.next()){
+                                 JOptionPane.showMessageDialog(null, "Ya ha registrado recientemente al "+txtAlumno.getText()+" con ese servicio y del ciclo lectivo actual","ERROR",ERROR_MESSAGE);
+                                 return;
+                       }
                 
-                /// una vez pasados todos los filtros, recien podra realizar la inscripcion...pero antes el sistema tendrá que dar como INACTIVO su servicio actual y, el nuevo pasaría a ser el ACTIVO..
-                Clases.Inscripcion.darBajaInscripcion(cx, codigoAlumno);
-                Clases.Inscripcion.insertarInscripcion(cx, codigoAlumno, dias, codigo_horario, codigoProfesor, codigo_servicio, fecha, c_c_l);
-                 JOptionPane.showMessageDialog(null, "Se registro la inscripcion correctamente");
-                 mostrarTablaInscripcion();
+                        /// una vez pasados todos los filtros, recien podra realizar la inscripcion...pero antes el sistema tendrá que dar como INACTIVO su servicio actual y, el nuevo pasaría a ser el ACTIVO..
+                        Clases.Inscripcion.darBajaInscripcion(cx, codigoAlumno);
+                        Clases.Inscripcion.insertarInscripcion(cx, codigoAlumno, dias, codigo_horario, codigoProfesor, codigo_servicio, fecha, c_c_l);
+                        JOptionPane.showMessageDialog(null, "Se registro la inscripcion correctamente");
+                        mostrarTablaInscripcion();
+                  }else{
+                         int filaSeleccionada = tablaInscripciones.getSelectedRow();
+                         ///rescato datos relevantes que se usaran para una actualizacion de la tabla.. 
+                         String dniAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 2).toString();
+           
+                         String dias=boxDias.getSelectedItem().toString();
+                         int codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
+                         
+                         /// si el labelCodigoProfesor esta vacio, quiere decir que no fue al apartaado profesor y seleccionó otro profesor, no, quiere decir que se queda con el preofesor que tiene nomas, que seria el que esta en el tabla, por lo tanto ponemos el codigo del profesor que esta en la tabla
+                         int codigo_profesor=0;
+                         if(labelCodigoProfesor.getText().isEmpty()){
+                             codigo_profesor=Integer.parseInt(txtAuxiliar.getText());
+                         }else{///sino, quiere decir que sí seleccionó otro profesor y por lo tanto tendriamos que pioner el codigo de ese nuevo profesor
+                             codigo_profesor=Integer.parseInt(labelCodigoProfesor.getText());
+                         }
+                         
+                         int codigo_alumno=Clases.Alumno.obtenerCodigo(cx,Integer.parseInt( dniAlumno));
+                         Clases.Inscripcion.actualizarInscripcion(cx, dias, codigo_horario, codigo_profesor, codigo_alumno);
+                         JOptionPane.showMessageDialog(null, "Se han actualizado algunos datos de la inscripcion del alumno "+txtAlumno.getText());      
+                         mostrarTablaInscripcion();
+                 }            
+              
       
         }catch(Exception e){
               JOptionPane.showMessageDialog(null, "Ha ocurrido un error","ERROR",ERROR_MESSAGE);
@@ -662,6 +746,196 @@ dialog.setVisible(true);
           validarCamposVacios();
     }//GEN-LAST:event_boxHorariosItemStateChanged
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+     try {
+               //  Ruta donde se guardará el PDF (en el Escritorio del usuario)
+               String ruta = System.getProperty("user.home") + "/OneDrive/Desktop/reporte.pdf";
+
+               // Crear el documento en formato A4 horizontal (más ancho para las tablas)
+               Document documento = new Document(PageSize.A4.rotate());
+
+               // Asociar el documento con un "escritor" que lo guardará en la ruta indicada
+               PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+
+               // Abrir el documento para comenzar a escribir contenido en él
+               documento.open();
+
+   
+               //ENCABEZADO DEL DOCUMENTO
+               // Título centrado y en negrita
+               Paragraph titulo = new Paragraph("Reporte de Inscripciones Activas",
+               FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
+               titulo.setAlignment(Element.ALIGN_CENTER);
+               documento.add(titulo);
+
+               //  Subtítulo e información adicional
+               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Fecha: " + LocalDate.now()));
+               documento.add(new Paragraph("\nListado de inscripciones activas:\n"));
+
+   
+               //  CREACIÓN DE LA TABLA PDF
+               // Crear una tabla con 11 columnas
+               PdfPTable tablaPDF = new PdfPTable(11);
+               tablaPDF.setWidthPercentage(100);   // Ocupa el ancho total de la página
+               tablaPDF.setSpacingBefore(10f);     // Espacio antes de la tabla
+               tablaPDF.setSpacingAfter(10f);      // Espacio después de la tabla
+
+               // Nombres de las columnas
+               String[] columnas = {
+                  "Nombre Alumno", "Apellido Alumno", "DNI Alumno", "Días", "Horarios",
+                  "Nombre Profesor", "Apellido Profesor", "Servicio",
+                  "Fecha Inscripción", "Ciclo Lectivo", "Estado"
+               };
+
+               // Fuente para el encabezado (blanca sobre fondo azul)
+               Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
+
+               // Agregar cada columna como una celda de encabezado
+               for (String col : columnas) {
+                   PdfPCell celda = new PdfPCell(new Phrase(col, fontHeader)); // Contenido de la celda
+                   celda.setBackgroundColor(new Color(50, 100, 150));          // Color de fondo azul
+                   celda.setHorizontalAlignment(Element.ALIGN_CENTER);          // Texto centrado
+                   celda.setPadding(5);                                         // Espaciado interno
+                   tablaPDF.addCell(celda);
+               }
+
+ 
+                //  LLENAR TABLA CON DATOS
+                 Font fontData = FontFactory.getFont(FontFactory.HELVETICA, 9); // Fuente para los datos
+
+                try {
+                           // Se llama al método del modelo que devuelve las inscripciones activas
+                           rs = Clases.Inscripcion.mostrarIncripcionesActivas(cx);
+
+                           // Se recorre cada fila del ResultSet y se agregan las celdas a la tabla
+                           while (rs.next()) {
+                              tablaPDF.addCell(new Phrase(rs.getString("al.nombre"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("al.apellido"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("al.dni"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("inc.dias"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("ho.horario"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("pro.nombre"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("pro.apellido"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("ser.nombre"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("inc.fecha_inscripcion"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("ci.año"), fontData));
+                              tablaPDF.addCell(new Phrase(rs.getString("inc.estado"), fontData));
+                           }
+
+                  } catch (Exception e) {
+                             JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e.getMessage());
+                  }
+
+                  // Agregar la tabla al documento PDF
+                   documento.add(tablaPDF);
+
+                  // Se cierra el documento (muy importante)
+                  documento.close();
+
+                   // Aviso al usuario
+                   JOptionPane.showMessageDialog(this, "PDF generado correctamente en el Escritorio.");
+
+                   // Abrir el archivo automáticamente
+                   java.awt.Desktop.getDesktop().open(new java.io.File(ruta));
+
+   }catch (Exception ex) {
+   
+        JOptionPane.showMessageDialog(this, "Error al generar el PDF: " + ex.getMessage());
+   }
+
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
+             tabla.setRowCount(0);   
+           tabla.setColumnCount(0);
+            tabla.addColumn("Nombre Alumno");
+           tabla.addColumn("Apellido Alumno");
+           tabla.addColumn("DNI Alumno");
+          tabla.addColumn("Días");
+          tabla.addColumn("Horarios");
+          tabla.addColumn("Nombre Profesor");
+          tabla.addColumn("Apellido Profesor");
+          tabla.addColumn("DNI Profesor");
+          tabla.addColumn("Servicio");
+          tabla.addColumn("Fecha Inscripción");
+          tabla.addColumn("Ciclo Lectivo");
+           tabla.addColumn("Estado");
+          
+
+     try{
+        
+        rs=Clases.Inscripcion.buscarAlumnoPorNombre(cx, txtNombreBuscador.getText());
+     
+        while(rs.next()){
+            datos[0]=rs.getString("al.nombre");
+            datos[1]=rs.getString("al.apellido");
+            datos[2]=rs.getString("al.dni");
+            datos[3]=rs.getString("inc.dias");
+            datos[4]=rs.getString("ho.horario");
+            datos[5]=rs.getString("pro.nombre");
+            datos[6]=rs.getString("pro.apellido");
+            datos[7]=rs.getString("pro.dni");
+            datos[8]=rs.getString("ser.nombre");
+            datos[9]=rs.getString("inc.fecha_inscripcion");
+            datos[10]=rs.getString("ci.año");
+            datos[11]=rs.getString("inc.estado");
+            
+                   
+            
+           
+            tabla.addRow(datos);
+        }
+         tablaInscripciones.setModel(tabla);
+       
+    }catch(Exception e){
+          JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar las inscripciones del alumno "+txtNombreBuscador.getText(),"ERROR",ERROR_MESSAGE);
+        
+    }       
+    }//GEN-LAST:event_jLabel15MouseClicked
+
+    private void tablaInscripcionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInscripcionesMouseClicked
+         try{
+            int filaSeleccionada = tablaInscripciones.getSelectedRow();
+            ///rescato datos relevantes que se usaran para una actualizacion de la tabla.. 
+            String nombreAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 0).toString();
+            String apellidoAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 1).toString();
+            String dias =tablaInscripciones.getValueAt(filaSeleccionada, 3).toString();
+            String horarios =tablaInscripciones.getValueAt(filaSeleccionada, 4).toString();
+            String nombreProfesor =tablaInscripciones.getValueAt(filaSeleccionada, 5).toString();
+            String apellidoProfesor =tablaInscripciones.getValueAt(filaSeleccionada, 6).toString();
+            String dniProfesor =tablaInscripciones.getValueAt(filaSeleccionada, 7).toString();
+            String servicio =tablaInscripciones.getValueAt(filaSeleccionada, 8).toString();
+            String fecha =tablaInscripciones.getValueAt(filaSeleccionada, 9).toString();
+            String estado =tablaInscripciones.getValueAt(filaSeleccionada, 11).toString();
+            
+            if(estado.equalsIgnoreCase("ACTIVO")){
+                  int codigo_profesor=Clases.Profesor.buscarCodigo(cx, Integer.parseInt(dniProfesor) );
+                  txtAlumno.setText(nombreAlumno+" "+apellidoAlumno);
+                  boxDias.setSelectedItem(dias);
+                  boxHorarios.setSelectedItem(horarios);
+                  txtProfesor.setText(nombreProfesor+" "+apellidoProfesor);
+                  boxServicios.setSelectedItem(servicio);
+                  SimpleDateFormat formatoEntrada = new SimpleDateFormat("yyyy-MM-dd"); // o el formato original 
+                  SimpleDateFormat formatoSalida = new SimpleDateFormat("dd-MM-yyyy");
+                  Date fechaDate = formatoEntrada.parse(fecha); // convertir String a Date
+                  String fechaFormateada = formatoSalida.format(fechaDate); // convertir Date a String con nuevo formato
+                  txtFecha.setText(fechaFormateada);
+
+                  txtAuxiliar.setText(String.valueOf(codigo_profesor));
+                   validarCamposVacios();
+            }
+          
+         }catch(Exception e){
+              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los datos de la tabla","ERROR",ERROR_MESSAGE);
+         }
+    }//GEN-LAST:event_tablaInscripcionesMouseClicked
+
+    private void labelEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditarMouseClicked
+      
+
+    }//GEN-LAST:event_labelEditarMouseClicked
+
     public void setTxtAlumno(String nombre) {
         txtAlumno.setText(nombre);
     }
@@ -686,6 +960,7 @@ dialog.setVisible(true);
     private javax.swing.JComboBox<String> boxServicios;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
@@ -704,13 +979,15 @@ dialog.setVisible(true);
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JLabel labelCodigoAlumno;
     private javax.swing.JLabel labelCodigoProfesor;
+    private javax.swing.JLabel labelEditar;
     private javax.swing.JPanel paneltres;
     private javax.swing.JTable tablaInscripciones;
     private javax.swing.JTextField txtAlumno;
+    private javax.swing.JLabel txtAuxiliar;
     private javax.swing.JTextField txtFecha;
+    private javax.swing.JTextField txtNombreBuscador;
     private javax.swing.JTextField txtProfesor;
     // End of variables declaration//GEN-END:variables
 }

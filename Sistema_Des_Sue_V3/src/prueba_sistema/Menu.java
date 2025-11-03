@@ -4,21 +4,26 @@ package prueba_sistema;
 
 
 import Alumno.ModificarA;
+import Consultas.Consultas1;
+import Gastos.Gastos;
 import ObraSocial.OS;
 import Profesores.ModificarP;
 import Tutores.ModificarT;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
-import java.awt.BorderLayout;
+
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+
 import java.awt.Graphics;
 import java.awt.Image;
-import javax.swing.Icon;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+
 import javax.swing.JPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 public class Menu extends javax.swing.JFrame {
 
@@ -29,10 +34,8 @@ public class Menu extends javax.swing.JFrame {
     public Menu() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
-        
-        
-        
+
+     
         
         cardLayout = (CardLayout)(contenedor.getLayout());
         
@@ -60,7 +63,6 @@ public class Menu extends javax.swing.JFrame {
         insbt = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         asistencia = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -68,14 +70,9 @@ public class Menu extends javax.swing.JFrame {
         panel1 = new FondoPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        modificarA = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        modificarP = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        os = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        modificarT = new javax.swing.JMenuItem();
-        jMenu7 = new javax.swing.JMenu();
         jMenu8 = new javax.swing.JMenu();
         jMenu9 = new javax.swing.JMenu();
 
@@ -114,7 +111,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Servicios");
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/servicio.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/salon-de-clases.png"))); // NOI18N
         jLabel7.setText("jLabel7");
 
         javax.swing.GroupLayout serviciobtLayout = new javax.swing.GroupLayout(serviciobt);
@@ -123,19 +120,25 @@ public class Menu extends javax.swing.JFrame {
             serviciobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(serviciobtLayout.createSequentialGroup()
                 .addGap(62, 62, 62)
-                .addGroup(serviciobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel2)
                 .addContainerGap(80, Short.MAX_VALUE))
+            .addGroup(serviciobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(serviciobtLayout.createSequentialGroup()
+                    .addGap(60, 60, 60)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(78, Short.MAX_VALUE)))
         );
         serviciobtLayout.setVerticalGroup(
             serviciobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(serviciobtLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(80, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addContainerGap())
+            .addGroup(serviciobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(serviciobtLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel7)
+                    .addContainerGap(36, Short.MAX_VALUE)))
         );
 
         pagoinsbt.setBackground(new java.awt.Color(255, 102, 102));
@@ -183,7 +186,6 @@ public class Menu extends javax.swing.JFrame {
         );
 
         pagobt.setBackground(new java.awt.Color(255, 102, 102));
-        pagobt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         pagobt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 pagobtMouseClicked(evt);
@@ -200,7 +202,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Pago de Cuotas");
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cuota.png"))); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/dinero-en-efectivo.png"))); // NOI18N
         jLabel9.setText("jLabel7");
 
         javax.swing.GroupLayout pagobtLayout = new javax.swing.GroupLayout(pagobt);
@@ -213,22 +215,20 @@ public class Menu extends javax.swing.JFrame {
                         .addGap(42, 42, 42)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pagobtLayout.createSequentialGroup()
-                        .addGap(64, 64, 64)
+                        .addGap(58, 58, 58)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pagobtLayout.setVerticalGroup(
             pagobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pagobtLayout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel5)
                 .addContainerGap())
         );
 
         insbt.setBackground(new java.awt.Color(255, 102, 102));
-        insbt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         insbt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 insbtMouseClicked(evt);
@@ -263,24 +263,22 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(insbtLayout.createSequentialGroup()
                 .addGroup(insbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(insbtLayout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(insbtLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(jLabel3)))
-                .addContainerGap(132, Short.MAX_VALUE))
+                        .addComponent(jLabel3))
+                    .addGroup(insbtLayout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         insbtLayout.setVerticalGroup(
             insbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, insbtLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addContainerGap())
         );
-
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/er.jpg"))); // NOI18N
 
         asistencia.setBackground(new java.awt.Color(255, 102, 102));
         asistencia.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -299,7 +297,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Asistencias");
 
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/servicio.png"))); // NOI18N
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/ausencia.png"))); // NOI18N
         jLabel12.setText("jLabel7");
 
         javax.swing.GroupLayout asistenciaLayout = new javax.swing.GroupLayout(asistencia);
@@ -308,17 +306,17 @@ public class Menu extends javax.swing.JFrame {
             asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(asistenciaLayout.createSequentialGroup()
                 .addGap(62, 62, 62)
-                .addGroup(asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addGroup(asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         asistenciaLayout.setVerticalGroup(
             asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(asistenciaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(7, Short.MAX_VALUE)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
                 .addContainerGap())
         );
@@ -327,7 +325,6 @@ public class Menu extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pagobt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pagoinsbt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,12 +332,13 @@ public class Menu extends javax.swing.JFrame {
                         .addGap(45, 45, 45)
                         .addComponent(jLabel1))
                     .addComponent(serviciobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(insbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel6))
-                    .addComponent(asistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(insbt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pagobt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(asistencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -349,19 +347,15 @@ public class Menu extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(serviciobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(pagobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(insbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(insbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pagobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addComponent(pagoinsbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(asistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel5, java.awt.BorderLayout.WEST);
@@ -381,7 +375,7 @@ public class Menu extends javax.swing.JFrame {
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 788, Short.MAX_VALUE)
+            .addGap(0, 794, Short.MAX_VALUE)
         );
 
         contenedor.add(panel1, "uno");
@@ -393,66 +387,47 @@ public class Menu extends javax.swing.JFrame {
 
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/alumno.png"))); // NOI18N
         jMenu1.setText("Alumnos");
-
-        modificarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
-        modificarA.setText("Reguistrar");
-        modificarA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modificarAActionPerformed(evt);
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
             }
         });
-        jMenu1.add(modificarA);
-
         jMenuBar1.add(jMenu1);
 
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/profesor.png"))); // NOI18N
         jMenu2.setText("Profesores");
-
-        modificarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
-        modificarP.setText("Registrar");
-        modificarP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modificarPActionPerformed(evt);
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
             }
         });
-        jMenu2.add(modificarP);
-
         jMenuBar1.add(jMenu2);
 
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/construccion-de-comunidad.png"))); // NOI18N
         jMenu3.setText("Obra Social");
-
-        os.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/os.png"))); // NOI18N
-        os.setText("Ver");
-        os.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                osActionPerformed(evt);
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
             }
         });
-        jMenu3.add(os);
-
         jMenuBar1.add(jMenu3);
 
         jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/tutor.png"))); // NOI18N
         jMenu4.setText("Tutores");
-
-        modificarT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/agregar.png"))); // NOI18N
-        modificarT.setText("Registrar");
-        modificarT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modificarTActionPerformed(evt);
+        jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu4MouseClicked(evt);
             }
         });
-        jMenu4.add(modificarT);
-
         jMenuBar1.add(jMenu4);
-
-        jMenu7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/recursos.png"))); // NOI18N
-        jMenu7.setText("Gastos");
-        jMenuBar1.add(jMenu7);
 
         jMenu8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes2/entrevista.png"))); // NOI18N
         jMenu8.setText("Consultas");
+        jMenu8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu8MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu8);
 
         jMenu9.setBackground(new java.awt.Color(255, 153, 153));
@@ -541,14 +516,11 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_pagobtMouseClicked
 
     private void pagoinsbtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pagoinsbtMouseClicked
-        Panel2 paneldos = new Panel2(); 
+         Gastos g = new Gastos();
         
-        contenedor.add(paneldos,"dos");
-       
-        cardLayout.show(contenedor, "dos");
-        
-        
-        contenedor.setSize( 1000,900);
+        contenedor.add(g,"gasto");
+        cardLayout.show(contenedor, "gasto");
+        contenedor.setSize( 1000, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }//GEN-LAST:event_pagoinsbtMouseClicked
@@ -556,42 +528,6 @@ public class Menu extends javax.swing.JFrame {
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         cardLayout.show(contenedor, "uno");
     }//GEN-LAST:event_jLabel1MouseClicked
-
-    private void modificarAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarAActionPerformed
-        ModificarA m = new ModificarA(); 
-        contenedor.add(m,"modificarA");
-        cardLayout.show(contenedor, "modificarA");
-        contenedor.setSize( 1000, 900);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_modificarAActionPerformed
-
-    private void modificarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarPActionPerformed
-        ModificarP mp = new ModificarP(); 
-        contenedor.add(mp,"modificarP");
-        cardLayout.show(contenedor, "modificarP");
-        contenedor.setSize( 598, 525);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_modificarPActionPerformed
-
-    private void osActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_osActionPerformed
-        OS O = new OS(); 
-        contenedor.add(O,"os");
-        cardLayout.show(contenedor, "os");
-        contenedor.setSize( 598, 525);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_osActionPerformed
-
-    private void modificarTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarTActionPerformed
-        ModificarT mt = new ModificarT(); 
-        contenedor.add(mt,"modificarT");
-        cardLayout.show(contenedor, "modificarT");
-        contenedor.setSize( 598, 525);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-    }//GEN-LAST:event_modificarTActionPerformed
 
     private void jMenu9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu9MouseClicked
         System.exit(0);
@@ -613,6 +549,53 @@ public class Menu extends javax.swing.JFrame {
     private void asistenciaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_asistenciaMouseExited
           asistencia.setBackground(new Color(255,102,102));
     }//GEN-LAST:event_asistenciaMouseExited
+
+    private void jMenu8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu8MouseClicked
+      Consultas1 con=new Consultas1();
+       contenedor.add(con,"consulta");
+        cardLayout.show(contenedor, "consulta");
+        contenedor.setSize( 598, 525);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+        
+        
+    }//GEN-LAST:event_jMenu8MouseClicked
+
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+       ModificarA m = new ModificarA(); 
+        contenedor.add(m,"modificarA");
+        cardLayout.show(contenedor, "modificarA");
+        contenedor.setSize( 1000, 900);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+          ModificarP mp = new ModificarP(); 
+        contenedor.add(mp,"modificarP");
+        cardLayout.show(contenedor, "modificarP");
+        contenedor.setSize( 598, 525);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }//GEN-LAST:event_jMenu2MouseClicked
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
+        OS O = new OS(); 
+        contenedor.add(O,"os");
+        cardLayout.show(contenedor, "os");
+        contenedor.setSize( 598, 525);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }//GEN-LAST:event_jMenu3MouseClicked
+
+    private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
+       ModificarT mt = new ModificarT(); 
+        contenedor.add(mt,"modificarT");
+        cardLayout.show(contenedor, "modificarT");
+        contenedor.setSize( 598, 525);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }//GEN-LAST:event_jMenu4MouseClicked
 
     
     
@@ -680,7 +663,8 @@ public class Menu extends javax.swing.JFrame {
 //            UIManager.setLookAndFeel(new FlatLightLaf());
               FlatArcOrangeIJTheme.setup();
         } catch (Exception ex) {
-            System.getLogger(Menu.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+           Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+
         }
 
         
@@ -704,7 +688,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -713,16 +696,11 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
-    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JMenuItem modificarA;
-    private javax.swing.JMenuItem modificarP;
-    private javax.swing.JMenuItem modificarT;
-    private javax.swing.JMenuItem os;
     private javax.swing.JPanel pagobt;
     private javax.swing.JPanel pagoinsbt;
     private javax.swing.JPanel panel1;

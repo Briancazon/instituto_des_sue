@@ -53,10 +53,10 @@ public class Pago {
     }
     
     ///metodo para ver el historial de todos los pagos de un alumno tanto activos como inactivos,, incluyendo los distintos servicios que tuvo...
-    public static ResultSet verHistorialPagosAlumno(Connection cx, int dni)throws Exception {
+    public static ResultSet verHistorialPagosAlumno(Connection cx, String nombre)throws Exception {
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("select tp.tipo_pago, al.nombre, al.apellido, al.dni, pa.fecha_pago, ser.nombre , pa.recargo, me.mes, cl.año, pa.observacion, pa.total from pagos as pa left join tipo_pago as tp on pa.codigo_tipo_pago=tp.codigo left join inscripcion as inc on pa.codigo_inscripcion=inc.codigo left join alumno as al on inc.codigo_alumno=al.codigo left join servicios as ser on pa.codigo_servicio=ser.codigo  left join meses as me on pa.codigo_mes=me.codigo left join ciclo_lectivo as cl on pa.codigo_ciclo_lectivo=cl.codigo where al.dni=? order by pa.codigo desc");
-        stm.setInt(1, dni);
+        PreparedStatement stm=cx.prepareStatement("select tp.tipo_pago, al.nombre, al.apellido, al.dni, pa.fecha_pago, ser.nombre , pa.recargo, me.mes, cl.año, pa.observacion, pa.total from pagos as pa left join tipo_pago as tp on pa.codigo_tipo_pago=tp.codigo left join inscripcion as inc on pa.codigo_inscripcion=inc.codigo left join alumno as al on inc.codigo_alumno=al.codigo left join servicios as ser on pa.codigo_servicio=ser.codigo  left join meses as me on pa.codigo_mes=me.codigo left join ciclo_lectivo as cl on pa.codigo_ciclo_lectivo=cl.codigo where al.nombre like ? order by pa.codigo desc");
+        stm.setString(1,"%"+ nombre+"%");
         try{
            rs= stm.executeQuery();
         }catch(SQLException e){
@@ -118,9 +118,12 @@ public class Pago {
     /// este metodo devolvera todos los meses que le corresponde pagar al alumno, es decir, todos los meses en los que asistio, mostrando asi solos los meses que asistio y por lo tanto le corresponde pagar, en cambio, los meses que no asistio no se cobran, esto seria solo para servicios MENSUALES
     public static ResultSet verQueMesesPaga(Connection cx, int codigo_inscripcion)throws Exception {
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("select me.mes from asistencias_mensuales as am inner join meses as me on am.codigo_mes=me.codigo inner join inscripcion as inc on am.codigo_inscripcion= inc.codigo where am.asistio=\"SI\" and inc.codigo=?");
+        
+        PreparedStatement stm=cx.prepareStatement("select me.mes from asistencias_mensuales as am inner join meses as me on am.codigo_mes=me.codigo inner join inscripcion as inc on am.codigo_inscripcion= inc.codigo where am.asistio='SI' and inc.codigo=? and inc.estado='ACTIVO' ");
         stm.setInt(1, codigo_inscripcion);
         try{
+          
+
             rs=stm.executeQuery();
         }catch(SQLException e){
              JOptionPane.showMessageDialog(null,e.getMessage());
@@ -163,7 +166,7 @@ public class Pago {
     }
      
      
-     /// metodo para ver los pagos pendientes (osea, cuotas mensuales pendientes, en donde se mostrará los meses que un alumno asistió pero no pagó) de un alumno..con inscripcion activa
+     /// metodo para ver los pagos pendientes (osea, cuotas mensuales pendientes, en donde se mostrará los meses que un alumno asistió pero no pagó) de un alumno..con inscripcion activa, lo hace a traves del dni del alumno
      public static ResultSet verPagosPendientesAlumno(Connection cx, int dni)throws Exception {
          ResultSet rs=null;;
          PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni, ser.nombre, me.mes, cl.año from asistencias_mensuales as am inner join inscripcion as inc on am.codigo_inscripcion=inc.codigo inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo inner join meses as me on am.codigo_mes=me.codigo inner join ciclo_lectivo as cl on inc.codigo_ciclo_lectivo=cl.codigo where am.asistio=\"SI\" and al.dni=? and inc.estado=\"ACTIVO\" and not exists(select * from pagos as pa where pa.codigo_inscripcion=inc.codigo and pa.codigo_mes=am.codigo_mes and pa.codigo_ciclo_lectivo=inc.codigo_ciclo_lectivo)");
@@ -176,7 +179,18 @@ public class Pago {
          return rs;
      }
      
-      
+         /// metodo para ver los pagos pendientes (osea, cuotas mensuales pendientes, en donde se mostrará los meses que un alumno asistió pero no pagó) de un alumno..con inscripcion activa, lo hace a traves del nombre del alumno
+     public static ResultSet verPagosPendientesAlumnoPorNombre(Connection cx, String nombre)throws Exception {
+         ResultSet rs=null;;
+         PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni, ser.nombre, me.mes, cl.año from asistencias_mensuales as am inner join inscripcion as inc on am.codigo_inscripcion=inc.codigo inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo inner join meses as me on am.codigo_mes=me.codigo inner join ciclo_lectivo as cl on inc.codigo_ciclo_lectivo=cl.codigo where am.asistio=\"SI\" and al.nombre like ?  and inc.estado=\"ACTIVO\" and not exists(select * from pagos as pa where pa.codigo_inscripcion=inc.codigo and pa.codigo_mes=am.codigo_mes and pa.codigo_ciclo_lectivo=inc.codigo_ciclo_lectivo)");
+         stm.setString(1,"%"+ nombre+"%");
+         try{
+            rs= stm.executeQuery();
+         }catch(SQLException e){
+              JOptionPane.showMessageDialog(null,e.getMessage());
+         }
+         return rs;
+     }
      /// metodo para ver los pagos pendientes (osea, cuotas mensuales pendientes, en donde se mostrará los meses que un alumno asistió pero no pagó) de todos los alumnos con inscripcion activa
      public static ResultSet verPagosPendientes(Connection cx)throws Exception {
          ResultSet rs=null;;

@@ -1,6 +1,8 @@
 
 package prueba_sistema;
 
+import Consultas.consultas4;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JFrame;
@@ -14,15 +16,21 @@ public class buscarProfesor extends javax.swing.JDialog {
      DefaultTableModel tabla=new DefaultTableModel();
      Object[] datos=new Object[4]; 
      Panel3 p3;
+      consultas4 pp;
+     int origen;
 
    
-    public buscarProfesor(java.awt.Frame parent, boolean modal, Panel3 panel) {
+    
+    public buscarProfesor(java.awt.Frame parent, boolean modal, Panel3 panel, consultas4 pp, int origen) {
         super(parent,"Seleccionar un Profesor", modal);
         initComponents();
         this.p3=panel;
+        this.pp=pp;
+        this.origen=origen;
         desactivarSeleccionar();
         setLocationRelativeTo(parent); ///centrar el dialog con respecto a la ventana 
         cargarTablaProfesor();
+        getContentPane().setBackground(new Color(255,102,102));
         }
     void cargarTablaProfesor(){
         
@@ -197,15 +205,24 @@ public class buscarProfesor extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void botonSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSeleccionarActionPerformed
-        try{
+      try{
            int filaSeleccionada=tablaProfesor.getSelectedRow();
            String codigo=tablaProfesor.getValueAt(filaSeleccionada, 0).toString();
            String nombre=tablaProfesor.getValueAt(filaSeleccionada, 1).toString();
            String apellido=tablaProfesor.getValueAt(filaSeleccionada, 2).toString();
            
+           
+           if(origen==1){
+               String apenom=nombre+" "+apellido;
+               pp.setTxtNombre(apenom);
+               pp.setLabelCodigo(codigo);
+           }else{
+                   
            String apenom=nombre+" "+apellido;
            p3.setTxtProfesor(apenom);
            p3.setLabelCodigoProfesor(codigo);
+           }
+          
            
     
            dispose();
@@ -258,18 +275,21 @@ public class buscarProfesor extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+             public void run() {
                  JFrame frame = new JFrame(); // padre temporal
-    Panel3 p3 = new Panel3();    // panel de prueba
-                buscarProfesor dialog = new buscarProfesor(frame, true,p3);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
+                 Panel3 p3 = new Panel3();    // panel de prueba
+                 consultas4 pp = new consultas4();
+                 int origen=0;
+                 buscarProfesor dialog = new buscarProfesor(frame, true,p3,pp, origen);
+                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                  @Override
+                  public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
-                    }
+                  }
                 });
                 dialog.setVisible(true);
             }
+
         });
     }
 

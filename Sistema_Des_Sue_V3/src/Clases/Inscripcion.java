@@ -152,7 +152,7 @@ public class Inscripcion {
     
     public static ResultSet verServicios(Connection cx)throws Exception {
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT nombre from servicios");
+        PreparedStatement stm=cx.prepareStatement("SELECT nombre, precio from servicios");
         try{
             rs=stm.executeQuery();
         }catch(SQLException e){
@@ -172,7 +172,18 @@ public class Inscripcion {
         return rs;
     }
      
-     
+     ///metodo para ver que dias viene un alumno de servicio de clase personalizada...
+     public static ResultSet verDIas(Connection cx, int dni)throws Exception {
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("select inc.dias from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo where al.dni=? and inc.estado='ACTIVO'");
+        stm.setInt(1, dni);
+        try{
+            rs=stm.executeQuery();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        return rs;
+    }
      
      public static int obtenerCodigoServicio(Connection cx, String nombre)throws Exception {
          ResultSet rs=null;
@@ -260,28 +271,46 @@ public class Inscripcion {
           
       }
       
+      //metodo que muestra inscripciones tanto activas como inactivas
       public static ResultSet mostrarIncripciones(Connection cx)throws Exception {
           ResultSet rs=null;
-          PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, inc.dias, ho.horario, pro.nombre, pro.apellido, ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc inner join alumno as al on al.codigo=inc.codigo_alumno inner join horarios as ho on ho.codigo=inc.codigo_horarios inner join profesor as pro on pro.codigo=inc.codigo_profesor inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo order by inc.codigo desc");
-          try{
+          PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni ,inc.dias, ho.horario, pro.nombre, pro.apellido, pro.dni,  ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc inner join alumno as al on al.codigo=inc.codigo_alumno inner join horarios as ho on ho.codigo=inc.codigo_horarios inner join profesor as pro on pro.codigo=inc.codigo_profesor inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo order by inc.codigo desc");
+         
               rs=stm.executeQuery();
-          }catch(SQLException e){
-               JOptionPane.showMessageDialog(null,e.getMessage());
-          }
+         
           return rs;
       }
+      
+      
+      ///metodo que unicamente mustra las inscripciones activas...
+        public static ResultSet mostrarIncripcionesActivas(Connection cx)throws Exception {
+          ResultSet rs=null;
+          PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni ,inc.dias, ho.horario, pro.nombre, pro.apellido, ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc inner join alumno as al on al.codigo=inc.codigo_alumno inner join horarios as ho on ho.codigo=inc.codigo_horarios inner join profesor as pro on pro.codigo=inc.codigo_profesor inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo where inc.estado='ACTIVO' order by inc.codigo desc");
+          
+              rs=stm.executeQuery();
+         
+          return rs;
+      }
+      
+       public static ResultSet buscarAlumnoPorNombre(Connection cx, String nombre)throws Exception{
+           ResultSet rs=null;
+           PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni ,inc.dias, ho.horario, pro.nombre, pro.apellido, pro.dni,  ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc inner join alumno as al on al.codigo=inc.codigo_alumno inner join horarios as ho on ho.codigo=inc.codigo_horarios inner join profesor as pro on pro.codigo=inc.codigo_profesor inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo where al.nombre like ?  order by inc.codigo desc");
+           stm.setString(1, nombre);
+           rs=stm.executeQuery();
+           return rs;
+       }
       
        /// este metodo busca las inscripciones de servicios mensuales y activas
         public static ResultSet mostrarIncripcionesServiciosMensuales(Connection cx)throws Exception {
           ResultSet rs=null;
           PreparedStatement stm=cx.prepareStatement("select al.codigo, al.nombre, al.apellido, al.dni, ser.nombre from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join modalidad_cobro as mc on mc.codigo=ser.codigo_modalidad_cobro where mc.codigo=1 and inc.estado='ACTIVO' ");
-          try{
+          
               rs=stm.executeQuery();
-          }catch(SQLException e){
-               JOptionPane.showMessageDialog(null,e.getMessage());
-          }
+         
           return rs;
       }
+        
+       
         
          /// este metodo busca las inscripciones activas de servicios mensuales y clases personalizadas , osea todos los servicios menos los de inclusion escolar
         public static ResultSet mostrarIncripcionesServiciosMensualesYClases(Connection cx)throws Exception {
@@ -296,7 +325,7 @@ public class Inscripcion {
       }
         
         
-      
+      ///metodo para ver el mes de una incripcion activa, te muestra el mes en numero, por ejemplo enero seria: 1
       public static int verMesInscripcion(Connection cx, int codigo_inscripcion)throws Exception{
           int mes=0;
           ResultSet rs=null;
@@ -329,7 +358,7 @@ public class Inscripcion {
         
     }
           
-          /// metodo para obtener el año de inscripcion de un alumno,  
+          /// metodo para obtener el año de inscripcion de un alumno activo
           public static int obtenerAñoInscripcion(Connection cx, int dni)throws Exception {
               ResultSet rs=null;
               int año=0;
@@ -346,6 +375,8 @@ public class Inscripcion {
               return año;
           }
           
+          
+          //obtener el mes de incripcion de una incripcion a traves del dni, siempre y cuando sea una inscripciona actuva
            public static int obtenerMesInscripcion(Connection cx, int dni)throws Exception {
               ResultSet rs=null;
               int mes=0;
@@ -395,14 +426,24 @@ public class Inscripcion {
           }
           
           
-          public static void darBajaInscripcion(Connection cx, int dni)throws Exception {
+          public static void darBajaInscripcion(Connection cx, int codigo_alumno)throws Exception {
               PreparedStatement stm=cx.prepareStatement("UPDATE inscripcion set estado='INACTIVO' where codigo_alumno=? and estado='ACTIVO' " );
-              stm.setInt(1, dni);
-              try{
+              stm.setInt(1, codigo_alumno);
+   
                   stm.executeUpdate();
-              }catch(SQLException e){
-               JOptionPane.showMessageDialog(null,e.getMessage());
+            
           }
+          
+          
+          //metodo para actualizar algunos campos de una inscripcion activa...
+          public static void actualizarInscripcion(Connection cx, String dias, int codigo_horarios,int codigo_profesor, int codigo_alumno)throws Exception{
+              PreparedStatement stm=cx.prepareStatement("UPDATE inscripcion set dias=?, codigo_horarios=?, codigo_profesor=? where codigo_alumno=? and estado='ACTIVO'");
+              stm.setString(1, dias);
+              stm.setInt(2, codigo_horarios);
+              stm.setInt(3, codigo_profesor);
+ 
+              stm.setInt(4, codigo_alumno);
+              stm.executeUpdate();
           }
           
           

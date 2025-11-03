@@ -63,7 +63,7 @@ public class pagosPendientes extends javax.swing.JPanel {
 
         jPanel3 = new javax.swing.JPanel();
         buscar = new javax.swing.JLabel();
-        txtDni = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         cargar = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -79,13 +79,18 @@ public class pagosPendientes extends javax.swing.JPanel {
             }
         });
 
-        txtDni.setBackground(new java.awt.Color(255, 204, 204));
-        txtDni.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txtDni.setForeground(new java.awt.Color(0, 0, 0));
-        txtDni.setBorder(null);
-        txtDni.addActionListener(new java.awt.event.ActionListener() {
+        txtNombre.setBackground(new java.awt.Color(255, 204, 204));
+        txtNombre.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNombre.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombre.setBorder(null);
+        txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDniActionPerformed(evt);
+                txtNombreActionPerformed(evt);
+            }
+        });
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
             }
         });
 
@@ -111,7 +116,7 @@ public class pagosPendientes extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
-                    .addComponent(txtDni))
+                    .addComponent(txtNombre))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cargar)
                 .addGap(302, 302, 302))
@@ -124,7 +129,7 @@ public class pagosPendientes extends javax.swing.JPanel {
                     .addComponent(cargar)
                     .addComponent(buscar)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel7)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -175,7 +180,7 @@ public class pagosPendientes extends javax.swing.JPanel {
 
         try{
 
-            rs=Clases.Pago.verPagosPendientesAlumno(cx, Integer.parseInt(txtDni.getText()));
+            rs=Clases.Pago.verPagosPendientesAlumnoPorNombre(cx, txtNombre.getText());
             while(rs.next()){
                 datos[0]=rs.getString("al.nombre");
                 datos[1]=rs.getString("al.apellido");
@@ -196,13 +201,21 @@ public class pagosPendientes extends javax.swing.JPanel {
 
     }//GEN-LAST:event_buscarMouseClicked
 
-    private void txtDniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDniActionPerformed
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDniActionPerformed
+    }//GEN-LAST:event_txtNombreActionPerformed
 
     private void cargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cargarMouseClicked
             cargarTablaPagosPendientes();
     }//GEN-LAST:event_cargarMouseClicked
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+      char c=evt.getKeyChar();
+         // verificar si el carácter ingresado es unicamente letra
+      if ((!Character.isLetter(c) && c != ' ') || txtNombre.getText().length()>20) {
+        evt.consume(); 
+      }
+    }//GEN-LAST:event_txtNombreKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -212,6 +225,6 @@ public class pagosPendientes extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablaPagos;
-    private javax.swing.JTextField txtDni;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

@@ -10,9 +10,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -145,7 +147,7 @@ CardLayout cardLayout;
                   total=precioServicio+recargo;
                   txtTotal.setText(String.valueOf(total));
               }catch(Exception e){
-                       JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar calcular el recargo y el total","ERROR",ERROR_MESSAGE);
+                      // JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar calcular el recargo y el total","ERROR",ERROR_MESSAGE);
                }
       
          // si el mes esta desactivado quiere decir que el servicio es por clase, por lo tanto no se cobrará ningun recargo..unicamente el precio del servicio   
@@ -163,21 +165,28 @@ CardLayout cardLayout;
     }
     
     ////este metodo llenara el box Mes con los meses que asistio el alumno, lo hace a traves de su inscripcion actual, pone unicamente los meses que asistió porque solo se corbran unicamente los meses que haya asistido, esto solo es para SERVICIOS MENSUALES..
-    public int cargarComboBoxMeses(int codigo_inscripcion){
-        int lleno=0;
-         try{
-            rs=Clases.Pago.verQueMesesPaga(cx, codigo_inscripcion);
+    void cargarComboBoxMeses(int codigo_inscripcion){
+       
+ 
+        try {
           
-            while(rs.next()){
-                ls2.addElement(rs.getString("me.mes"));
-                boxMes.setModel(ls2);
-                lleno=1;
-            }
+        
+           rs = Clases.Pago.verQueMesesPaga(cx, codigo_inscripcion);
+           
+           while (rs.next()) 
+            ls2.addElement(rs.getString("me.mes"));
+            boxMes.setModel(ls2); 
+        
+
             
-        }catch(Exception e){
-              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los meses que debe pagar","ERROR",ERROR_MESSAGE);
-        }
-         return lleno;
+
+         }catch (Exception e) {
+            JOptionPane.showMessageDialog(null, 
+            "Ha ocurrido un error al mostrar los meses que debe pagar", 
+            "ERROR", ERROR_MESSAGE);
+         }
+
+    
     }
 
     
@@ -589,6 +598,11 @@ CardLayout cardLayout;
         jLabel7.setText("    Mes:");
 
         boxMes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "..." }));
+        boxMes.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                boxMesItemStateChanged(evt);
+            }
+        });
         boxMes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 boxMesActionPerformed(evt);
@@ -973,6 +987,33 @@ CardLayout cardLayout;
           }
          
          int modalidad_cobro=(int) datos[4];
+          
+         ///VALIDACION CLASE PERSONALIZADA, valida que si por ejemplo brian se inscribio lunes-viernes de CP, unicamente tiene que venir y pagar esos dias, si por ejemplo viene un miercoles y quiera pagar esa clase, el sistema no le permitirá hacerlo
+         if(modalidad_cobro==2){
+             
+            rs= Clases.Inscripcion.verDIas(cx, Integer.parseInt(txtDni.getText()));
+            while(rs.next()){
+              
+                String dias=rs.getString("dias");
+                // Separar en base al guion
+                String[] partes = dias.split(" - ");
+        
+                 // Guardar los dos días
+                 String dia1 = partes[0].trim();
+                 String dia2 = partes[1].trim();
+          
+                 LocalDate hoy = LocalDate.now();  ///obtiene la fecha de hoy
+                 String diaEnEspañol = hoy.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("es", "ES"));  //obtiene el dia de la semana y a ese dia lo pasa a español
+        
+                 //filtro para que solo pague las clases de los dias en el que se haya inscripto, si pasa eeste filtro quiere decir que sí esta por pagar en los dias en que se inscribió
+                 if(!dia1.equalsIgnoreCase(diaEnEspañol) && !dia2.equalsIgnoreCase(diaEnEspañol) ){
+                       JOptionPane.showMessageDialog(null, "El alumno elegido tiene un servicio de clase personalizada de cursado los dias: "+dia1+" y "+dia2+". Unicamente deberá pagar cada clase de los dias que curse","ERROR",ERROR_MESSAGE);
+                       return;
+                 }
+
+            }
+             
+         }
          String apenom=datos[0].toString()+" "+datos[1].toString();
          txtAlumno.setText(apenom);
          txtServicio.setText(datos[2].toString());
@@ -987,20 +1028,22 @@ CardLayout cardLayout;
         txtFecha.setText(fechaFormateada);
          int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
          int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
+   
          if(modalidad_cobro==1){
             
            
-            int lleno=cargarComboBoxMeses(codigo_inscripcion);
-            if(lleno ==0){
-                  JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" tiene un servicio mensual sin asistencias cargadas, deberá realizar primero las asistencias correspondientes de dicho alumno para efectuar un pago");
-                  return;
-            }
+            cargarComboBoxMeses(codigo_inscripcion);
+           
+           
+               activarBoxMes();
+          
+           
             
-            activarBoxMes();
+            
          }
              
-         
          activarCampos();
+       
          txtDni.setEnabled(false);
          botonBuscarAlumno.setEnabled(false);
                 
@@ -1050,14 +1093,24 @@ CardLayout cardLayout;
                 txtFecha.setText(fechaFormateada);
               int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
               int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
-              if(modalidad_cobro==1){
-                activarBoxMes();
+            if(modalidad_cobro==1){
+            
            
-                cargarComboBoxMeses(codigo_inscripcion);
+            cargarComboBoxMeses(codigo_inscripcion);
+           
+           
+               activarBoxMes();
           
-              }else{
-                activarCampos();
-              }
+           
+            
+            
+         }
+             
+         activarCampos();
+       
+        
+                
+              
               txtDni.setEnabled(false);
               botonBuscarAlumno.setEnabled(false);
           }catch(Exception e){
@@ -1143,6 +1196,10 @@ CardLayout cardLayout;
     private void txtFechaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtFechaPropertyChange
          calcularRecargoYTotal();
     }//GEN-LAST:event_txtFechaPropertyChange
+
+    private void boxMesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_boxMesItemStateChanged
+             calcularRecargoYTotal();
+    }//GEN-LAST:event_boxMesItemStateChanged
 
     public void setTxtAlumno(String nombre) {
         txtAlumno.setText(nombre);

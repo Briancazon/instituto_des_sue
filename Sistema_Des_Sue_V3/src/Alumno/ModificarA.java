@@ -1093,8 +1093,9 @@ public class ModificarA extends javax.swing.JPanel {
              int respuesta = JOptionPane.showConfirmDialog( null, "¿Estás seguro de que deseas eliminar a este alumno?" , "Confirmar eliminación", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
         
              if (respuesta == JOptionPane.YES_OPTION) {
-                  
+                           Clases.Inscripcion.darBajaInscripcion(cx, codigo);  // dar de baja insccripcion activa del alumno antes de darlo de baja a él
                            Clases.Alumno.eliminar(cx, codigo);
+                           
                            JOptionPane.showMessageDialog(null, "Se ha eliminado al alumno correctamente");
                            MostrarAlumno();
                            limpiar();
@@ -1222,7 +1223,7 @@ public class ModificarA extends javax.swing.JPanel {
             }
       }catch(Exception e){
           JOptionPane.showMessageDialog(null, "No hay datos en la tabla","ERROR",ERROR_MESSAGE);
-           e.printStackTrace();
+
             
       }
             
