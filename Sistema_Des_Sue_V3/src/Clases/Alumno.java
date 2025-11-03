@@ -89,7 +89,7 @@ public class Alumno {
     
     public static ResultSet mostrarAlumnos(Connection cx)throws Exception{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement(" SELECT al.codigo, al.nombre, al.apellido, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre, t.nombre, t.apellido, t.telefono, at.parentesco from alumno as al left join obra_social as os on os.codigo=al.obra_social left join alumno_tutor as at on at.codigo_alumno=al.codigo left join tutor as t on t.codigo=at.codigo_tutor  where al.borrado=0 order by al.codigo desc");
+        PreparedStatement stm=cx.prepareStatement(" SELECT al.codigo, al.nombre, al.apellido, al.borrado, al.fecha_nac, al.dni, al.escuela, al.grado, al.nivel, os.nombre, t.nombre, t.apellido, t.telefono, at.parentesco from alumno as al left join obra_social as os on os.codigo=al.obra_social left join alumno_tutor as at on at.codigo_alumno=al.codigo left join tutor as t on t.codigo=at.codigo_tutor  where al.borrado=0 order by al.codigo desc");
         try{
             rs=stm.executeQuery();
         }catch(SQLException e){

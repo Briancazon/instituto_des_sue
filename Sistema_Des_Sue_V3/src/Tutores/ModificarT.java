@@ -1,11 +1,24 @@
 
 package Tutores;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -305,6 +318,7 @@ public class ModificarT extends javax.swing.JPanel {
         eliminar = new javax.swing.JLabel();
         inactivo = new javax.swing.JCheckBox();
         habilitar = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaTutor = new javax.swing.JTable();
         cod = new javax.swing.JLabel();
@@ -608,6 +622,13 @@ public class ModificarT extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setText("GENERAR REPORTE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -619,48 +640,49 @@ public class ModificarT extends javax.swing.JPanel {
                 .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cargar, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(61, 61, 61)
-                .addComponent(agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(modificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(habilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inactivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addComponent(agregar)
+                .addGap(89, 89, 89)
+                .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(74, 74, 74)
+                .addComponent(modificar)
+                .addGap(85, 85, 85)
+                .addComponent(eliminar)
+                .addGap(57, 57, 57)
+                .addComponent(habilitar)
+                .addGap(50, 50, 50)
+                .addComponent(inactivo, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addComponent(cancelar)
-                .addContainerGap())
+                .addGap(92, 92, 92)
+                .addComponent(jButton1)
+                .addGap(21, 21, 21))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buscar)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(buscar)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(17, 17, 17)
+                        .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(cancelar)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(eliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addComponent(agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addComponent(habilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(eliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(modificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(habilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(inactivo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
         );
 
         tablaTutor.setModel(new javax.swing.table.DefaultTableModel(
@@ -685,7 +707,7 @@ public class ModificarT extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1609, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -709,8 +731,8 @@ public class ModificarT extends javax.swing.JPanel {
                         .addComponent(cod))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1085,6 +1107,104 @@ public class ModificarT extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_guardarMouseEntered
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+  try {
+               //  Ruta donde se guardará el PDF (en el Escritorio del usuario)
+               String ruta = System.getProperty("user.home") + "\\Downloads\\REPORTES\\TUTOR\\reporteTutores.pdf";
+
+
+               // Crear el documento en formato A4 horizontal (más ancho para las tablas)
+               Document documento = new Document(PageSize.A4.rotate());
+
+               // Asociar el documento con un "escritor" que lo guardará en la ruta indicada
+               PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+
+               // Abrir el documento para comenzar a escribir contenido en él
+               documento.open();
+
+   
+               //ENCABEZADO DEL DOCUMENTO
+               // Título centrado y en negrita
+               Paragraph titulo = new Paragraph("Reporte de Tutores Activos",
+               FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
+               titulo.setAlignment(Element.ALIGN_CENTER);
+               documento.add(titulo);
+
+               //  Subtítulo e información adicional
+               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Fecha: " + LocalDate.now()));
+               documento.add(new Paragraph("\nListado de tutores activos:\n"));
+
+   
+               //  CREACIÓN DE LA TABLA PDF
+               // Crear una tabla con 11 columnas
+               PdfPTable tablaPDF = new PdfPTable(5);
+               tablaPDF.setWidthPercentage(100);   // Ocupa el ancho total de la página
+               tablaPDF.setSpacingBefore(10f);     // Espacio antes de la tabla
+               tablaPDF.setSpacingAfter(10f);      // Espacio después de la tabla
+
+               // Nombres de las columnas
+               String[] columnas = {
+                  "Nombre Tutor", "Apellido Tutor", "DNI Tutor", "Teléfono", "Estado"
+               };
+
+               // Fuente para el encabezado (blanca sobre fondo azul)
+               Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
+
+               // Agregar cada columna como una celda de encabezado
+               for (String col : columnas) {
+                   PdfPCell celda = new PdfPCell(new Phrase(col, fontHeader)); // Contenido de la celda
+                   celda.setBackgroundColor(new Color(50, 100, 150));          // Color de fondo azul
+                   celda.setHorizontalAlignment(Element.ALIGN_CENTER);          // Texto centrado
+                   celda.setPadding(5);                                         // Espaciado interno
+                   tablaPDF.addCell(celda);
+               }
+
+ 
+                //  LLENAR TABLA CON DATOS
+                 Font fontData = FontFactory.getFont(FontFactory.HELVETICA, 9); // Fuente para los datos
+
+                try {
+                           // Se llama al método del modelo que devuelve los tutores activos
+                           rs = Clases.Tutor.mostrartutoresactivos(cx);
+
+                           // Se recorre cada fila del ResultSet y se agregan las celdas a la tabla
+                          while (rs.next()) {
+                            tablaPDF.addCell(new Phrase(rs.getString("nombre"), fontData));          // 1
+                            tablaPDF.addCell(new Phrase(rs.getString("apellido"), fontData));          // 2
+                            tablaPDF.addCell(new Phrase(rs.getString("dni"), fontData));          // 3
+                            tablaPDF.addCell(new Phrase(rs.getString("telefono"), fontData));          // 4
+                            int estado=rs.getInt("borrado");
+                            if(estado==0){
+                                 tablaPDF.addCell(new Phrase("ACTIVO", fontData));        // 5
+                            }
+                           
+                          
+}
+
+
+                  } catch (Exception e) {
+                             JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e.getMessage());
+                  }
+
+                  // Agregar la tabla al documento PDF
+                   documento.add(tablaPDF);
+
+                  // Se cierra el documento (muy importante)
+                  documento.close();
+
+                   // Aviso al usuario
+                   JOptionPane.showMessageDialog(this, "PDF generado correctamente.");
+
+                   // Abrir el archivo automáticamente
+                   java.awt.Desktop.getDesktop().open(new java.io.File(ruta));
+
+   }catch (Exception ex) {
+   
+        JOptionPane.showMessageDialog(this, "Error al generar el PDF: " + ex.getMessage());
+   }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel agregar;
@@ -1098,6 +1218,7 @@ public class ModificarT extends javax.swing.JPanel {
     private javax.swing.JLabel guardar;
     private javax.swing.JLabel habilitar;
     private javax.swing.JCheckBox inactivo;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;

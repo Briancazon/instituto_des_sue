@@ -1,12 +1,24 @@
 
 package Profesores;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -299,6 +311,7 @@ public class ModificarP extends javax.swing.JPanel {
         eliminar = new javax.swing.JLabel();
         Inactivo = new javax.swing.JCheckBox();
         Habilitar = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setLayout(new java.awt.CardLayout());
 
@@ -523,7 +536,7 @@ public class ModificarP extends javax.swing.JPanel {
                                 .addGap(97, 97, 97)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGap(47, 47, 47))
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1385, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1605, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -669,6 +682,13 @@ public class ModificarP extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setText("GENERAR REPORTE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -676,57 +696,65 @@ public class ModificarP extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(108, 108, 108))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addComponent(prueba, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
                         .addComponent(buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cargar, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
-                .addComponent(agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Habilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Inactivo, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Cancelar))
+                        .addGap(18, 18, 18)
+                        .addComponent(agregar)
+                        .addGap(58, 58, 58)
+                        .addComponent(guardar)
+                        .addGap(61, 61, 61)
+                        .addComponent(modificar)
+                        .addGap(71, 71, 71)
+                        .addComponent(eliminar)
+                        .addGap(61, 61, 61)
+                        .addComponent(Habilitar)
+                        .addGap(62, 62, 62)
+                        .addComponent(Inactivo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(55, 55, 55)
+                        .addComponent(Cancelar)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(39, 39, 39))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(buscar))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(modificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cargar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addGap(16, 16, 16)
-                                    .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(eliminar, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addGap(15, 15, 15)
-                                    .addComponent(Inactivo))
-                                .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(Habilitar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(buscar))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(modificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cargar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(Cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanel5Layout.createSequentialGroup()
+                                            .addGap(16, 16, 16)
+                                            .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(eliminar)
+                                        .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(Habilitar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(Inactivo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(prueba, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -735,12 +763,12 @@ public class ModificarP extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1385, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1605, Short.MAX_VALUE)
                 .addGap(2, 2, 2))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(125, 125, 125)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1566, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1102,6 +1130,105 @@ desactivarhabilitar();
     }  
     }//GEN-LAST:event_txtNombreBuscadorKeyTyped
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+  try {
+               //  Ruta donde se guardará el PDF (en el Escritorio del usuario)
+               String ruta = System.getProperty("user.home") + "\\Downloads\\REPORTES\\OBRA SOCIAL\\reporteObrasSociales.pdf";
+
+
+               // Crear el documento en formato A4 horizontal (más ancho para las tablas)
+               Document documento = new Document(PageSize.A4.rotate());
+
+               // Asociar el documento con un "escritor" que lo guardará en la ruta indicada
+               PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+
+               // Abrir el documento para comenzar a escribir contenido en él
+               documento.open();
+
+   
+               //ENCABEZADO DEL DOCUMENTO
+               // Título centrado y en negrita
+               Paragraph titulo = new Paragraph("Reporte de Profesores Activos",
+               FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
+               titulo.setAlignment(Element.ALIGN_CENTER);
+               documento.add(titulo);
+
+               //  Subtítulo e información adicional
+               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Fecha: " + LocalDate.now()));
+               documento.add(new Paragraph("\nListado de profesores activos:\n"));
+
+   
+               //  CREACIÓN DE LA TABLA PDF
+               // Crear una tabla con 11 columnas
+               PdfPTable tablaPDF = new PdfPTable(6);
+               tablaPDF.setWidthPercentage(100);   // Ocupa el ancho total de la página
+               tablaPDF.setSpacingBefore(10f);     // Espacio antes de la tabla
+               tablaPDF.setSpacingAfter(10f);      // Espacio después de la tabla
+
+               // Nombres de las columnas
+               String[] columnas = {
+                  "Nombre Profesor", "Apellido Profesor", "DNI", "Residencia", "Título", "Estado"
+               };
+
+               // Fuente para el encabezado (blanca sobre fondo azul)
+               Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
+
+               // Agregar cada columna como una celda de encabezado
+               for (String col : columnas) {
+                   PdfPCell celda = new PdfPCell(new Phrase(col, fontHeader)); // Contenido de la celda
+                   celda.setBackgroundColor(new Color(50, 100, 150));          // Color de fondo azul
+                   celda.setHorizontalAlignment(Element.ALIGN_CENTER);          // Texto centrado
+                   celda.setPadding(5);                                         // Espaciado interno
+                   tablaPDF.addCell(celda);
+               }
+
+ 
+                //  LLENAR TABLA CON DATOS
+                 Font fontData = FontFactory.getFont(FontFactory.HELVETICA, 9); // Fuente para los datos
+
+                try {
+                           // Se llama al método del modelo que devuelve los profesores activos
+                           rs = Clases.Profesor.mostrarprofesoresactivos(cx);
+
+                           // Se recorre cada fila del ResultSet y se agregan las celdas a la tabla
+                          while (rs.next()) {
+                            tablaPDF.addCell(new Phrase(rs.getString("nombre"), fontData));          // 1
+                            tablaPDF.addCell(new Phrase(rs.getString("apellido"), fontData));          // 1
+                            tablaPDF.addCell(new Phrase(rs.getString("dni"), fontData));          // 1
+                            tablaPDF.addCell(new Phrase(rs.getString("residencia"), fontData));          // 1
+                            tablaPDF.addCell(new Phrase(rs.getString("titulo"), fontData));          // 1
+                            int estado=rs.getInt("borrado");
+                            if(estado==0){
+                                 tablaPDF.addCell(new Phrase("ACTIVO", fontData));        // 2
+                            }
+                           
+                          
+}
+
+
+                  } catch (Exception e) {
+                             JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e.getMessage());
+                  }
+
+                  // Agregar la tabla al documento PDF
+                   documento.add(tablaPDF);
+
+                  // Se cierra el documento (muy importante)
+                  documento.close();
+
+                   // Aviso al usuario
+                   JOptionPane.showMessageDialog(this, "PDF generado correctamente.");
+
+                   // Abrir el archivo automáticamente
+                   java.awt.Desktop.getDesktop().open(new java.io.File(ruta));
+
+   }catch (Exception ex) {
+   
+        JOptionPane.showMessageDialog(this, "Error al generar el PDF: " + ex.getMessage());
+   }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     
     
     
@@ -1126,6 +1253,7 @@ desactivarhabilitar();
     private javax.swing.JTextField dnitxt;
     private javax.swing.JLabel eliminar;
     private javax.swing.JLabel guardar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;

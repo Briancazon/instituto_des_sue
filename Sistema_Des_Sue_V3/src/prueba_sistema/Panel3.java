@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -41,8 +42,33 @@ public class Panel3 extends javax.swing.JPanel {
         cargarComboBoxHorarios();
         desactivarCampoAlumno();
         desactivarCampoProfesor();
-        validarCamposVacios();
+
         mostrarTablaInscripcion();
+        desactivarCampos();
+        
+    }
+    
+    void limpiar(){
+        txtAlumno.setText("");
+        labelCodigoAlumno.setText("");
+        boxServicios.setSelectedItem("Seleccione un Servicio");
+        boxDias.setSelectedItem("Seleccione unos días");
+        boxHorarios.setSelectedItem("Seleccione un Horario");
+        txtProfesor.setText("");
+        labelCodigoProfesor.setText("");
+        txtFecha.setText("");
+        txtAuxiliar.setText("");
+        desactivarCampos();
+        botonAlumno.setEnabled(true);
+    }
+    
+    void desactivarCampos(){
+        boxDias.setEnabled(false);
+        boxHorarios.setEnabled(false);
+        botonProfesor.setEnabled(false);
+        txtFecha.setEnabled(false);
+         boxServicios.setEnabled(false);
+         labelEditar.setEnabled(false);
     }
     
     
@@ -97,13 +123,7 @@ public class Panel3 extends javax.swing.JPanel {
     
      
     
-    void validarCamposVacios(){
-        if(txtAlumno.getText().isEmpty() || txtProfesor.getText().isEmpty() || txtFecha.getText().isEmpty() || boxDias.getSelectedItem().equals("Seleccione unos días") || boxServicios.getSelectedItem().equals("Seleccione un Servicio") || boxHorarios.getSelectedItem().equals("Seleccione un Horario")){
-            botonGuardar.setEnabled(false);          
-        }else{
-            botonGuardar.setEnabled(true);
-        }
-    }
+  
     
     void desactivarCampoAlumno(){
         txtAlumno.setEnabled(false);
@@ -166,11 +186,11 @@ public class Panel3 extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         txtFecha = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        botonAlumno = new javax.swing.JButton();
         boxHorarios = new javax.swing.JComboBox<>();
         jLabel17 = new javax.swing.JLabel();
         txtProfesor = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        botonProfesor = new javax.swing.JButton();
         boxDias = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaInscripciones = new javax.swing.JTable();
@@ -183,6 +203,8 @@ public class Panel3 extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         labelEditar = new javax.swing.JLabel();
         txtAuxiliar = new javax.swing.JLabel();
+        labelLimpiar = new javax.swing.JLabel();
+        recargar = new javax.swing.JLabel();
 
         setLayout(new java.awt.CardLayout());
 
@@ -315,10 +337,10 @@ public class Panel3 extends javax.swing.JPanel {
         jLabel13.setForeground(new java.awt.Color(255, 102, 51));
         jLabel13.setText("***********************************************************");
 
-        jButton1.setText("...");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonAlumno.setText("...");
+        botonAlumno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botonAlumnoActionPerformed(evt);
             }
         });
 
@@ -356,10 +378,10 @@ public class Panel3 extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setText("...");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        botonProfesor.setText("...");
+        botonProfesor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                botonProfesorActionPerformed(evt);
             }
         });
 
@@ -402,7 +424,7 @@ public class Panel3 extends javax.swing.JPanel {
                                     .addComponent(boxDias, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(botonAlumno)
                 .addGap(0, 822, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -417,7 +439,7 @@ public class Panel3 extends javax.swing.JPanel {
                                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtProfesor))
                                 .addGap(29, 29, 29)
-                                .addComponent(jButton2))))
+                                .addComponent(botonProfesor))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -457,7 +479,7 @@ public class Panel3 extends javax.swing.JPanel {
                                 .addComponent(txtProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel17))
-                            .addComponent(jButton2))
+                            .addComponent(botonProfesor))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -471,7 +493,7 @@ public class Panel3 extends javax.swing.JPanel {
                         .addContainerGap(17, Short.MAX_VALUE))))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(46, 46, 46)
-                .addComponent(jButton1)
+                .addComponent(botonAlumno)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -521,8 +543,6 @@ public class Panel3 extends javax.swing.JPanel {
             }
         });
 
-        labelCodigoAlumno.setText("jLabel9");
-
         jButton3.setText("IMPRIMIR ");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -539,6 +559,22 @@ public class Panel3 extends javax.swing.JPanel {
             }
         });
 
+        labelLimpiar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
+        labelLimpiar.setForeground(new java.awt.Color(255, 255, 255));
+        labelLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/c.png"))); // NOI18N
+        labelLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelLimpiarMouseClicked(evt);
+            }
+        });
+
+        recargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/recargar.png"))); // NOI18N
+        recargar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                recargarMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -548,41 +584,52 @@ public class Panel3 extends javax.swing.JPanel {
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
+                .addComponent(recargar)
+                .addGap(72, 72, 72)
                 .addComponent(botonGuardar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(87, 87, 87)
                 .addComponent(labelEditar)
-                .addGap(444, 444, 444)
-                .addComponent(labelCodigoAlumno)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelLimpiar)
+                .addGap(60, 60, 60)
+                .addComponent(labelCodigoAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70)
-                .addComponent(jButton3)
-                .addGap(150, 150, 150)
+                .addGap(306, 306, 306)
                 .addComponent(txtAuxiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(487, 487, 487))
+                .addGap(86, 86, 86)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(285, 285, 285))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel15)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labelCodigoAlumno)
+                            .addComponent(labelCodigoAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3)
                             .addComponent(txtAuxiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(13, 13, 13))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(botonGuardar)
-                            .addComponent(labelEditar))
+                            .addComponent(botonGuardar, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelEditar, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelLimpiar)
+                            .addComponent(recargar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout paneltresLayout = new javax.swing.GroupLayout(paneltres);
@@ -593,7 +640,7 @@ public class Panel3 extends javax.swing.JPanel {
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(paneltresLayout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 6, Short.MAX_VALUE))
             .addGroup(paneltresLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1674, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -619,21 +666,33 @@ public class Panel3 extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreBuscadorActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void botonAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAlumnoActionPerformed
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
        
 buscarAlumno dialog = new buscarAlumno(frame, true, this, a, p5, 1);
 dialog.setVisible(true);
+       if(!txtAlumno.getText().isEmpty()){
+            boxServicios.setEnabled(true);
+            // Obtener la fecha actual
+             Date fechaActual = new Date();
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+             // Formatear la fecha al formato  dd-MM-yyyy
+               SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+             String fechaFormateada = formato.format(fechaActual);
+               // Mostrarla en el JTextField
+              txtFecha.setText(fechaFormateada);
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       }
+      
+    }//GEN-LAST:event_botonAlumnoActionPerformed
+
+    private void botonProfesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProfesorActionPerformed
     JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
        
 buscarProfesor dialog = new buscarProfesor(frame, true, this, pp, 2);
 dialog.setVisible(true);
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_botonProfesorActionPerformed
 
     private void botonGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonGuardarMouseClicked
 
@@ -646,12 +705,27 @@ dialog.setVisible(true);
         
         try{ 
                if(txtAuxiliar.getText().isEmpty()){
+                   
                       int codigo_servicio=Clases.Inscripcion.obtenerCodigoServicio(cx, servicio);
                       int codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
                       int codigoProfesor=Integer.parseInt(labelCodigoProfesor.getText());
                       int codigoAlumno=Integer.parseInt(labelCodigoAlumno.getText());
                       String dias=boxDias.getSelectedItem().toString();
+                      String diasF="";
+                      if(dias.equalsIgnoreCase("Seleccione unos Días")){
+                          diasF=null;
+                      }else{
+                          diasF=dias;
+                      }
                       String fecha=txtFecha.getText();
+                      Calendar fechaSeleccionada = Calendar.getInstance();
+                      fechaSeleccionada.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(txtFecha.getText()));
+
+                      // Crear el formateador
+                      SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+
+                      // Convertir la fecha al formato deseado
+                      String fechaFormateada = formato.format(fechaSeleccionada.getTime());
                       int c_c_l=Clases.Inscripcion.obtenerCodigoCicloLectivo(cx);
                 
                       ///VALIDACION: valida que un alumno con servicio mensual no tenga pagos pendientes, si es que tiene el sistema no le permitirá registrar una nueva inscripcion no sin antes haber saldado todo lo que debe
@@ -672,10 +746,15 @@ dialog.setVisible(true);
                 
                         /// una vez pasados todos los filtros, recien podra realizar la inscripcion...pero antes el sistema tendrá que dar como INACTIVO su servicio actual y, el nuevo pasaría a ser el ACTIVO..
                         Clases.Inscripcion.darBajaInscripcion(cx, codigoAlumno);
-                        Clases.Inscripcion.insertarInscripcion(cx, codigoAlumno, dias, codigo_horario, codigoProfesor, codigo_servicio, fecha, c_c_l);
+                        Clases.Inscripcion.insertarInscripcion(cx, codigoAlumno, diasF, codigo_horario, codigoProfesor, codigo_servicio, fechaFormateada, c_c_l);
                         JOptionPane.showMessageDialog(null, "Se registro la inscripcion correctamente");
                         mostrarTablaInscripcion();
+                        limpiar();
+                        
+                        
                   }else{
+                   
+                   
                          int filaSeleccionada = tablaInscripciones.getSelectedRow();
                          ///rescato datos relevantes que se usaran para una actualizacion de la tabla.. 
                          String dniAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 2).toString();
@@ -695,6 +774,7 @@ dialog.setVisible(true);
                          Clases.Inscripcion.actualizarInscripcion(cx, dias, codigo_horario, codigo_profesor, codigo_alumno);
                          JOptionPane.showMessageDialog(null, "Se han actualizado algunos datos de la inscripcion del alumno "+txtAlumno.getText());      
                          mostrarTablaInscripcion();
+                         limpiar();
                  }            
               
       
@@ -707,15 +787,15 @@ dialog.setVisible(true);
     }//GEN-LAST:event_botonGuardarMouseClicked
 
     private void txtAlumnoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAlumnoKeyReleased
-       validarCamposVacios();
+
     }//GEN-LAST:event_txtAlumnoKeyReleased
 
     private void txtProfesorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProfesorKeyReleased
-       validarCamposVacios();
+
     }//GEN-LAST:event_txtProfesorKeyReleased
 
     private void txtFechaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFechaKeyReleased
-        validarCamposVacios();
+
     }//GEN-LAST:event_txtFechaKeyReleased
 
     private void boxServiciosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boxServiciosMouseReleased
@@ -731,11 +811,25 @@ dialog.setVisible(true);
     }//GEN-LAST:event_boxHorariosMouseReleased
 
     private void boxServiciosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_boxServiciosItemStateChanged
-         validarCamposVacios();
+
+
+             if(boxServicios.getSelectedItem().equals("Inclusión Escolar: Acompañamiento") || boxServicios.getSelectedItem().equals("Inclusión Escolar: Itinerancia")){
+                 boxHorarios.setEnabled(false);
+                 boxHorarios.setSelectedItem("Seleccione un Horario");
+                 botonProfesor.setEnabled(true);
+                 boxDias.setEnabled(false);
+                 boxDias.setSelectedItem("Seleccione unos días");
+                 
+             }else{
+                 boxDias.setEnabled(true);
+                  boxHorarios.setEnabled(true);
+                 botonProfesor.setEnabled(true);
+             }
+         
     }//GEN-LAST:event_boxServiciosItemStateChanged
 
     private void boxDiasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_boxDiasItemStateChanged
-         validarCamposVacios();
+
     }//GEN-LAST:event_boxDiasItemStateChanged
 
     private void boxHorariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxHorariosActionPerformed
@@ -743,7 +837,7 @@ dialog.setVisible(true);
     }//GEN-LAST:event_boxHorariosActionPerformed
 
     private void boxHorariosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_boxHorariosItemStateChanged
-          validarCamposVacios();
+
     }//GEN-LAST:event_boxHorariosItemStateChanged
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -923,7 +1017,13 @@ dialog.setVisible(true);
                   txtFecha.setText(fechaFormateada);
 
                   txtAuxiliar.setText(String.valueOf(codigo_profesor));
-                   validarCamposVacios();
+                  botonAlumno.setEnabled(false);
+                  boxServicios.setEnabled(false);
+                  txtFecha.setEnabled(false);
+                  boxDias.setEnabled(false);
+                  boxHorarios.setEnabled(false);
+                  botonProfesor.setEnabled(false);
+                  labelEditar.setEnabled(true);
             }
           
          }catch(Exception e){
@@ -932,9 +1032,19 @@ dialog.setVisible(true);
     }//GEN-LAST:event_tablaInscripcionesMouseClicked
 
     private void labelEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditarMouseClicked
-      
-
+                  boxDias.setEnabled(true);
+                  boxHorarios.setEnabled(true);
+                  botonProfesor.setEnabled(true);      
+                  labelEditar.setEnabled(false);
     }//GEN-LAST:event_labelEditarMouseClicked
+
+    private void labelLimpiarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelLimpiarMouseClicked
+        limpiar();      
+    }//GEN-LAST:event_labelLimpiarMouseClicked
+
+    private void recargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recargarMouseClicked
+ mostrarTablaInscripcion();
+    }//GEN-LAST:event_recargarMouseClicked
 
     public void setTxtAlumno(String nombre) {
         txtAlumno.setText(nombre);
@@ -954,12 +1064,12 @@ dialog.setVisible(true);
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonAlumno;
     private javax.swing.JLabel botonGuardar;
+    private javax.swing.JButton botonProfesor;
     private javax.swing.JComboBox<String> boxDias;
     private javax.swing.JComboBox<String> boxHorarios;
     private javax.swing.JComboBox<String> boxServicios;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -982,7 +1092,9 @@ dialog.setVisible(true);
     private javax.swing.JLabel labelCodigoAlumno;
     private javax.swing.JLabel labelCodigoProfesor;
     private javax.swing.JLabel labelEditar;
+    private javax.swing.JLabel labelLimpiar;
     private javax.swing.JPanel paneltres;
+    private javax.swing.JLabel recargar;
     private javax.swing.JTable tablaInscripciones;
     private javax.swing.JTextField txtAlumno;
     private javax.swing.JLabel txtAuxiliar;

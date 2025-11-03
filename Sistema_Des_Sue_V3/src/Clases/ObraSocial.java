@@ -24,7 +24,7 @@ public class ObraSocial {
     
        public static ResultSet mostrarObrasSocialesActivas(Connection cx)throws SQLException{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre from obra_social where borrado=0");
+        PreparedStatement stm=cx.prepareStatement("SELECT codigo,nombre, borrado from obra_social where borrado=0");
       
         try{
             rs=stm.executeQuery();

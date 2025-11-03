@@ -1,11 +1,24 @@
 
 package ObraSocial;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -328,6 +341,7 @@ public class OS extends javax.swing.JPanel {
         labelAgregar = new javax.swing.JLabel();
         Cancelar = new javax.swing.JLabel();
         habilitar = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaOS = new javax.swing.JTable();
         labelCodigo = new javax.swing.JLabel();
@@ -425,13 +439,13 @@ public class OS extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(263, 263, 263)
-                .addComponent(buscar, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                .addComponent(buscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 219, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(nomtxt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addComponent(cargar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(288, 288, 288))
         );
         jPanel3Layout.setVerticalGroup(
@@ -533,6 +547,13 @@ public class OS extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setText("GENERAR REPORTE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -544,52 +565,59 @@ public class OS extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(195, 195, 195)
-                .addComponent(labelAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(habilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(108, 108, 108)
+                .addComponent(labelAgregar)
+                .addGap(78, 78, 78)
+                .addComponent(labelGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70)
+                .addComponent(labelEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(72, 72, 72)
+                .addComponent(labelEliminar)
+                .addGap(67, 67, 67)
+                .addComponent(habilitar)
+                .addGap(60, 60, 60)
                 .addComponent(checkInactivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(61, 61, 61)
                 .addComponent(Cancelar)
-                .addContainerGap())
+                .addGap(70, 70, 70)
+                .addComponent(jButton1)
+                .addGap(32, 32, 32))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelEditar)
-                    .addComponent(labelEliminar))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(jLabel8)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(labelAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Cancelar)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(habilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addComponent(labelGuardar, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Cancelar, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(checkInactivo)
-                        .addGap(18, 18, 18))))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(nombretxt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(7, 7, 7)
+                                    .addComponent(jLabel8)))))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelEditar)
+                            .addComponent(labelGuardar)
+                            .addComponent(labelEliminar)
+                            .addComponent(habilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(checkInactivo)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         tablaOS.setModel(new javax.swing.table.DefaultTableModel(
@@ -627,7 +655,7 @@ public class OS extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 962, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1517, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(72, 72, 72)
@@ -648,12 +676,12 @@ public class OS extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(34, 34, 34)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                         .addGap(39, 39, 39))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(91, 91, 91)
                         .addComponent(labelCodigo)
-                        .addContainerGap(189, Short.MAX_VALUE))))
+                        .addContainerGap(183, Short.MAX_VALUE))))
         );
 
         add(jPanel1, "os");
@@ -890,6 +918,101 @@ public class OS extends javax.swing.JPanel {
     }  
     }//GEN-LAST:event_nomtxtKeyTyped
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      try {
+               //  Ruta donde se guardará el PDF (en el Escritorio del usuario)
+               String ruta = System.getProperty("user.home") + "\\Downloads\\REPORTES\\OBRA SOCIAL\\reporteObrasSociales.pdf";
+
+
+               // Crear el documento en formato A4 horizontal (más ancho para las tablas)
+               Document documento = new Document(PageSize.A4.rotate());
+
+               // Asociar el documento con un "escritor" que lo guardará en la ruta indicada
+               PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+
+               // Abrir el documento para comenzar a escribir contenido en él
+               documento.open();
+
+   
+               //ENCABEZADO DEL DOCUMENTO
+               // Título centrado y en negrita
+               Paragraph titulo = new Paragraph("Reporte de Obras Sociales Activas",
+               FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
+               titulo.setAlignment(Element.ALIGN_CENTER);
+               documento.add(titulo);
+
+               //  Subtítulo e información adicional
+               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Fecha: " + LocalDate.now()));
+               documento.add(new Paragraph("\nListado de obras sociales activas:\n"));
+
+   
+               //  CREACIÓN DE LA TABLA PDF
+               // Crear una tabla con 11 columnas
+               PdfPTable tablaPDF = new PdfPTable(2);
+               tablaPDF.setWidthPercentage(100);   // Ocupa el ancho total de la página
+               tablaPDF.setSpacingBefore(10f);     // Espacio antes de la tabla
+               tablaPDF.setSpacingAfter(10f);      // Espacio después de la tabla
+
+               // Nombres de las columnas
+               String[] columnas = {
+                  "Obra Social", "Estado"
+               };
+
+               // Fuente para el encabezado (blanca sobre fondo azul)
+               Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
+
+               // Agregar cada columna como una celda de encabezado
+               for (String col : columnas) {
+                   PdfPCell celda = new PdfPCell(new Phrase(col, fontHeader)); // Contenido de la celda
+                   celda.setBackgroundColor(new Color(50, 100, 150));          // Color de fondo azul
+                   celda.setHorizontalAlignment(Element.ALIGN_CENTER);          // Texto centrado
+                   celda.setPadding(5);                                         // Espaciado interno
+                   tablaPDF.addCell(celda);
+               }
+
+ 
+                //  LLENAR TABLA CON DATOS
+                 Font fontData = FontFactory.getFont(FontFactory.HELVETICA, 9); // Fuente para los datos
+
+                try {
+                           // Se llama al método del modelo que devuelve las OS activas...
+                           rs = Clases.ObraSocial.mostrarObrasSocialesActivas(cx);
+
+                           // Se recorre cada fila del ResultSet y se agregan las celdas a la tabla
+                          while (rs.next()) {
+                            tablaPDF.addCell(new Phrase(rs.getString("nombre"), fontData));          // 1
+                            int estado=rs.getInt("borrado");
+                            if(estado==0){
+                                 tablaPDF.addCell(new Phrase("ACTIVO", fontData));        // 2
+                            }
+                           
+                          
+}
+
+
+                  } catch (Exception e) {
+                             JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e.getMessage());
+                  }
+
+                  // Agregar la tabla al documento PDF
+                   documento.add(tablaPDF);
+
+                  // Se cierra el documento (muy importante)
+                  documento.close();
+
+                   // Aviso al usuario
+                   JOptionPane.showMessageDialog(this, "PDF generado correctamente.");
+
+                   // Abrir el archivo automáticamente
+                   java.awt.Desktop.getDesktop().open(new java.io.File(ruta));
+
+   }catch (Exception ex) {
+   
+        JOptionPane.showMessageDialog(this, "Error al generar el PDF: " + ex.getMessage());
+   }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Cancelar;
@@ -897,6 +1020,7 @@ public class OS extends javax.swing.JPanel {
     private javax.swing.JLabel cargar;
     private javax.swing.JCheckBox checkInactivo;
     private javax.swing.JLabel habilitar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel18;
