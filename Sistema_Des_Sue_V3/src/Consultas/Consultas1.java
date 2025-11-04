@@ -270,7 +270,7 @@ alumno.setText(String.valueOf(cantidadDocentes));
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(AlumnoProfesor)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,7 +305,7 @@ alumno.setText(String.valueOf(cantidadDocentes));
         circular.setLayout(circularLayout);
         circularLayout.setHorizontalGroup(
             circularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 778, Short.MAX_VALUE)
+            .addGap(0, 836, Short.MAX_VALUE)
         );
         circularLayout.setVerticalGroup(
             circularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

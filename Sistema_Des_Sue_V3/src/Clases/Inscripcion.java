@@ -255,26 +255,38 @@ public class Inscripcion {
       
       
       public static void insertarInscripcion(Connection cx, int codigo_alumno, String dias, int codigo_horarios, int codigo_profesor, int codigo_servicio, String fecha, int codigo_ciclo_lectivo )throws Exception{
-          PreparedStatement stm=cx.prepareStatement("INSERT INTO inscripcion (codigo_alumno, dias, codigo_horarios, codigo_profesor, codigo_servicio, fecha_inscripcion, codigo_ciclo_lectivo, estado) values (?, ?, ?, ?, ?, ?, ?, 'ACTIVO') ");
-          stm.setInt(1, codigo_alumno);
-          stm.setString(2, dias);
-          stm.setInt(3, codigo_horarios);
-          stm.setInt(4, codigo_profesor);
-          stm.setInt(5, codigo_servicio);
-          stm.setString(6, fecha);
-          stm.setInt(7, codigo_ciclo_lectivo);
-          try{
-              stm.executeUpdate();
-          }catch(SQLException e){
-               JOptionPane.showMessageDialog(null,e.getMessage());
+          if(codigo_horarios==0){
+                PreparedStatement stm=cx.prepareStatement("INSERT INTO inscripcion (codigo_alumno, dias, codigo_horarios, codigo_profesor, codigo_servicio, fecha_inscripcion, codigo_ciclo_lectivo, estado) values (?, ?, null, ?, ?, ?, ?, 'ACTIVO') ");
+                stm.setInt(1, codigo_alumno);
+                stm.setString(2, dias);
+                
+                stm.setInt(3, codigo_profesor);
+                stm.setInt(4, codigo_servicio);
+                stm.setString(5, fecha);
+                stm.setInt(6, codigo_ciclo_lectivo);
+         
+                stm.executeUpdate();
+          }else{
+                PreparedStatement stm=cx.prepareStatement("INSERT INTO inscripcion (codigo_alumno, dias, codigo_horarios, codigo_profesor, codigo_servicio, fecha_inscripcion, codigo_ciclo_lectivo, estado) values (?, ?, ?, ?, ?, ?, ?, 'ACTIVO') ");
+                stm.setInt(1, codigo_alumno);
+                stm.setString(2, dias);
+                stm.setInt(3, codigo_horarios);
+                stm.setInt(4, codigo_profesor);
+                stm.setInt(5, codigo_servicio);
+                stm.setString(6, fecha);
+                stm.setInt(7, codigo_ciclo_lectivo);
+         
+                stm.executeUpdate();
+         
           }
+        
           
       }
       
       //metodo que muestra inscripciones tanto activas como inactivas
       public static ResultSet mostrarIncripciones(Connection cx)throws Exception {
           ResultSet rs=null;
-          PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni ,inc.dias, ho.horario, pro.nombre, pro.apellido, pro.dni,  ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc inner join alumno as al on al.codigo=inc.codigo_alumno inner join horarios as ho on ho.codigo=inc.codigo_horarios inner join profesor as pro on pro.codigo=inc.codigo_profesor inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo order by inc.codigo desc");
+          PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni ,inc.dias, ho.horario, pro.nombre, pro.apellido, pro.dni,  ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc left join alumno as al on al.codigo=inc.codigo_alumno left join horarios as ho on ho.codigo=inc.codigo_horarios left join profesor as pro on pro.codigo=inc.codigo_profesor left join servicios as ser on ser.codigo=inc.codigo_servicio left join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo order by inc.codigo desc");
          
               rs=stm.executeQuery();
          
@@ -292,10 +304,11 @@ public class Inscripcion {
           return rs;
       }
       
+        ///metodo para buscar la inscripcion de un alummno por nombre(inscripciones tanto activas como inactivas)...
        public static ResultSet buscarAlumnoPorNombre(Connection cx, String nombre)throws Exception{
            ResultSet rs=null;
-           PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni ,inc.dias, ho.horario, pro.nombre, pro.apellido, pro.dni,  ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc inner join alumno as al on al.codigo=inc.codigo_alumno inner join horarios as ho on ho.codigo=inc.codigo_horarios inner join profesor as pro on pro.codigo=inc.codigo_profesor inner join servicios as ser on ser.codigo=inc.codigo_servicio inner join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo where al.nombre like ?  order by inc.codigo desc");
-           stm.setString(1, nombre);
+           PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni ,inc.dias, ho.horario, pro.nombre, pro.apellido, pro.dni,  ser.nombre, inc.fecha_inscripcion, ci.año, inc.estado from inscripcion as inc left join alumno as al on al.codigo=inc.codigo_alumno left join horarios as ho on ho.codigo=inc.codigo_horarios left join profesor as pro on pro.codigo=inc.codigo_profesor left join servicios as ser on ser.codigo=inc.codigo_servicio left join ciclo_lectivo as ci on ci.codigo=inc.codigo_ciclo_lectivo where al.nombre like ?  order by inc.codigo desc");
+           stm.setString(1, "%"+nombre+"%");
            rs=stm.executeQuery();
            return rs;
        }
@@ -437,15 +450,26 @@ public class Inscripcion {
           
           //metodo para actualizar algunos campos de una inscripcion activa...
           public static void actualizarInscripcion(Connection cx, String dias, int codigo_horarios,int codigo_profesor, int codigo_alumno)throws Exception{
-              PreparedStatement stm=cx.prepareStatement("UPDATE inscripcion set dias=?, codigo_horarios=?, codigo_profesor=? where codigo_alumno=? and estado='ACTIVO'");
-              stm.setString(1, dias);
-              stm.setInt(2, codigo_horarios);
-              stm.setInt(3, codigo_profesor);
+              if(dias==null && codigo_horarios==0){
+                     PreparedStatement stm=cx.prepareStatement("UPDATE inscripcion set codigo_profesor=? where codigo_alumno=? and estado='ACTIVO'");
+                    
+                      stm.setInt(1, codigo_profesor);
  
-              stm.setInt(4, codigo_alumno);
-              stm.executeUpdate();
+                      stm.setInt(2, codigo_alumno);
+                      stm.executeUpdate();
+              }else{
+                      PreparedStatement stm=cx.prepareStatement("UPDATE inscripcion set dias=?, codigo_horarios=?, codigo_profesor=? where codigo_alumno=? and estado='ACTIVO'");
+                      stm.setString(1, dias);
+                      stm.setInt(2, codigo_horarios);
+                      stm.setInt(3, codigo_profesor);
+ 
+                      stm.setInt(4, codigo_alumno);
+                      stm.executeUpdate();
+              }
+              
           }
           
+       
           
 
     }

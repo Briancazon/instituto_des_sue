@@ -543,7 +543,7 @@ public class Panel3 extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setText("IMPRIMIR ");
+        jButton3.setText("GENERAR REPORTE");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -592,14 +592,14 @@ public class Panel3 extends javax.swing.JPanel {
                 .addComponent(labelEditar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelLimpiar)
-                .addGap(60, 60, 60)
+                .addGap(29, 29, 29)
                 .addComponent(labelCodigoAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(306, 306, 306)
                 .addComponent(txtAuxiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(86, 86, 86)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
+                .addComponent(jButton3)
                 .addGap(285, 285, 285))
         );
         jPanel4Layout.setVerticalGroup(
@@ -617,7 +617,7 @@ public class Panel3 extends javax.swing.JPanel {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(botonGuardar, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelEditar, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelLimpiar)
+                            .addComponent(labelLimpiar, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(recargar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -643,7 +643,7 @@ public class Panel3 extends javax.swing.JPanel {
                 .addGap(0, 6, Short.MAX_VALUE))
             .addGroup(paneltresLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1674, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1708, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         paneltresLayout.setVerticalGroup(
@@ -707,7 +707,11 @@ dialog.setVisible(true);
                if(txtAuxiliar.getText().isEmpty()){
                    
                       int codigo_servicio=Clases.Inscripcion.obtenerCodigoServicio(cx, servicio);
-                      int codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
+                      int codigo_horario=0;
+                      if(!horario.equalsIgnoreCase("Seleccione un Horario")){
+                           codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
+                      }
+                    
                       int codigoProfesor=Integer.parseInt(labelCodigoProfesor.getText());
                       int codigoAlumno=Integer.parseInt(labelCodigoAlumno.getText());
                       String dias=boxDias.getSelectedItem().toString();
@@ -752,34 +756,55 @@ dialog.setVisible(true);
                         limpiar();
                         
                         
-                  }else{
+                  }else{//// SiNO, QUIERE DECIR QUE ES UNA ACTUALIZACION
                    
                    
                          int filaSeleccionada = tablaInscripciones.getSelectedRow();
                          ///rescato datos relevantes que se usaran para una actualizacion de la tabla.. 
                          String dniAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 2).toString();
-           
-                         String dias=boxDias.getSelectedItem().toString();
-                         int codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
+                         Object dias =tablaInscripciones.getValueAt(filaSeleccionada, 3);
+                         if(dias == null){
+                                String diasF="";
+                                diasF=null;
+                                int codigo_horario=0;
+                                /// si el labelCodigoProfesor esta vacio, quiere decir que no fue al apartado profesor y seleccionó otro profesor, no, quiere decir que se queda con el preofesor que tiene nomas, que seria el que esta en el tabla, por lo tanto ponemos el codigo del profesor que esta en la tabla
+                                int codigo_profesor=0;
+                                if(labelCodigoProfesor.getText().isEmpty()){
+                                       codigo_profesor=Integer.parseInt(txtAuxiliar.getText());
+                                }else{///sino, quiere decir que sí seleccionó otro profesor y por lo tanto tendriamos que poner el codigo de ese nuevo profesor
+                                       codigo_profesor=Integer.parseInt(labelCodigoProfesor.getText());
+                                }
                          
-                         /// si el labelCodigoProfesor esta vacio, quiere decir que no fue al apartaado profesor y seleccionó otro profesor, no, quiere decir que se queda con el preofesor que tiene nomas, que seria el que esta en el tabla, por lo tanto ponemos el codigo del profesor que esta en la tabla
-                         int codigo_profesor=0;
-                         if(labelCodigoProfesor.getText().isEmpty()){
-                             codigo_profesor=Integer.parseInt(txtAuxiliar.getText());
-                         }else{///sino, quiere decir que sí seleccionó otro profesor y por lo tanto tendriamos que pioner el codigo de ese nuevo profesor
-                             codigo_profesor=Integer.parseInt(labelCodigoProfesor.getText());
-                         }
+                                int codigo_alumno=Clases.Alumno.obtenerCodigo(cx,Integer.parseInt( dniAlumno));
+                                Clases.Inscripcion.actualizarInscripcion(cx, diasF, codigo_horario, codigo_profesor, codigo_alumno);
+                                JOptionPane.showMessageDialog(null, "Se han actualizado algunos datos de la inscripcion del alumno "+txtAlumno.getText());      
+                                mostrarTablaInscripcion();
+                                limpiar();
+                         }else{
+                              String d=boxDias.getSelectedItem().toString();
+                              int codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
                          
-                         int codigo_alumno=Clases.Alumno.obtenerCodigo(cx,Integer.parseInt( dniAlumno));
-                         Clases.Inscripcion.actualizarInscripcion(cx, dias, codigo_horario, codigo_profesor, codigo_alumno);
-                         JOptionPane.showMessageDialog(null, "Se han actualizado algunos datos de la inscripcion del alumno "+txtAlumno.getText());      
-                         mostrarTablaInscripcion();
-                         limpiar();
+                              /// si el labelCodigoProfesor esta vacio, quiere decir que no fue al apartado profesor y seleccionó otro profesor, no, quiere decir que se queda con el preofesor que tiene nomas, que seria el que esta en el tabla, por lo tanto ponemos el codigo del profesor que esta en la tabla
+                              int codigo_profesor=0;
+                              if(labelCodigoProfesor.getText().isEmpty()){
+                                   codigo_profesor=Integer.parseInt(txtAuxiliar.getText());
+                               }else{///sino, quiere decir que sí seleccionó otro profesor y por lo tanto tendriamos que poner el codigo de ese nuevo profesor
+                                   codigo_profesor=Integer.parseInt(labelCodigoProfesor.getText());
+                               }
+                         
+                               int codigo_alumno=Clases.Alumno.obtenerCodigo(cx,Integer.parseInt( dniAlumno));
+                               Clases.Inscripcion.actualizarInscripcion(cx, d, codigo_horario, codigo_profesor, codigo_alumno);
+                               JOptionPane.showMessageDialog(null, "Se han actualizado algunos datos de la inscripcion del alumno "+txtAlumno.getText());      
+                               mostrarTablaInscripcion();
+                               limpiar();
+                           }
+                        
                  }            
               
       
         }catch(Exception e){
               JOptionPane.showMessageDialog(null, "Ha ocurrido un error","ERROR",ERROR_MESSAGE);
+              e.printStackTrace();
         }
      
        
@@ -994,8 +1019,14 @@ dialog.setVisible(true);
             ///rescato datos relevantes que se usaran para una actualizacion de la tabla.. 
             String nombreAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 0).toString();
             String apellidoAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 1).toString();
-            String dias =tablaInscripciones.getValueAt(filaSeleccionada, 3).toString();
-            String horarios =tablaInscripciones.getValueAt(filaSeleccionada, 4).toString();
+            Object dias =tablaInscripciones.getValueAt(filaSeleccionada, 3);
+            if(dias!=null){
+                dias.toString();
+            }
+            Object horarios =tablaInscripciones.getValueAt(filaSeleccionada, 4);
+            if(horarios!=null){
+                horarios.toString();
+            }
             String nombreProfesor =tablaInscripciones.getValueAt(filaSeleccionada, 5).toString();
             String apellidoProfesor =tablaInscripciones.getValueAt(filaSeleccionada, 6).toString();
             String dniProfesor =tablaInscripciones.getValueAt(filaSeleccionada, 7).toString();
@@ -1005,37 +1036,82 @@ dialog.setVisible(true);
             
             if(estado.equalsIgnoreCase("ACTIVO")){
                   int codigo_profesor=Clases.Profesor.buscarCodigo(cx, Integer.parseInt(dniProfesor) );
-                  txtAlumno.setText(nombreAlumno+" "+apellidoAlumno);
-                  boxDias.setSelectedItem(dias);
-                  boxHorarios.setSelectedItem(horarios);
-                  txtProfesor.setText(nombreProfesor+" "+apellidoProfesor);
-                  boxServicios.setSelectedItem(servicio);
-                  SimpleDateFormat formatoEntrada = new SimpleDateFormat("yyyy-MM-dd"); // o el formato original 
-                  SimpleDateFormat formatoSalida = new SimpleDateFormat("dd-MM-yyyy");
-                  Date fechaDate = formatoEntrada.parse(fecha); // convertir String a Date
-                  String fechaFormateada = formatoSalida.format(fechaDate); // convertir Date a String con nuevo formato
-                  txtFecha.setText(fechaFormateada);
+                  if(dias==null && horarios==null){
+                      txtAlumno.setText(nombreAlumno+" "+apellidoAlumno);
+                      boxDias.setSelectedItem("Seleccione unos Días");
+                      boxHorarios.setSelectedItem("Seleccione un Horario");
+                      txtProfesor.setText(nombreProfesor+" "+apellidoProfesor);
+                      boxServicios.setSelectedItem(servicio);
+                      SimpleDateFormat formatoEntrada = new SimpleDateFormat("yyyy-MM-dd"); // o el formato original 
+                      SimpleDateFormat formatoSalida = new SimpleDateFormat("dd-MM-yyyy");
+                      Date fechaDate = formatoEntrada.parse(fecha); // convertir String a Date
+                      String fechaFormateada = formatoSalida.format(fechaDate); // convertir Date a String con nuevo formato
+                      txtFecha.setText(fechaFormateada);
+                      
+                      txtAuxiliar.setText(String.valueOf(codigo_profesor));
+                      botonAlumno.setEnabled(false);
+                      boxServicios.setEnabled(false);
+                      txtFecha.setEnabled(false);
+                      boxDias.setEnabled(false);
+                      boxHorarios.setEnabled(false);
+                      botonProfesor.setEnabled(false);
+                      labelEditar.setEnabled(true);
+                  }else{
+                       txtAlumno.setText(nombreAlumno+" "+apellidoAlumno);
+                       boxDias.setSelectedItem(dias);
+                       boxHorarios.setSelectedItem(horarios);
+                       txtProfesor.setText(nombreProfesor+" "+apellidoProfesor);
+                       boxServicios.setSelectedItem(servicio);
+                       SimpleDateFormat formatoEntrada = new SimpleDateFormat("yyyy-MM-dd"); // o el formato original 
+                       SimpleDateFormat formatoSalida = new SimpleDateFormat("dd-MM-yyyy");
+                       Date fechaDate = formatoEntrada.parse(fecha); // convertir String a Date
+                       String fechaFormateada = formatoSalida.format(fechaDate); // convertir Date a String con nuevo formato
+                       txtFecha.setText(fechaFormateada);
 
-                  txtAuxiliar.setText(String.valueOf(codigo_profesor));
-                  botonAlumno.setEnabled(false);
-                  boxServicios.setEnabled(false);
-                  txtFecha.setEnabled(false);
-                  boxDias.setEnabled(false);
-                  boxHorarios.setEnabled(false);
-                  botonProfesor.setEnabled(false);
-                  labelEditar.setEnabled(true);
+                       txtAuxiliar.setText(String.valueOf(codigo_profesor));
+                       botonAlumno.setEnabled(false);
+                       boxServicios.setEnabled(false);
+                       txtFecha.setEnabled(false);
+                       boxDias.setEnabled(false);
+                       boxHorarios.setEnabled(false);
+                       botonProfesor.setEnabled(false);
+                       labelEditar.setEnabled(true);
+                  }
+                 
+            }else{
+                 txtAlumno.setText("");
+                 labelCodigoAlumno.setText("");
+                 boxServicios.setSelectedItem("Seleccione un Servicio");
+                 boxDias.setSelectedItem("Seleccione unos días");
+                 boxHorarios.setSelectedItem("Seleccione un Horario");
+                 txtProfesor.setText("");
+                 labelCodigoProfesor.setText("");
+                 txtFecha.setText("");
+                 txtAuxiliar.setText("");
+                desactivarCampos();
+                botonAlumno.setEnabled(false);
+                 JOptionPane.showMessageDialog(null, "No se puede modificar inscripciones INACTIIVAS","ERROR",ERROR_MESSAGE);
             }
           
          }catch(Exception e){
-              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar los datos de la tabla","ERROR",ERROR_MESSAGE);
+              
          }
     }//GEN-LAST:event_tablaInscripcionesMouseClicked
 
     private void labelEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelEditarMouseClicked
+          int filaSeleccionada = tablaInscripciones.getSelectedRow();
+
+            Object dias =tablaInscripciones.getValueAt(filaSeleccionada, 3); 
+            if(dias==null){
+                  botonProfesor.setEnabled(true);   
+                  labelEditar.setEnabled(false);
+            }else{
                   boxDias.setEnabled(true);
                   boxHorarios.setEnabled(true);
                   botonProfesor.setEnabled(true);      
                   labelEditar.setEnabled(false);
+            }
+        
     }//GEN-LAST:event_labelEditarMouseClicked
 
     private void labelLimpiarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelLimpiarMouseClicked
