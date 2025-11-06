@@ -1,0 +1,26 @@
+[33mc33a86fb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Agrego funciones en inscripcion
+[33ma7b0543[m Agregando reportes a los abm
+[33m4821797[m agrego mejoras al sistema, como reportes
+[33m894d144[m Agrego validaciones en todos los ABM
+[33m4f5f394[m Agrego funciones del modulo de pagos
+[33m1a4fc38[m Agrego nueva version del proyecto
+[33ma7fc06d[m Agrego nuevas funciones, como inscripcion y algunos cambios en los ABM
+[33m7886b32[m agregué todos los ABM
+[33m432caae[m Agrego nueva interfaz del sistema
+[33m1c86e71[m Agrego la db actualizada con nuevas tablas y modificaciones
+[33mb950529[m Agrego funcionalidades en la sección 'Servicios'
+[33mf467791[m Agrego ABM de tutor con validaciones
+[33m0379763[m Agrego modificación del tutor
+[33mafbda58[m Conservo el formulario agregar_tutor(alta del tutor hecha), elimino .class conflictivos y actualizo .gitignore
+[33m93a002d[m Agrego alta de tutor
+[33m1581529[m se resolvio el conflicto
+[33m1f93d5a[m agregué el modificar de profesores, voy a estar modificando la interfaz para que sea más intuitiva
+[33m0c4e4f4[m Agrego ABM de alumno con validaciones incluidas
+[33m4f66409[m controlo la clase obra Social y los paneles los profesores, me falta modificar profesor
+[33mc1ce917[m agregué la alta, busqueda y eliminación de la obrasocial y tambien se agrego el alta y eliminacion de profesor, falta la modificación
+[33m8d89c3a[m Modificación del alumno hecha
+[33m5141672[m Agregando funcionalidades en la modificación del alumno
+[33m65231e7[m Muestreo de alumnos en la tabla, que está dentro del alta del alumno
+[33m0b2f7c0[m Alta del alumno hecha con variante del MVC
+[33m6e0cce8[m Subida de la base de datos en .sql
+[33m94a7b5c[m Subida Inicial del proyecto

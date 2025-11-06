@@ -705,6 +705,23 @@ dialog.setVisible(true);
         
         try{ 
                if(txtAuxiliar.getText().isEmpty()){
+                      int c_c_l=Clases.Inscripcion.obtenerCodigoCicloLectivo(cx);///obtenemos el codigo ciclo lectivo actual de este año
+                      int cantidad_activos_inscriptos=Clases.Inscripcion.cantidadActivosInscriptos(cx, c_c_l);  //obtengo la cantidad de inscripciones activas de este ciclo lectivo
+                      int codigoProfesor=Integer.parseInt(labelCodigoProfesor.getText()); //obtenemos el codigo del profesor
+                      
+                      ////pregunto si la cantidad de inscripciones activas de este año es mayor o igual a 60
+                      if(cantidad_activos_inscriptos>=60){
+                           JOptionPane.showMessageDialog(null, "No se puede inscribir. El instituto alcanzó el límite de 60 alumnos activos de este ciclo lectivo.","ERROR",ERROR_MESSAGE); /// si es asi, entonces el sistema no le permitirá realizar otra inscripcion
+                               return;
+                      }
+                      
+                     int cantidad_alumnos_activos_de_docente= Clases.Inscripcion.cantidadAlumnosDeUnDocente(cx, c_c_l, codigoProfesor); ///obtenemos la cantidad de alumnos activos que tiene el docente
+                     
+                     ////si la cantidad de alumnos activos que tiene un docente es mayor o igual a 10, el sistema no le permite realizar la inscripcion, ya que el profe tiene cupo lleno, por lo tanto debera esocjer otro profesor
+                     if(cantidad_alumnos_activos_de_docente>=10){
+                          JOptionPane.showMessageDialog(null, "No se puede inscribir. El profesor "+txtProfesor.getText()+" ya tiene cupo lleno de alumnos (10) en este ciclo lectivo, deberá elegir otro profesor","ERROR",ERROR_MESSAGE); 
+                               return;
+                     }
                    
                       int codigo_servicio=Clases.Inscripcion.obtenerCodigoServicio(cx, servicio);
                       int codigo_horario=0;
@@ -712,7 +729,7 @@ dialog.setVisible(true);
                            codigo_horario=Clases.Inscripcion.obtenerCodigoHorario(cx, horario);
                       }
                     
-                      int codigoProfesor=Integer.parseInt(labelCodigoProfesor.getText());
+                    
                       int codigoAlumno=Integer.parseInt(labelCodigoAlumno.getText());
                       String dias=boxDias.getSelectedItem().toString();
                       String diasF="";
@@ -730,7 +747,7 @@ dialog.setVisible(true);
 
                       // Convertir la fecha al formato deseado
                       String fechaFormateada = formato.format(fechaSeleccionada.getTime());
-                      int c_c_l=Clases.Inscripcion.obtenerCodigoCicloLectivo(cx);
+                      
                 
                       ///VALIDACION: valida que un alumno con servicio mensual no tenga pagos pendientes, si es que tiene el sistema no le permitirá registrar una nueva inscripcion no sin antes haber saldado todo lo que debe
                       int dni_alumno=Clases.Alumno.obtenerDni(cx, codigoAlumno);

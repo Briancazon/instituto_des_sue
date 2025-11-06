@@ -16,6 +16,7 @@ import java.awt.Color;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.sql.Connection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -30,11 +31,17 @@ public class Menu extends javax.swing.JFrame {
   FondoPanel fondo= new FondoPanel();
   FondoPanel2 fondo2=new FondoPanel2();
   CardLayout cardLayout;
+  Connection cx=Conexion.conexion.conexion();
    
     public Menu() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+     
+       try{
+         Clases.cicloLectivo.insertar(cx);
+       }catch(Exception e){
+        
+        }
      
         
         cardLayout = (CardLayout)(contenedor.getLayout());
@@ -200,7 +207,7 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Pago de Cuotas");
+        jLabel5.setText("Pago de Servicios");
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/dinero-en-efectivo.png"))); // NOI18N
         jLabel9.setText("jLabel7");
@@ -212,11 +219,11 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(pagobtLayout.createSequentialGroup()
                 .addGroup(pagobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pagobtLayout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pagobtLayout.createSequentialGroup()
                         .addGap(58, 58, 58)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pagobtLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel5)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pagobtLayout.setVerticalGroup(

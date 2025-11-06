@@ -1078,7 +1078,7 @@ public class ModificarT extends javax.swing.JPanel {
     private void telefonotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_telefonotxtKeyTyped
           char c=evt.getKeyChar();
          // verificar si el carácter ingresado es unicamente numeros
-      if (!Character.isDigit(c) || telefonotxt.getText().length()>12) {
+      if (!Character.isDigit(c) || telefonotxt.getText().length()>10) {
         evt.consume(); 
     }  
     }//GEN-LAST:event_telefonotxtKeyTyped

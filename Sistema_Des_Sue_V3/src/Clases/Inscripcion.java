@@ -336,7 +336,15 @@ public class Inscripcion {
           }
           return rs;
       }
+       
         
+        public static ResultSet verInfoAlumno(Connection cx, int codigo_alumno)throws Exception {
+            ResultSet rs=null;
+            PreparedStatement stm=cx.prepareStatement("select al.nombre, al.apellido, al.dni, ser.nombre from inscripcion as inc inner join alumno as al on inc.codigo_alumno=al.codigo inner join servicios as ser on inc.codigo_servicio=ser.codigo where al.codigo=? and inc.estado='ACTIVO'");
+            stm.setInt(1, codigo_alumno);
+            rs=stm.executeQuery();
+            return rs;
+        }
         
       ///metodo para ver el mes de una incripcion activa, te muestra el mes en numero, por ejemplo enero seria: 1
       public static int verMesInscripcion(Connection cx, int codigo_inscripcion)throws Exception{
@@ -467,6 +475,35 @@ public class Inscripcion {
                       stm.executeUpdate();
               }
               
+          }
+          
+          ///este metodo te devuelve la cantidad de inscripciones activas actual
+          public static int cantidadActivosInscriptos(Connection cx, int codigo_ciclo_lectivo)throws Exception{
+              ResultSet rs=null;
+              int cantidad=0;
+              PreparedStatement stm=cx.prepareStatement("SELECT count(codigo) from inscripcion where codigo_ciclo_lectivo=? and estado='ACTIVO'");
+              stm.setInt(1, codigo_ciclo_lectivo);
+              rs=stm.executeQuery();
+              while(rs.next()){
+                  cantidad=rs.getInt("count(codigo)");
+              }
+              return cantidad;
+          }
+          
+          
+          
+          ///metodo que devuelve la cantidad de inscriptos activos que tine un docente de un ciclo lectivo(actual)
+          public static int cantidadAlumnosDeUnDocente(Connection cx, int codigo_ciclo_lectivo, int codigo_profesor)throws Exception{
+              int cantidad=0;
+              ResultSet rs=null;
+              PreparedStatement stm=cx.prepareStatement("SELECT count(codigo) from inscripcion where codigo_ciclo_lectivo=? and codigo_profesor=? and estado='ACTIVO'");
+              stm.setInt(1, codigo_ciclo_lectivo);
+              stm.setInt(2, codigo_profesor);
+              rs=stm.executeQuery();
+              while(rs.next()){
+                  cantidad=rs.getInt("count(codigo)");
+              }
+              return cantidad;
           }
           
        

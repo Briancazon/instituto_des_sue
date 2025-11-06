@@ -2,10 +2,17 @@
 package prueba_sistema;
 
 import Pagos.Historial;
+import com.lowagie.text.Document;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -906,10 +913,19 @@ CardLayout cardLayout;
     }//GEN-LAST:event_PagosMouseClicked
 
     private void labelPagarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelPagarMouseClicked
-       try{
+    try{
+           
+           ///filtro para que en caso de que paguen por transferencia, se le pregunte al ususario si dicha transferencia se acreditó correctamente en su cuenta, en caso de que sí, le deja efecutar el pago, en caso de que no, el pago no se podrá efecutar, el si o el no lo decide el  usuario
+           if(boxTipoPago.getSelectedItem().equals("Transferencia")){
+                     int respuesta = JOptionPane.showConfirmDialog( null, "El pago que se está por realizar es por transferencia, confirme si se acreditó" , "Confirmar pago", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
+                     if (respuesta == JOptionPane.NO_OPTION) {
+                             JOptionPane.showMessageDialog(null, "Se ha cancelado el pago debido a que no se acreditó la transferencia");
+                             return;
+                     }
+           }
            int codigo_tipo_pago=Clases.Pago.obtenerCodigoTipoPago(cx, boxTipoPago.getSelectedItem().toString());
            int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));
-           int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno);
+           int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno);   ///obtiene la inscripcion actual activa del alumno
           Calendar fechaSeleccionada = Calendar.getInstance();
           fechaSeleccionada.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(txtFecha.getText()));
 
@@ -923,7 +939,7 @@ CardLayout cardLayout;
            
            int codigo_mes=0;
            if(boxMes.isEnabled()){
-              codigo_mes=Clases.Asistencia.obtenerCodigoMes(cx, boxMes.getSelectedItem().toString());
+                     codigo_mes=Clases.Asistencia.obtenerCodigoMes(cx, boxMes.getSelectedItem().toString());
            }
                 
            
@@ -937,29 +953,143 @@ CardLayout cardLayout;
             int año_inscripcion=Clases.Inscripcion.obtenerAñoInscripcion(cx, Integer.parseInt(txtDni.getText()));
             
            if (codigo_mes==0){
-              
-              
-               rs=Clases.Pago.evitarDoblesPagosServicioClase(cx, codigo_inscripcion, fechaFormateada, codigo_ciclo_lectivo); /// consulta para ver si ya pagó esa fecha del ciclo lectivo al que pertenezca esa inscripcion
-               if(rs.next()){  ///si hay datos, quiere decir que ya pagó, por lo tanto el sistema no le debe permitir realizar de nuevo el mismo pago
-                   SimpleDateFormat formato2 = new SimpleDateFormat("dd-MM-yyyy"); /// creamos un formato de  fecha en formato dia-mes-año
-                   String fechaBonita = formato2.format(fechaSeleccionada); /// a ese formato creado lo guardamos en la variable fechaBonita, mas que nada para mostrarle al usuario una fecha legible, y no un año--me-dia...
-                   JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" ya tiene registrado un pago de la fecha "+fechaBonita+" del Ciclo Lectivo "+año_inscripcion,"ERROR",ERROR_MESSAGE);
-                   return;
-               }
+               rs = Clases.Pago.evitarDoblesPagosServicioClase(cx, codigo_inscripcion, fechaFormateada, codigo_ciclo_lectivo);
+                if (rs.next()){  
+                      SimpleDateFormat formato2 = new SimpleDateFormat("dd-MM-yyyy"); 
+                           String fechaBonita = formato2.format(fechaSeleccionada.getTime());  // ✅ CORREGIDO AQUÍ
+                            JOptionPane.showMessageDialog(null, 
+                         "El alumno " + txtAlumno.getText() + 
+                       " ya tiene registrado un pago de la fecha " + fechaBonita + 
+                         " del Ciclo Lectivo " + año_inscripcion,
+                           "ERROR", ERROR_MESSAGE);
+                           return;
+                  }
            }else{///sino quiere decir que el servicio es mensual, por lo tanto la validacion es por mes y año
                rs=Clases.Pago.evitarDoblesPagosServicioMensual(cx, codigo_inscripcion, codigo_mes, codigo_ciclo_lectivo);  //consulta para ver si ya pagó ese mes del ciclo lectivo al que pertenezca esa isncripcion
-              if(rs.next()){ /// si hay datos, quiere decir que ya pagó ese mes del ciclo lecctivo al que pertenezca esa inscripcion, por lo tanto el sistema no le debe permitir realizar el pago
-                   JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" ya tiene registrado un pago del mes "+boxMes.getSelectedItem()+" del Ciclo Lectivo "+año_inscripcion,"ERROR",ERROR_MESSAGE);
-                   return;
-              }
+               if(rs.next()){ /// si hay datos, quiere decir que ya pagó ese mes del ciclo lecctivo al que pertenezca esa inscripcion, por lo tanto el sistema no le debe permitir realizar el pago
+                    JOptionPane.showMessageDialog(null, "El alumno "+txtAlumno.getText()+" ya tiene registrado un pago del mes "+boxMes.getSelectedItem()+" del Ciclo Lectivo "+año_inscripcion,"ERROR",ERROR_MESSAGE);
+                     return;
+                }
            }
            //////insertar el pago...
            Clases.Pago.pagar(cx, codigo_tipo_pago, codigo_inscripcion, fechaFormateada, codigo_servicio, recargo, codigo_mes, codigo_ciclo_lectivo, obervacion, total);
-            JOptionPane.showMessageDialog(null, "Se ha pagado correctamente el servicio");
+           JOptionPane.showMessageDialog(null, "Se ha pagado correctamente el servicio");
+            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            ///COMPROBANTE DE PAGO, esta parte le abrirá al usuario whatsapp werb cun mensaje prellenado hacia el numero del tutor que hizo el pago del servicio del niño a cargo
+            /// el usuario simplemente tendrá que hacer click en enviar y listo, el comprobante de pago lo tendrá por WAPP el tutor
+            
+            // Número de teléfono con código de país, sin el +
+            rs=Clases.Inscripcion.verInfoAlumno(cx, codigo_alumno);
+            String  nombre_alumno="";
+            String apellido_alumno="";
+            String servicio_alumno="";
+            String dni_alumno="";
+            while(rs.next()){
+                 nombre_alumno=  rs.getString("al.nombre");
+                 apellido_alumno=rs.getString("al.apellido");
+                 servicio_alumno=rs.getString("ser.nombre");
+                 dni_alumno=rs.getString("al.dni");
+            }
+            
+              // Carpeta donde se guardará el comprobante
+            String userHome = System.getProperty("user.home");
+            String carpeta = userHome + "\\Downloads\\Comprobantes\\";
+
+        
+
+             // Nombre del archivo PDF (por ejemplo: Comprobante_JuanPerez_06-11-2025.pdf)
+            String nombreArchivo = "Comprobante_" + nombre_alumno + "_" + apellido_alumno + "_" + txtFecha.getText().replace("/", "-") + ".pdf";
+            String rutaPDF = carpeta + nombreArchivo;
+
+            // Crear el documento PDF
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(rutaPDF));
+            document.open();
+
+           // Contenido simple del comprobante
+           document.add(new Paragraph("COMPROBANTE DE PAGO"));
+           document.add(new Paragraph("--------------------------------------------"));
+           document.add(new Paragraph("Alumno: " + nombre_alumno + " " + apellido_alumno));
+           document.add(new Paragraph("DNI: " + dni_alumno));
+           document.add(new Paragraph("Servicio: " + servicio_alumno));
+           if (codigo_mes == 0) {
+                 document.add(new Paragraph("Clase Pagada: " + txtFecha.getText()));
+           } else {
+                 document.add(new Paragraph("Mes Pagado: " + boxMes.getSelectedItem().toString()));
+           }
+           document.add(new Paragraph("Fecha de Pago: " + txtFecha.getText()));
+           document.add(new Paragraph("Ciclo Lectivo: " + codigo_ciclo_lectivo));
+           document.add(new Paragraph("Monto Total: $" + txtTotal.getText()));
+           document.add(new Paragraph("Tipo de Pago: " + boxTipoPago.getSelectedItem().toString()));
+           document.add(new Paragraph("Observaciones: " + (obervacion.isEmpty() ? "Sin observaciones" : obervacion)));
+           document.add(new Paragraph("--------------------------------------------"));
+           document.add(new Paragraph("Gracias por su pago."));
+
+           document.close();
+
+
+            
+          // Obtener información del tutor
+          rs = Clases.Tutor.obtenerInfo(cx, codigo_alumno);
+          String nombre_tutor = "";
+          String apellido_tutor = "";
+          String telefono_tutor = "";
+
+          while (rs.next()) {
+                   nombre_tutor = rs.getString("t.nombre");
+                   apellido_tutor = rs.getString("t.apellido");
+                  telefono_tutor = rs.getString("t.telefono"); // lo tomamos como String por si tiene ceros adelante
+          }
+
+         // Normalizamos el número: si el usuario ingresó por ejemplo 3888684916,
+         // agregamos automáticamente el código de país de Argentina (54)
+         String numeroConPrefijo = "54" + telefono_tutor; 
+         int año_inscripcion_alumno=Clases.Inscripcion.obtenerAñoInscripcion(cx, Integer.parseInt(txtDni.getText()));
+         // Creamos el mensaje
+         String mensaje = "";
+         if (codigo_mes == 0) {
+                    mensaje = "Buenas señor/a tutor " + nombre_tutor + " " + apellido_tutor + 
+                    ". A continuación le mandamos el comprobante de pago realizado recientemente. " +
+                    "Alumno: " + nombre_alumno + " " + apellido_alumno + ", DNI: " + dni_alumno + ". " +
+                     "Servicio: " + servicio_alumno + ". " +
+                     "Clase Pagada: " + txtFecha.getText() + ". " +
+                    "Fecha de Pago: " + txtFecha.getText() + ". " +
+                    "Ciclo Lectivo: " + año_inscripcion_alumno + ".";
+         } else {
+                     mensaje = "Buenas señor/a tutor/a " + nombre_tutor + " " + apellido_tutor + 
+                     ". A continuación le mandamos el comprobante del pago efectuado recientemente. " +
+                     "Alumno: " + nombre_alumno + " " + apellido_alumno + ", DNI: " + dni_alumno + ". " +
+                     "Servicio: " + servicio_alumno + ". " +
+                      "Cuota Pagada: " + boxMes.getSelectedItem() + ". " +
+                     "Fecha de Pago: " + txtFecha.getText() + ". " +
+                      "Ciclo Lectivo: " + año_inscripcion_alumno + ".";
+         }
+
+         // Codificar el mensaje para URL
+        String mensajeCodificado = java.net.URLEncoder.encode(mensaje, "UTF-8");
+
+         // Crear el enlace oficial de WhatsApp (sin el +)
+         String url = "https://wa.me/" + numeroConPrefijo + "?text=" + mensajeCodificado;
+          try{
+                // Abrir en el navegador predeterminado
+                Desktop.getDesktop().browse(new URI(url));
+          }catch(Exception exWapp ){
+               JOptionPane.showMessageDialog(null, 
+            "El pago fue registrado y el comprobante generado correctamente, " +
+            "pero no se pudo abrir WhatsApp. Verifique su conexión a Internet.",
+            "ADVERTENCIA", JOptionPane.WARNING_MESSAGE);
+      
+          }
+        
+
+            
             limpiar();
           
-       }catch(Exception e){
+    }catch(Exception e){
            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar pagar el servicio","ERROR",ERROR_MESSAGE);
+   
        }
         
   
@@ -989,31 +1119,54 @@ CardLayout cardLayout;
          int modalidad_cobro=(int) datos[4];
           
          ///VALIDACION CLASE PERSONALIZADA, valida que si por ejemplo brian se inscribio lunes-viernes de CP, unicamente tiene que venir y pagar esos dias, si por ejemplo viene un miercoles y quiera pagar esa clase, el sistema no le permitirá hacerlo
-         if(modalidad_cobro==2){
-             
-            rs= Clases.Inscripcion.verDIas(cx, Integer.parseInt(txtDni.getText()));
-            while(rs.next()){
-              
-                String dias=rs.getString("dias");
-                // Separar en base al guion
-                String[] partes = dias.split(" - ");
-        
-                 // Guardar los dos días
-                 String dia1 = partes[0].trim();
-                 String dia2 = partes[1].trim();
-          
-                 LocalDate hoy = LocalDate.now();  ///obtiene la fecha de hoy
-                 String diaEnEspañol = hoy.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("es", "ES"));  //obtiene el dia de la semana y a ese dia lo pasa a español
-        
-                 //filtro para que solo pague las clases de los dias en el que se haya inscripto, si pasa eeste filtro quiere decir que sí esta por pagar en los dias en que se inscribió
-                 if(!dia1.equalsIgnoreCase(diaEnEspañol) && !dia2.equalsIgnoreCase(diaEnEspañol) ){
-                       JOptionPane.showMessageDialog(null, "El alumno elegido tiene un servicio de clase personalizada de cursado los dias: "+dia1+" y "+dia2+". Unicamente deberá pagar cada clase de los dias que curse","ERROR",ERROR_MESSAGE);
-                       return;
-                 }
+         if (modalidad_cobro == 2) {
 
+            rs = Clases.Inscripcion.verDIas(cx, Integer.parseInt(txtDni.getText()));
+
+        while (rs.next()) {
+
+            String dias = rs.getString("dias");
+            // Separar en base al guion
+            String[] partes = dias.split(" - ");
+
+            // Guardar los dos días
+            String dia1 = partes[0].trim();
+            String dia2 = partes[1].trim();
+
+            // Obtener el día actual en español (ej: "miércoles")
+            LocalDate hoy = LocalDate.now();
+            String diaEnEspañol = hoy.getDayOfWeek()
+                    .getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
+
+            // === FUNCIÓN LOCAL: NORMALIZAR (elimina tildes y pasa a minúsculas) ===
+            java.util.function.Function<String, String> normalizar = texto -> {
+                if (texto == null) return "";
+                return java.text.Normalizer
+                        .normalize(texto, java.text.Normalizer.Form.NFD)
+                        .replaceAll("\\p{M}", "")  // elimina tildes
+                        .toLowerCase()
+                        .trim();
+            };
+
+            // Normalizamos todos los textos
+            String dia1Norm = normalizar.apply(dia1);
+            String dia2Norm = normalizar.apply(dia2);
+            String diaHoyNorm = normalizar.apply(diaEnEspañol);
+
+       
+
+            // Filtro: solo puede pagar si el día actual coincide con alguno de sus días de cursado
+            if (!dia1Norm.equals(diaHoyNorm) && !dia2Norm.equals(diaHoyNorm)) {
+                JOptionPane.showMessageDialog(null,
+                        "El alumno elegido tiene un servicio de clase personalizada de cursado los días: "
+                        + dia1 + " y " + dia2
+                        + ".\nÚnicamente deberá pagar cada clase de los días que curse.",
+                        "ERROR", ERROR_MESSAGE);
+                return;
             }
-             
+        }   
          }
+
          String apenom=datos[0].toString()+" "+datos[1].toString();
          txtAlumno.setText(apenom);
          txtServicio.setText(datos[2].toString());
@@ -1052,7 +1205,7 @@ CardLayout cardLayout;
     }catch(Exception e){
           
             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el servicio y el precio del servicio del alumno","ERROR",ERROR_MESSAGE);
-          
+         
        }
     }//GEN-LAST:event_txtDniActionPerformed
 
@@ -1069,31 +1222,85 @@ CardLayout cardLayout;
           buscarAlumno dialog = new buscarAlumno(frame, true, p3, a, this, 3);
           dialog.setVisible(true);
           
-          try{
-              rs=Clases.Pago.consultarServicioYPrecio(cx, Integer.parseInt(txtDni.getText()));
-              while(rs.next()){
-                  datos[0]=rs.getString("al.nombre");
-                  datos[1]=rs.getString("al.apellido");
+       // en caso de que ponga un dni inexistente o un alumno que tiene una inscripcion activa o el mismo este inactivo, saldra el mensaje del catch...
+       
+           
+        try{
+         rs=Clases.Pago.consultarServicioYPrecio(cx, Integer.parseInt(txtDni.getText()));
+         while(rs.next()){
+                   datos[0]=rs.getString("al.nombre");
+                   datos[1]=rs.getString("al.apellido");
                    datos[2]=rs.getString("ser.nombre");
                    datos[3]=rs.getString("ser.precio");
                    datos[4]=rs.getInt("ser.codigo_modalidad_cobro");         
-              }
+          }
          
-              int modalidad_cobro=(int) datos[4];
-              
-              txtServicio.setText(datos[2].toString());
-              txtPrecio.setText(datos[3].toString());
-               // Obtener la fecha actual
-               Date fechaActual = new Date();
+         int modalidad_cobro=(int) datos[4];
+          
+         ///VALIDACION CLASE PERSONALIZADA, valida que si por ejemplo brian se inscribio lunes-viernes de CP, unicamente tiene que venir y pagar esos dias, si por ejemplo viene un miercoles y quiera pagar esa clase, el sistema no le permitirá hacerlo
+         if (modalidad_cobro == 2) {
 
-               // Formatear la fecha al formato  dd-MM-yyyy
-               SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
-               String fechaFormateada = formato.format(fechaActual);
-                // Mostrarla en el JTextField
-                txtFecha.setText(fechaFormateada);
-              int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
-              int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
-            if(modalidad_cobro==1){
+            rs = Clases.Inscripcion.verDIas(cx, Integer.parseInt(txtDni.getText()));
+
+        while (rs.next()) {
+
+            String dias = rs.getString("dias");
+            // Separar en base al guion
+            String[] partes = dias.split(" - ");
+
+            // Guardar los dos días
+            String dia1 = partes[0].trim();
+            String dia2 = partes[1].trim();
+
+            // Obtener el día actual en español (ej: "miércoles")
+            LocalDate hoy = LocalDate.now();
+            String diaEnEspañol = hoy.getDayOfWeek()
+                    .getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
+
+            // === FUNCIÓN LOCAL: NORMALIZAR (elimina tildes y pasa a minúsculas) ===
+            java.util.function.Function<String, String> normalizar = texto -> {
+                if (texto == null) return "";
+                return java.text.Normalizer
+                        .normalize(texto, java.text.Normalizer.Form.NFD)
+                        .replaceAll("\\p{M}", "")  // elimina tildes
+                        .toLowerCase()
+                        .trim();
+            };
+
+            // Normalizamos todos los textos
+            String dia1Norm = normalizar.apply(dia1);
+            String dia2Norm = normalizar.apply(dia2);
+            String diaHoyNorm = normalizar.apply(diaEnEspañol);
+
+
+            // Filtro: solo puede pagar si el día actual coincide con alguno de sus días de cursado
+            if (!dia1Norm.equals(diaHoyNorm) && !dia2Norm.equals(diaHoyNorm)) {
+                JOptionPane.showMessageDialog(null,
+                        "El alumno elegido tiene un servicio de clase personalizada de cursado los días: "
+                        + dia1 + " y " + dia2
+                        + ".\nÚnicamente deberá pagar cada clase de los días que curse.",
+                        "ERROR", ERROR_MESSAGE);
+                return;
+            }
+        }   
+         }
+
+         String apenom=datos[0].toString()+" "+datos[1].toString();
+         txtAlumno.setText(apenom);
+         txtServicio.setText(datos[2].toString());
+         txtPrecio.setText(datos[3].toString());
+       // Obtener la fecha actual
+       Date fechaActual = new Date();
+
+        // Formatear la fecha al formato  dd-MM-yyyy
+        SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaFormateada = formato.format(fechaActual);
+        // Mostrarla en el JTextField
+        txtFecha.setText(fechaFormateada);
+         int codigo_alumno=Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
+         int codigo_inscripcion=Clases.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
+   
+         if(modalidad_cobro==1){
             
            
             cargarComboBoxMeses(codigo_inscripcion);
@@ -1108,17 +1315,16 @@ CardLayout cardLayout;
              
          activarCampos();
        
-        
+         txtDni.setEnabled(false);
+         botonBuscarAlumno.setEnabled(false);
                 
               
-              txtDni.setEnabled(false);
-              botonBuscarAlumno.setEnabled(false);
-          }catch(Exception e){
+             
+    }catch(Exception e){
           
-               JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el servicio del alumno","ERROR",ERROR_MESSAGE);
-           
-         }
-
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al buscar el servicio y el precio del servicio del alumno","ERROR",ERROR_MESSAGE);
+ 
+       }
     }//GEN-LAST:event_botonBuscarAlumnoActionPerformed
 
     private void labelCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelCancelarMouseClicked

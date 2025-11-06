@@ -54,7 +54,7 @@ public class Alumno {
     public static int obtenerCodigo(Connection cx, int dni)throws Exception{
           ResultSet rs=null;
           int codigo=0;
-          PreparedStatement stm=cx.prepareStatement("SELECT codigo from alumno where dni=? and borrado=0");
+          PreparedStatement stm=cx.prepareStatement("SELECT codigo from alumno where dni=? ");
           stm.setInt(1, dni);
           try{
               rs=stm.executeQuery();
@@ -68,6 +68,9 @@ public class Alumno {
           return codigo;
               
       }
+    
+    
+   
     
     public static int obtenerDni(Connection cx, int codigo)throws Exception{
           ResultSet rs=null;

@@ -198,6 +198,7 @@ public class ModificarA extends javax.swing.JPanel {
  
      public void activarguardar(){
          guardar.setEnabled(true);
+        
      }
      public void activarmodificar(){
          modificar.setEnabled(true);
@@ -1082,7 +1083,7 @@ public class ModificarA extends javax.swing.JPanel {
              
         }catch(Exception e){
            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar cargar o actualizar los datos","ERROR",ERROR_MESSAGE);
-
+     e.printStackTrace();
             MostrarAlumno();
            
         }
@@ -1158,7 +1159,10 @@ public class ModificarA extends javax.swing.JPanel {
 
     private void habilitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_habilitarMouseClicked
         
-        int codigo=Integer.parseInt(codA.getText());
+try{
+   
+    int codigo=Integer.parseInt(codA.getText());
+
         int respuesta = JOptionPane.showConfirmDialog( null, "¿Estás seguro de que deseas habilitar a este alumno?" , "Confirmar habilitación", JOptionPane.YES_NO_OPTION , JOptionPane.WARNING_MESSAGE);
         
          if (respuesta == JOptionPane.YES_OPTION) {
@@ -1166,18 +1170,25 @@ public class ModificarA extends javax.swing.JPanel {
                            Clases.Alumno.HabilitarA(cx, codigo);
                            JOptionPane.showMessageDialog(null, "Se ha habilitado al alumno correctamente");
                            MostrarAlumnoInactivo();
-                           
+                           limpiar();
+                           desactivarhabilitar();
                   }catch(Exception e){
             
                             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar habilitar el alumno","ERROR",ERROR_MESSAGE);
+                            limpiar();
+                            desactivarhabilitar();
                   }
          }else{
              JOptionPane.showMessageDialog(null, "Se ha cancelado");
             MostrarAlumno();
+            limpiar();
+            desactivarhabilitar();
          }
         
         
-        
+}catch(Exception e){
+                
+ }
         
         
         
@@ -1202,16 +1213,17 @@ public class ModificarA extends javax.swing.JPanel {
             String parentesco =TablaAlumno.getValueAt(filaSeleccionada, 11).toString();
             if(inactivo.isSelected()){
                 activarhabilitar();
+                int codigo= Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(dni));
+                  codA.setText(String.valueOf(codigo));   //pone el codigo del alumno en el label prueba
+                  System.out.print("entra al if y pone el codigo: "+codA.getText());
             }else{
                 desactivarMas();
                 desactivarguardar();
                 
-                  try{
+                  
                      int codigo= Clases.Alumno.obtenerCodigo(cx, Integer.parseInt(dni));
                      codA.setText(String.valueOf(codigo));   //pone el codigo del alumno en el label prueba
-                  }catch(Exception e){
-                     JOptionPane.showMessageDialog(null, "Error al intentar obtener el codigo del alumno");   
-                  }
+                  
                   String apenomTutor=nombre_tutor+" "+apellido_tutor;
             
                   nombretxt.setText(nombre);

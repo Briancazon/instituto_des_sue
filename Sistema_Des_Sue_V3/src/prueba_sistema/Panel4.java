@@ -333,6 +333,10 @@ public class Panel4 extends javax.swing.JPanel {
                   txtPrecio.setText(precio);
                   activarEditar();
                   desactivarCampos();
+            }else{
+                txtServicio.setText("");
+                txtPrecio.setText("");
+                
             }
            
          }catch(Exception e){

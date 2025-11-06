@@ -203,6 +203,15 @@ public class Tutor {
         
     }
     
+    ///metodo que obtiene el nombre , apllido  y telefono de un tutor de un alumno en particular,
+    public static ResultSet obtenerInfo(Connection cx, int codigo_alumno)throws Exception {
+        ResultSet rs=null;
+        PreparedStatement stm=cx.prepareStatement("select t.nombre, t.apellido, t.telefono from alumno_tutor as altu inner join tutor as t on altu.codigo_tutor=t.codigo inner join alumno as al on altu.codigo_alumno=al.codigo where al.codigo=?");
+        stm.setInt(1, codigo_alumno);
+        rs=stm.executeQuery();
+        return rs;
+    }
+    
     
     
     
