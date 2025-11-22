@@ -5,10 +5,10 @@ import MODELO_CONTROLADOR.TablaEstilo;
 import VISTA.ABMs.ModificarP;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.List;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.time.LocalDate;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -17,10 +17,9 @@ import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+
 import javax.swing.table.DefaultTableModel;
-import VISTA.buscarObraSocial;
+
 
 
 
@@ -29,23 +28,33 @@ import VISTA.buscarObraSocial;
 
 public class Gastos extends javax.swing.JPanel {
 DefaultTableModel tabla=new DefaultTableModel();
-      Object[] datos=new Object[2];
+      Object[] datos=new Object[3];
       Object[] fila=new Object[2];
       ResultSet rs;
        ResultSet lm;
       Connection cx=MODELO_CONTROLADOR.conexion.conexion();
       DefaultComboBoxModel ls= new DefaultComboBoxModel();
+      boolean labelLimpiar=true;
+      boolean labelConsulta=true;
+      boolean labelEliminar=true;
+      
+      
+      
     public Gastos() {
         
         initComponents();
         //Mes();
+        validarLimpieza();
         MostrarTabla();
         calcularTotal();
+        verificarSiHayDatos();
+        desactivarEliminar();
           
-      eliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+      limpiar.addMouseListener(new java.awt.event.MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            eliminarya(); // llamamos al método que actualiza los datos
+            eliminarya(); // llamamos al método que limpia los datos
+            verificarSiHayDatos();
         }
     });
          DefaultTableModel model = (DefaultTableModel) tablaG.getModel();
@@ -69,6 +78,40 @@ DefaultTableModel tabla=new DefaultTableModel();
       
       
     }
+    
+    
+    ///metodo que activa el lmipiar solo en caso de que haya datos en la tabla, si no los hay seguira desactivado
+    void verificarSiHayDatos(){
+        if (tabla.getRowCount() == 0){
+            desactivarLimpiar();
+        }else{
+            activarLimpiar();
+        }
+    }
+    
+    //este metodo nos salvara en caso de que el usuario haya olvidado por ejemplo limpiar los gastos (que ya calculló de noviembre) a fines de mes, esto provocaria una confusion, ya que si bien los gastos que cargo ya estan en la db con noviembre de 2025 por ej
+    // al no limpiarlos , cuando sea diciembre se verian reflejado esos gastos, haciendo creer que son de diciembre cuando en realidad son de noviembre, entonces cuando sea fines de mes, y el usuario no haya limpiado los datos, el sistema lo  hara solo
+   void validarLimpieza(){
+       //si la tabla tiene registros, quiere decir que el usuario no limpió los gastos...
+        if (tablaG.getRowCount() > 0){
+            try{
+
+    
+              int dia_hoy=LocalDate.now().getDayOfMonth(); ///obtenemos la fecha de hoy
+              //si es 28 o mas, quiere decir que estamos a fin de mes, el sistema debe limpiar los gastos , para que todo este listo para el mes que viene
+              if(dia_hoy >= 28){
+                  MODELO_CONTROLADOR.GastosG.desactivarTodosLosGastos(cx);
+                  MostrarTabla();
+              }
+            }catch(Exception e){
+                
+            }
+
+       }
+           
+       
+ }
+    
 
     public class FondoPanel2 extends JPanel {
     
@@ -83,31 +126,34 @@ DefaultTableModel tabla=new DefaultTableModel();
     
     }
     
-  /*  void Mes(){
-        try{
-            rs=Clases.GastosG.mostrarMes(cx);
-            ls.addElement("Seleccionar");
-            while(rs.next())
-                ls.addElement(rs.getString("mes"));
-                mesbox.setModel(ls);
-            
-        }catch(Exception e){
-              JOptionPane.showMessageDialog(null, "Ha ocurrido un error al mostrar el mes","ERROR",ERROR_MESSAGE);
-        }
-    }*/
+  
     
-    public void MostrarTabla(){
+    
+    void activarEliminar(){
+        eliminar.setEnabled(true);
+        labelEliminar=true;
+    }
+    
+      void desactivarEliminar(){
+        eliminar.setEnabled(false);
+        labelEliminar=false;
+    }
+      
+      
+      
+ void MostrarTabla(){
          tabla.setRowCount(0);   
               tabla.setColumnCount(0);
               tabla.addColumn("Nombre");  
               tabla.addColumn("Precio");
+              tabla.addColumn("Mes");
                try{
             
                     rs=MODELO_CONTROLADOR.GastosG.mostrar(cx);
                     while(rs.next()){
-                        datos[0]=rs.getString("nombre");
-                        datos[1]=rs.getString("precio");
-                   
+                        datos[0]=rs.getString("ga.nombre");
+                        datos[1]=rs.getString("ga.precio"); 
+                         datos[2]=rs.getString("me.mes");
                   
                         tabla.addRow(datos);
                    
@@ -123,7 +169,19 @@ DefaultTableModel tabla=new DefaultTableModel();
     }
     
     
-    public void calcularTotal() {
+    void activarLimpiar(){
+        limpiar.setEnabled(true);
+        labelLimpiar=true;
+    }
+    
+      
+    void desactivarLimpiar(){
+        limpiar.setEnabled(false);
+        labelLimpiar=false;
+    }
+    
+
+    void calcularTotal() {
     DefaultTableModel model = (DefaultTableModel) tablaG.getModel();
     
    
@@ -145,7 +203,11 @@ DefaultTableModel tabla=new DefaultTableModel();
   
 
 public void guardarGasto() {
-   
+        
+    if(nombretxt.getText().isEmpty() || preciotxt.getText().isEmpty()){
+        JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios","ERROR",ERROR_MESSAGE); 
+        return;
+    }
         // Obtener mes y año actual
         int mesActual = LocalDate.now().getMonthValue();
         
@@ -191,8 +253,19 @@ public void guardarGasto() {
             
            int codigomes=MODELO_CONTROLADOR.GastosG.obtenerCodigo(cx, mes);
             int c_c_l=MODELO_CONTROLADOR.GastosG.obtenerCodigoCicloLectivo(cx);
+           
+            
+            ///cuando no haya datos en la tabla vamos a validar si cuando ingrese gastos , no haya cargado ya gastos del mes y año actuales, la idea es que esta validacion actue cuando el usuario ya limpia los gastos y queda todo de cero, si ahi nomas quiere cargar los gastos del mismo mes y año que ya cargo, que no le deje, unicamente podria hacer eso cuando traiga de nuevo los gastos que cargo del mes actual
+             if (tablaG.getRowCount() == 0){
+                  int tiene=MODELO_CONTROLADOR.GastosG.verSiHayGastos(cx, codigomes, c_c_l);
+                  if(tiene!=0){
+                      JOptionPane.showMessageDialog(null, "Ya ha cargado gastos del mes y año actuales","ERROR",ERROR_MESSAGE); 
+                      return;
+                  }
+             }
+           
            MODELO_CONTROLADOR.GastosG.cargarGastos(cx, nombre, precio, codigomes, c_c_l);
-            JOptionPane.showMessageDialog(null, "Se guardo correctamente correctamente"); 
+            JOptionPane.showMessageDialog(null, "Se han cargado correctamente los datos"); 
            MostrarTabla();
             
             nombretxt.setText("");
@@ -205,41 +278,23 @@ public void guardarGasto() {
         }
             
 
-}
-    public void mostrarPorMes(String mesSeleccionado) {
-    try {
-        tabla.setRowCount(0);   
-        tabla.setColumnCount(0);
-        tabla.addColumn("Nombre");  
-        tabla.addColumn("Precio");
-
-        // Usamos tu método de clase GastosG, adaptado para filtrar por mes
-        rs = MODELO_CONTROLADOR.GastosG.mostrarPorMes(cx, mesSeleccionado);
         
+                 verificarSiHayDatos();
+}
+   
 
-        while (rs.next()) {
-            datos[0] = rs.getString("nombre");
-            datos[1] = rs.getString("precio");
-            tabla.addRow(datos);
+ void eliminarya() {
+      ///si no esta activada esta accion,retorna...
+        if(!labelLimpiar){
+            return;
         }
-
-        tablaG.setModel(tabla);
-        calcularTotal();
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al mostrar los datos del mes seleccionado: " + e.getMessage());
-    }
-}
-
-public void eliminarya() {
-      
-        
           try{
                MODELO_CONTROLADOR.GastosG.desactivarTodosLosGastos(cx);
-               JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
+               JOptionPane.showMessageDialog(null, "Se han limpiado los registros correctamente");
               MostrarTabla();
                 
             }catch(Exception e){
-               JOptionPane.showMessageDialog(null, "Error al eliminar gasto");   
+               JOptionPane.showMessageDialog(null, "Error al limpiar gasto");   
             }
  
 }
@@ -276,9 +331,10 @@ public void eliminarya() {
         total2 = new javax.swing.JTextField();
         calcular = new javax.swing.JButton();
         guardar = new javax.swing.JLabel();
-        eliminar = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        limpiar = new javax.swing.JLabel();
+        consulta = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
+        eliminar = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaG = new javax.swing.JTable();
 
@@ -302,7 +358,7 @@ public void eliminarya() {
                 .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
-                .addContainerGap(793, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -470,21 +526,29 @@ public void eliminarya() {
             }
         });
 
-        eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes2/servidor.png"))); // NOI18N
+        limpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes2/servidor.png"))); // NOI18N
+        limpiar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                limpiarMouseClicked(evt);
+            }
+        });
+
+        consulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes2/gastooss.png"))); // NOI18N
+        consulta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                consultaMouseClicked(evt);
+            }
+        });
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes2/carpeta (1).png"))); // NOI18N
+        eliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         eliminar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 eliminarMouseClicked(evt);
             }
         });
-
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes2/gastooss.png"))); // NOI18N
-        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel9MouseClicked(evt);
-            }
-        });
-
-        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -504,18 +568,20 @@ public void eliminarya() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(guardar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(eliminar)
+                .addComponent(limpiar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9)
+                .addComponent(consulta)
+                .addGap(18, 18, 18)
+                .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 405, Short.MAX_VALUE)
                 .addComponent(calcular, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(total2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(34, 34, 34))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -528,8 +594,9 @@ public void eliminarya() {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
+                                    .addComponent(consulta)
                                     .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(limpiar)
                                     .addComponent(eliminar))
                                 .addGap(9, 9, 9))))
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -538,7 +605,6 @@ public void eliminarya() {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(calcular, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -549,7 +615,8 @@ public void eliminarya() {
                                         .addComponent(jLabel7)
                                         .addComponent(total1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel6)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(calcular, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
@@ -567,6 +634,11 @@ public void eliminarya() {
         tablaG.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablaGMouseClicked(evt);
+            }
+        });
+        tablaG.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tablaGPropertyChange(evt);
             }
         });
         jScrollPane1.setViewportView(tablaG);
@@ -646,33 +718,26 @@ public void eliminarya() {
             try{
                int codigo= MODELO_CONTROLADOR.GastosG.obtenerCodigoGastos(cx, nombre);
                 codigoG.setText(String.valueOf(codigo));
-                
+                activarEliminar();
             }catch(Exception e){
                JOptionPane.showMessageDialog(null, "Error al obtener el código");   
             }
         
     }//GEN-LAST:event_tablaGMouseClicked
 
-    private void eliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarMouseClicked
-     
-    }//GEN-LAST:event_eliminarMouseClicked
+    private void limpiarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_limpiarMouseClicked
+             
+    }//GEN-LAST:event_limpiarMouseClicked
 
-    private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
+    private void consultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_consultaMouseClicked
        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); 
-      ConsultaGasto dialogo = new ConsultaGasto(
-        new javax.swing.JFrame(), // padre
-        true,                     // modal
-        this                      // 👈 pasamos el JPanel Gastos actual
-    );
+      ConsultaGasto dialogo = new ConsultaGasto(new javax.swing.JFrame(),  true);
     dialogo.setLocationRelativeTo(null);
     dialogo.setVisible(true);
 
-// Intentamos obtener la ventana padre (JFrame) automáticamente
-//                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(Gastos.this);
-  //              ConsultaGasto dialogo = new ConsultaGasto(parent, true);
-    //            dialogo.setVisible(true); // abre el JDialog
-              
-    }//GEN-LAST:event_jLabel9MouseClicked
+
+              verificarSiHayDatos();
+    }//GEN-LAST:event_consultaMouseClicked
 
     private void nombretxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombretxtKeyTyped
           char c = evt.getKeyChar();
@@ -694,6 +759,32 @@ public void eliminarya() {
        
   
     }//GEN-LAST:event_preciotxtKeyTyped
+
+    private void tablaGPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tablaGPropertyChange
+
+    }//GEN-LAST:event_tablaGPropertyChange
+
+    private void eliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarMouseClicked
+    if(!labelEliminar){
+        return;
+    }
+        try{
+             int filaSeleccionada = tablaG.getSelectedRow();
+            
+            String nombre =tablaG.getValueAt(filaSeleccionada, 0).toString();
+            String mes =tablaG.getValueAt(filaSeleccionada, 2).toString();
+            int codigo_mes= MODELO_CONTROLADOR.GastosG.obtenerCodigo(cx, mes);
+           int año= MODELO_CONTROLADOR.GastosG.obtenerCodigoCicloLectivo(cx);
+           int codigo_gasto=MODELO_CONTROLADOR.GastosG.obtenerCodigoGasto(cx,nombre, codigo_mes, año);
+           MODELO_CONTROLADOR.GastosG.eliminarDefinitivamente(cx, codigo_gasto);
+           JOptionPane.showMessageDialog(null, "Gasto eliminado correctamente");
+           MostrarTabla();
+           desactivarEliminar();
+     }catch(Exception e){
+         
+     }
+
+    }//GEN-LAST:event_eliminarMouseClicked
 
     
     
@@ -719,6 +810,7 @@ public void eliminarya() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton calcular;
     private javax.swing.JLabel codigoG;
+    private javax.swing.JLabel consulta;
     private javax.swing.JLabel eliminar;
     private javax.swing.JLabel guardar;
     private javax.swing.JLabel jLabel14;
@@ -729,7 +821,6 @@ public void eliminarya() {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -737,6 +828,7 @@ public void eliminarya() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel limpiar;
     private javax.swing.JComboBox<String> mesbox;
     private javax.swing.JTextField nombretxt;
     private javax.swing.JTextField preciotxt;

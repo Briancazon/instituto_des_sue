@@ -36,6 +36,8 @@ public class GastosG {
         return rs;
     }
     
+     
+     //obtener codigo mes
      public static int obtenerCodigo(Connection cx, String nombre) throws Exception{
            ResultSet rs=null;
            int codigo=0;
@@ -59,14 +61,31 @@ public class GastosG {
            int codigo=0;
            PreparedStatement stm=cx.prepareStatement("SELECT codigo from gastos where nombre=?");
            stm.setString(1, nombre) ;
-           try{
+   
                rs=stm.executeQuery();
                 if(rs.next()){
                     codigo=rs.getInt("codigo");
                 }
-           }catch(SQLException e){
-                 JOptionPane.showMessageDialog(null,e.getMessage());
+           
+           
+           return codigo;
+           
            }
+    
+    //obtener el codigo de un gasto dado el nombre, mes y año con el que fue cargado
+     public static int obtenerCodigoGasto(Connection cx, String nombre, int codigo_mes, int año) throws Exception{
+           ResultSet rs=null;
+           int codigo=0;
+           PreparedStatement stm=cx.prepareStatement("SELECT codigo from gastos where nombre=? and codigo_mes=? and año=?");
+           stm.setString(1, nombre) ;
+           stm.setInt(2, codigo_mes);
+           stm.setInt(3, año);
+   
+               rs=stm.executeQuery();
+                if(rs.next()){
+                    codigo=rs.getInt("codigo");
+                }
+         
            
            return codigo;
            
@@ -74,7 +93,7 @@ public class GastosG {
     
         public static ResultSet mostrar(Connection cx)throws SQLException{
         ResultSet rs=null;
-        PreparedStatement stm=cx.prepareStatement("SELECT nombre, precio from gastos where borrado=0 ");
+        PreparedStatement stm=cx.prepareStatement("SELECT ga.nombre, ga.precio , me.mes from gastos as ga inner join meses as me on ga.codigo_mes=me.codigo where ga.borrado=0 ");
       
         try{
             rs=stm.executeQuery();
@@ -95,6 +114,22 @@ public class GastosG {
        }
         
         
+        ///metodo para eliminar un gasto no deseado o mal cargado, lo eliminamos de manera definitiva(delete)
+        public static void eliminarDefinitivamente(Connection cx, int codigo)throws Exception{
+           PreparedStatement stm=cx.prepareStatement("DELETE from gastos where codigo=?");
+            stm.setInt(1, codigo);
+  
+               stm.executeUpdate();
+         
+       }
+         ///metodo para ver todos los gastos que el usuario haya cargado y ya haya limpiado, de todos los meses de todos lo años en orden desc..
+        public static ResultSet verGastosAnteriores(Connection cx)throws Exception{
+            ResultSet rs=null;
+            PreparedStatement stm=cx.prepareStatement("SELECT SUM(ga.precio), SUM(ga.precio)/(SELECT COUNT(codigo) FROM profesor WHERE borrado=0) , me.mes, me.codigo, ci.año FROM gastos AS ga INNER JOIN meses AS me ON ga.codigo_mes = me.codigo INNER JOIN ciclo_lectivo AS ci ON ga.año = ci.codigo WHERE ga.borrado = 1 GROUP BY me.mes, me.codigo, ci.año ORDER BY ci.año DESC, me.codigo DESC");
+            rs=stm.executeQuery();
+            return rs;
+        }
+        
       
         public static ResultSet mostrarGastosAnteriores(Connection cx, int codigo)throws SQLException{
         ResultSet rs=null;
@@ -107,6 +142,21 @@ public class GastosG {
         }
         return rs;
     }
+        
+        
+        ///metodo que nos permite validar si ya cargó gastos en el mes de enero de 2025 por ejemplo...
+        public static int verSiHayGastos(Connection cx, int codigo_mes, int codigo_ciclo_lectivo)throws Exception{
+            ResultSet rs=null;
+            int tiene=0;
+            PreparedStatement stm=cx.prepareStatement("select codigo from gastos where codigo_mes=? and año=?");
+            stm.setInt(1, codigo_mes);
+            stm.setInt(2, codigo_ciclo_lectivo);
+            rs=stm.executeQuery();
+            while(rs.next()){
+                tiene=rs.getInt("codigo");
+            }
+            return tiene;
+        }
         
       public static int obtenerCodigoCicloLectivo(Connection cx)throws Exception {
          ResultSet rs=null;
