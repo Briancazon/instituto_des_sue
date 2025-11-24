@@ -3,7 +3,6 @@ package VISTA;
 
 import VISTA.Menu;
 import VISTA.ABMs.ModificarA;
-import MODELO_CONTROLADOR.TablaEstilo;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 import java.awt.Color;
 import java.sql.Connection;

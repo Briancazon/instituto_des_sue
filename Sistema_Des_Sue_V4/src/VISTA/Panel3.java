@@ -3,8 +3,6 @@ package VISTA;
 
 
 import VISTA.Pagos.Panel5;
-import MODELO_CONTROLADOR.TablaEstilo;
-import MODELO_CONTROLADOR.TablaEstilo2;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.DefaultComboBoxModel;
@@ -215,23 +213,7 @@ public class Panel3 extends javax.swing.JPanel {
     }
 
     
-    
-    //ver la cantida de alumnos activos
-     public int getCantidadI() {
-     int totalActivos = 0; // Variable para guardar la cantidad
-
-// Recorremos todas las filas de la tabla
-for (int i = 0; i < tablaInscripciones.getRowCount(); i++) {
-    // Suponemos que la columna "Estado" está en la columna 3 (índice 2)
-    String estado = tablaInscripciones.getValueAt(i, 11).toString();
-
-    // Si el estado es "Activo", sumamos 1
-    if (estado.equalsIgnoreCase("ACTIVO")) {
-        totalActivos++;
-    }
-}      
-         return totalActivos;
-}
+  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -479,7 +461,7 @@ for (int i = 0; i < tablaInscripciones.getRowCount(); i++) {
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botonAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 194, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -612,6 +594,10 @@ for (int i = 0; i < tablaInscripciones.getRowCount(); i++) {
             }
         });
 
+        labelCodigoAlumno.setForeground(new java.awt.Color(255, 102, 102));
+
+        labelCodigoProfesor.setForeground(new java.awt.Color(255, 102, 102));
+
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes/impresora.png"))); // NOI18N
         jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -629,6 +615,8 @@ for (int i = 0; i < tablaInscripciones.getRowCount(); i++) {
                 labelEditarMouseClicked(evt);
             }
         });
+
+        txtAuxiliar.setForeground(new java.awt.Color(255, 102, 102));
 
         labelLimpiar.setFont(new java.awt.Font("Segoe Print", 1, 10)); // NOI18N
         labelLimpiar.setForeground(new java.awt.Color(255, 255, 255));
@@ -691,13 +679,13 @@ for (int i = 0; i < tablaInscripciones.getRowCount(); i++) {
                         .addComponent(labelEditar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(labelLimpiar)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18)
-                    .addComponent(jButton3))
-                .addGap(248, 248, 248)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton3)
+                    .addComponent(jLabel18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 469, Short.MAX_VALUE)
                 .addComponent(labelCodigoAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -706,53 +694,52 @@ for (int i = 0; i < tablaInscripciones.getRowCount(); i++) {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addGap(2, 2, 2)
-                            .addComponent(jLabel16)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(buscar)
-                                    .addComponent(recargar))
-                                .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jSeparator2)
-                                .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(botonGuardar)
-                                        .addComponent(labelEditar)
-                                        .addComponent(labelLimpiar))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel28)))))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelCodigoAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAuxiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(4, 4, 4))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSeparator3)
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel18)))
-                .addContainerGap())
+                        .addComponent(jLabel18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(botonGuardar)
+                                    .addComponent(labelEditar)
+                                    .addComponent(labelLimpiar))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel28))
+                            .addComponent(jSeparator3)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(buscar)
+                                        .addComponent(recargar))
+                                    .addComponent(txtNombreBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelCodigoAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelCodigoProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAuxiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(4, 4, 4))
         );
 
         javax.swing.GroupLayout paneltresLayout = new javax.swing.GroupLayout(paneltres);
         paneltres.setLayout(paneltresLayout);
         paneltresLayout.setHorizontalGroup(
             paneltresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 939, Short.MAX_VALUE)
-            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 939, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1667, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(paneltresLayout.createSequentialGroup()
                 .addContainerGap()
@@ -768,7 +755,7 @@ for (int i = 0; i < tablaInscripciones.getRowCount(); i++) {
                 .addGap(1, 1, 1)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
         );
 
         add(paneltres, "tres");
@@ -916,10 +903,11 @@ dialog.setVisible(true);
                          String dniAlumno =tablaInscripciones.getValueAt(filaSeleccionada, 2).toString();
                          Object dias =tablaInscripciones.getValueAt(filaSeleccionada, 3);
                          
+                        
                          ////veerifamos si se trata de una actualizacion de una inscripcion con servicio de inclusion escolar....
-                         if(dias == null){
+                         if(dias == null){/// si dias es igual a null, si se trata de inclusion escolar...
                                if(txtProfesor.getText().isEmpty()){
-                                      JOptionPane.showMessageDialog(null, "Ya ha registrado recientemente al "+txtAlumno.getText()+" con ese servicio y del ciclo lectivo actual","ERROR",ERROR_MESSAGE);
+                                      JOptionPane.showMessageDialog(null, "Debe elegir un profesor","ERROR",ERROR_MESSAGE);
                                        return;
                                }
                                 String diasF="";
@@ -931,6 +919,15 @@ dialog.setVisible(true);
                                        codigo_profesor=Integer.parseInt(txtAuxiliar.getText());
                                 }else{///sino, quiere decir que sí seleccionó otro profesor y por lo tanto tendriamos que poner el codigo de ese nuevo profesor
                                        codigo_profesor=Integer.parseInt(labelCodigoProfesor.getText());
+                                        ////VALIDACION, antes verfificaremos si ese nuevo profesor que seleccione el usuario tiene cupos disponibles...
+                                        int c_c_l=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx);///obtenemos el codigo ciclo lectivo actual de este año
+                                        int cantidad_alumnos_activos_de_docente= MODELO_CONTROLADOR.Inscripcion.cantidadAlumnosDeUnDocente(cx, c_c_l, codigo_profesor); ///obtenemos la cantidad de alumnos activos que tiene el docente
+                     
+                                         ////si la cantidad de alumnos activos que tiene un docente es mayor o igual a 10, el sistema no le permite realizar la inscripcion, ya que el profe tiene cupo lleno, por lo tanto debera esocjer otro profesor
+                                        if(cantidad_alumnos_activos_de_docente>=10){
+                                           JOptionPane.showMessageDialog(null, "No se puede modificar la inscripcion. El profesor "+txtProfesor.getText()+" ya tiene cupo lleno de alumnos (10) en este ciclo lectivo, deberá elegir otro profesor","ERROR",ERROR_MESSAGE); 
+                                           return;
+                                        }
                                 }
                          
                                 int codigo_alumno=MODELO_CONTROLADOR.Alumno.obtenerCodigo(cx,Integer.parseInt( dniAlumno));
@@ -939,7 +936,7 @@ dialog.setVisible(true);
                                 mostrarTablaInscripcion();
                                 limpiar();
                                 
-                         }else{///sino quiere decir que se trata de una inscripcion de servicio mensual o de clase..
+                         }else{///sino quiere decir que se trata de una actualizacion  de servicio mensual o de clase..
                               String d=boxDias.getSelectedItem().toString();
                               int codigo_horario=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoHorario(cx, horario);
                          
@@ -949,6 +946,15 @@ dialog.setVisible(true);
                                    codigo_profesor=Integer.parseInt(txtAuxiliar.getText());
                                }else{///sino, quiere decir que sí seleccionó otro profesor y por lo tanto tendriamos que poner el codigo de ese nuevo profesor
                                    codigo_profesor=Integer.parseInt(labelCodigoProfesor.getText());
+                                     ////VALIDACION, antes verfificaremos si ese nuevo profesor que seleccione el usuario tiene cupos disponibles...
+                                     int c_c_l=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx);///obtenemos el codigo ciclo lectivo actual de este año
+                                     int cantidad_alumnos_activos_de_docente= MODELO_CONTROLADOR.Inscripcion.cantidadAlumnosDeUnDocente(cx, c_c_l, codigo_profesor); ///obtenemos la cantidad de alumnos activos que tiene el docente
+                     
+                                     ////si la cantidad de alumnos activos que tiene un docente es mayor o igual a 10, el sistema no le permite realizar la inscripcion, ya que el profe tiene cupo lleno, por lo tanto debera esocjer otro profesor
+                                     if(cantidad_alumnos_activos_de_docente>=10){
+                                           JOptionPane.showMessageDialog(null, "No se puede modificar la inscripcion. El profesor "+txtProfesor.getText()+" ya tiene cupo lleno de alumnos (10) en este ciclo lectivo, deberá elegir otro profesor","ERROR",ERROR_MESSAGE); 
+                                           return;
+                                      }
                                }
                          
                                int codigo_alumno=MODELO_CONTROLADOR.Alumno.obtenerCodigo(cx,Integer.parseInt( dniAlumno));
@@ -1047,7 +1053,7 @@ dialog.setVisible(true);
                documento.add(titulo);
 
                //  Subtítulo e información adicional
-               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Espacio Pedagógico Despertando Sueños"));
                documento.add(new Paragraph("Fecha: " + LocalDate.now()));
                documento.add(new Paragraph("\nListado de inscripciones activas:\n"));
 
@@ -1112,7 +1118,7 @@ dialog.setVisible(true);
                   documento.close();
 
                    // Aviso al usuario
-                   JOptionPane.showMessageDialog(this, "PDF generado correctamente en el Escritorio.");
+                   JOptionPane.showMessageDialog(this, "PDF generado correctamente");
 
                    // Abrir el archivo automáticamente
                    java.awt.Desktop.getDesktop().open(new java.io.File(ruta));

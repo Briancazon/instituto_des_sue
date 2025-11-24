@@ -1,7 +1,7 @@
 
 package VISTA.ABMs;
 
-import MODELO_CONTROLADOR.TablaEstilo;
+import VISTA.TablaEstilo;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -1104,13 +1104,13 @@ public class ModificarP extends javax.swing.JPanel {
                JOptionPane.showMessageDialog(null, "Se ha eliminado el registro correctamente");
                limpiar();
               mostrarP();
-              desactivaragregar();
+             
 
               
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido eliminar el registro seleccionado","ERROR",ERROR_MESSAGE); 
             limpiar();
-                desactivaragregar();
+   
              }
            
            
@@ -1118,7 +1118,7 @@ public class ModificarP extends javax.swing.JPanel {
            JOptionPane.showMessageDialog(null, "Se ha cancelado la eliminación"); 
             mostrarP();
             limpiar();
-            desactivaragregar();
+
        }
        
     }//GEN-LAST:event_eliminarMouseClicked
@@ -1137,6 +1137,7 @@ public class ModificarP extends javax.swing.JPanel {
                MODELO_CONTROLADOR.Profesor.habilitarP(cx, codigo);
                JOptionPane.showMessageDialog(null, "Se ha habilitado el registro correctamente");
                limpiar();
+               desactivaragregar();
                desactivarhabilitar();
                  inhabilitado();
              
@@ -1145,6 +1146,7 @@ public class ModificarP extends javax.swing.JPanel {
              }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se ha podido habiliar el registro seleccionado","ERROR",ERROR_MESSAGE); 
                   limpiar();
+                   desactivaragregar();
             desactivarhabilitar();
              }
            
@@ -1152,6 +1154,7 @@ public class ModificarP extends javax.swing.JPanel {
        }else{
            JOptionPane.showMessageDialog(null, "Se ha cancelado "); 
                  limpiar();
+                  desactivaragregar();
            inhabilitado();
             desactivarhabilitar();
        }
@@ -1240,7 +1243,7 @@ public class ModificarP extends javax.swing.JPanel {
                documento.add(titulo);
 
                //  Subtítulo e información adicional
-               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Espacio Pedagógico Despertando Sueños"));
                documento.add(new Paragraph("Fecha: " + LocalDate.now()));
                documento.add(new Paragraph("\nListado de profesores activos:\n"));
 

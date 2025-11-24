@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 public class Alumno {
     public static void cargar(Connection cx, String nombre, String apellido, String fecha_nac, int dni, String escuela, String grado, String nivel, int obra_social )throws Exception {
         if(obra_social==0){
-               PreparedStatement stm=cx.prepareStatement("INSERT INTO alumno (nombre, apellido, fecha_nac, dni, escuela, grado, nivel, obra_social, borrado) values (?, ?, ?, ?, ?, ?, ?, null, 0)");
+               PreparedStatement stm=cx.prepareStatement("INSERT INTO alumno (nombre, apellido, fecha_nac, dni, escuela, grado, nivel, obra_social, borrado) values (UPPER(?), UPPER(?), ?, ?, ?, ?, ?, null, 0)");
                stm.setString(1, nombre);
                stm.setString(2, apellido );
                stm.setString(3, fecha_nac);
@@ -24,7 +24,7 @@ public class Alumno {
                        stm.executeUpdate();
                
         }else{
-                 PreparedStatement stm=cx.prepareStatement("INSERT INTO alumno (nombre, apellido, fecha_nac, dni, escuela, grado, nivel, obra_social, borrado) values (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+                 PreparedStatement stm=cx.prepareStatement("INSERT INTO alumno (nombre, apellido, fecha_nac, dni, escuela, grado, nivel, obra_social, borrado) values (UPPER(?), UPPER(?), ?, ?, ?, ?, ?, ?, 0)");
                  stm.setString(1, nombre);
                  stm.setString(2, apellido );
                  stm.setString(3, fecha_nac);
@@ -150,7 +150,7 @@ public class Alumno {
       
       public static void actualizarAlumno(Connection cx, String nombre, String apellido, String fecha_nac, int dni, String escuela, String grado, String nivel, int obra_social, int codigo)throws Exception{
           if (obra_social==0){
-                PreparedStatement stm=cx.prepareStatement("update alumno set nombre= ?, apellido=?, fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=null where codigo=?");
+                PreparedStatement stm=cx.prepareStatement("update alumno set nombre= UPPER(?), apellido=UPPER(?), fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=null where codigo=?");
                 stm.setString(1, nombre);
                 stm.setString(2, apellido);
                 stm.setString(3, fecha_nac);
@@ -164,7 +164,7 @@ public class Alumno {
                        stm.executeUpdate();
                 
           }else{
-                  PreparedStatement stm=cx.prepareStatement("update alumno set nombre= ?, apellido=?, fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=? where codigo=?");
+                  PreparedStatement stm=cx.prepareStatement("update alumno set nombre= UPPER(?), apellido=UPPER(?), fecha_nac=?, dni=?, escuela=?, grado=?, nivel=?, obra_social=? where codigo=?");
                   stm.setString(1, nombre);
                   stm.setString(2, apellido);
                   stm.setString(3, fecha_nac);

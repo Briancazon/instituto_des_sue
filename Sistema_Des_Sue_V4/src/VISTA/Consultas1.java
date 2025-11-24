@@ -4,31 +4,36 @@ package VISTA;
 import VISTA.consultas3;
 import VISTA.consultas4;
 import VISTA.consultas2;
-import VISTA.ABMs.ModificarP;
+
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.sql.Connection;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
-import VISTA.Panel3;
-import VISTA.Panel4;
+
+
 
 
 public class Consultas1 extends javax.swing.JPanel {
 CardLayout cardLayout;
+Connection cx=MODELO_CONTROLADOR.conexion.conexion();
+
+
     public Consultas1() {
         initComponents();
         
          circular.setLayout(new java.awt.BorderLayout());
+         
        alumno.getDocument().addDocumentListener(new DocumentListener() {
         @Override
         public void insertUpdate(DocumentEvent e) {
@@ -42,15 +47,22 @@ CardLayout cardLayout;
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-           
+            actualizar();
         }
     });
         
-        Panel3 frmAlumno = new Panel3();
-int cantidadDocentes = frmAlumno.getCantidadI(); // Método que devuelve tblDocentes.getRowCount()
-alumno.setText(String.valueOf(cantidadDocentes));
+       
+       ///esta parte calcula la cantidad de alumnos inscriptos activos de este año... luego esa cantida la pega en el txt alumno...
+       try{
+              int codigo_ciclo_lectivo=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx); //obtener el codigo ciclo lectivo actual
+              int cantidadAlumnos = MODELO_CONTROLADOR.Inscripcion.cantidadActivosInscriptos(cx, codigo_ciclo_lectivo);
+              alumno.setText(String.valueOf(cantidadAlumnos));
 
-        alumno.setEditable(false);
+              alumno.setEditable(false);
+       }catch(Exception e){
+           
+       }
+      
         
         cardLayout = (CardLayout)(contenedor.getLayout());
         

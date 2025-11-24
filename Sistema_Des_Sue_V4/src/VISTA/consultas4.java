@@ -1,21 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package VISTA;
 
-import MODELO_CONTROLADOR.TablaEstilo;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import javax.swing.JTextField;
+
 import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+
 import javax.swing.table.DefaultTableModel;
 import VISTA.Panel3;
 import VISTA.buscarProfesor;
@@ -68,6 +60,8 @@ public class consultas4 extends javax.swing.JPanel {
             }
         });
 
+        labelCodigo.setBackground(new java.awt.Color(255, 255, 255));
+        labelCodigo.setForeground(new java.awt.Color(255, 255, 255));
         labelCodigo.setText("jLabel1");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -189,8 +183,8 @@ public class consultas4 extends javax.swing.JPanel {
         
          try{
              int codigo= Integer.parseInt(Codigo);
-            
-             rs= MODELO_CONTROLADOR.ConsultaPofesor.buscaAlumno(cx, codigo);
+             int codigo_ciclo_lectivo=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx);
+             rs= MODELO_CONTROLADOR.ConsultaPofesor.buscaAlumno(cx, codigo, codigo_ciclo_lectivo);
               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
@@ -205,22 +199,7 @@ public class consultas4 extends javax.swing.JPanel {
           }catch(Exception e){
                   
           }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+             
         
     }
     

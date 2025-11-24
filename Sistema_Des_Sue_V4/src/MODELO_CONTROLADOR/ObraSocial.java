@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 public class ObraSocial {
      public static void cargar(Connection cx, String nombre )throws Exception {
-        PreparedStatement stm=cx.prepareStatement("INSERT INTO obra_social (nombre, borrado) values (?, 0)");
+        PreparedStatement stm=cx.prepareStatement("INSERT INTO obra_social (nombre, borrado) values (UPPER(?), 0)");
         stm.setString(1, nombre);
         
         
@@ -92,7 +92,7 @@ public class ObraSocial {
            }
        
        public static void update(Connection cx, String nombre, int codigo)throws Exception {
-           PreparedStatement stm=cx.prepareStatement("UPDATE obra_social set nombre=? where codigo =?");
+           PreparedStatement stm=cx.prepareStatement("UPDATE obra_social set nombre=UPPER(?) where codigo =?");
            stm.setString(1, nombre);
            stm.setInt(2, codigo);
            

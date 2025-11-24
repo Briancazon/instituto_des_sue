@@ -1,7 +1,7 @@
 //
 package VISTA.Pagos;
 
-import MODELO_CONTROLADOR.TablaEstilo;
+import VISTA.TablaEstilo;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;

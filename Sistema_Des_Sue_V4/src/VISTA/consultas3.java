@@ -1,7 +1,6 @@
 
 package VISTA;
 
-import MODELO_CONTROLADOR.TablaEstilo;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -429,6 +428,8 @@ public class consultas3 extends javax.swing.JPanel {
          tabla.addColumn("Grado"); 
          tabla.addColumn("Nivel"); 
         
+         // Asignar el modelo vacío una vez
+           TablaNiveles.setModel(tabla);
         
          
          try{
@@ -469,7 +470,8 @@ public class consultas3 extends javax.swing.JPanel {
          tabla.addColumn("Grado"); 
          tabla.addColumn("Nivel"); 
         
-        
+           // Asignar el modelo vacío una vez
+           TablaNiveles.setModel(tabla);
          
          try{
             
@@ -507,7 +509,8 @@ public class consultas3 extends javax.swing.JPanel {
          tabla.addColumn("Grado"); 
          tabla.addColumn("Nivel"); 
         
-        
+           // Asignar el modelo vacío una vez
+           TablaNiveles.setModel(tabla);
          
          try{
             

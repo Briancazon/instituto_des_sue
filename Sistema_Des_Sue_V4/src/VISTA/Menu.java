@@ -15,6 +15,8 @@ import java.awt.Color;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.File;
+import java.nio.file.Files;
 import java.sql.Connection;
 
 import javax.swing.ImageIcon;
@@ -24,6 +26,7 @@ import javax.swing.JPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import javax.swing.JOptionPane;
 
 public class Menu extends javax.swing.JFrame {
 
@@ -34,8 +37,11 @@ public class Menu extends javax.swing.JFrame {
    
     public Menu() {
         initComponents();
+        setResizable(true);     // Hace que aparezca el botón maximizar
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-     
+
+    
+
        try{
          MODELO_CONTROLADOR.cicloLectivo.insertar(cx);
        }catch(Exception e){
@@ -81,6 +87,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenu8 = new javax.swing.JMenu();
         jMenu9 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         jMenu5.setText("jMenu5");
 
@@ -131,7 +138,7 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(serviciobtLayout.createSequentialGroup()
                     .addGap(60, 60, 60)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(78, Short.MAX_VALUE)))
+                    .addContainerGap(81, Short.MAX_VALUE)))
         );
         serviciobtLayout.setVerticalGroup(
             serviciobtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,22 +337,22 @@ public class Menu extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel1))
-                    .addComponent(serviciobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45)
+                .addComponent(jLabel1)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(insbt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(asistencia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(insbt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(asistencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(pagobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(pagoinsbt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(pagoinsbt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(serviciobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -363,7 +370,7 @@ public class Menu extends javax.swing.JFrame {
                 .addComponent(pagobt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pagoinsbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel5, java.awt.BorderLayout.WEST);
@@ -379,11 +386,11 @@ public class Menu extends javax.swing.JFrame {
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGap(0, 760, Short.MAX_VALUE)
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 783, Short.MAX_VALUE)
         );
 
         contenedor.add(panel1, "uno");
@@ -440,13 +447,22 @@ public class Menu extends javax.swing.JFrame {
 
         jMenu9.setBackground(new java.awt.Color(255, 153, 153));
         jMenu9.setForeground(new java.awt.Color(0, 0, 0));
-        jMenu9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes2/salir.png"))); // NOI18N
-        jMenu9.setText("Salir");
+        jMenu9.setText("Opciones");
         jMenu9.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu9MouseClicked(evt);
             }
         });
+
+        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes/guardar_nuevo.png"))); // NOI18N
+        jMenuItem3.setText("Realizar Copia de Seguridad");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu9.add(jMenuItem3);
+
         jMenuBar1.add(jMenu9);
 
         setJMenuBar(jMenuBar1);
@@ -538,7 +554,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jMenu9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu9MouseClicked
-        System.exit(0);
+  
     }//GEN-LAST:event_jMenu9MouseClicked
 
     private void asistenciaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_asistenciaMouseClicked
@@ -604,6 +620,92 @@ public class Menu extends javax.swing.JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }//GEN-LAST:event_jMenu4MouseClicked
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+                                          
+             try {
+
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    // 1) Generar BACKUP de la base de datos
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    String rutaBackupLocal = "C:\\backups_db\\instituto.sql";
+
+    // Asegurar que exista la carpeta
+    new File("C:\\backups_db").mkdirs();
+
+    // Comando mysqldump
+  
+
+   //String comando = "cmd.exe /c \"\"C:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\bin\\mysqldump.exe\" -u root --skip-password instituto > \"" + rutaBackupLocal + "\"\"";
+
+   String comando = "cmd.exe /c \"\"C:\\xampp\\mysql\\bin\\mysqldump.exe\" -u root --skip-password instituto > \"" + rutaBackupLocal + "\"\"";
+
+
+    // Ejecutar comando
+    Process p = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", comando});
+    p.waitFor(); // Esperar a que termine
+
+    
+    File archivoBackup = new File(rutaBackupLocal);
+
+    
+    
+    
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    // 2) Detectar automáticamente Google Drive
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    File unidadDrive = null;
+
+    for (File root : File.listRoots()) { 
+        File prueba = new File(root, ".shortcut-targets-by-id");
+        if (prueba.exists()) {
+            unidadDrive = root;
+            break;
+        }
+    }
+
+    if (unidadDrive == null) {
+        JOptionPane.showMessageDialog(null, "No se encontró Google Drive instalado en esta PC.");
+        return;
+    }
+
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    // 3) Detectar "Mi unidad" o "My Drive"
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    File carpetaDrive = new File(unidadDrive, "Mi unidad");
+    if (!carpetaDrive.exists()) {
+        carpetaDrive = new File(unidadDrive, "My Drive");
+    }
+
+    if (!carpetaDrive.exists()) {
+        JOptionPane.showMessageDialog(null, "No se encontró la carpeta 'Mi unidad' en Google Drive.");
+        return;
+    }
+
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    // 4) Copiar al Google Drive
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    File destino = new File(carpetaDrive, "instituto.sql");
+
+    Files.copy(
+        archivoBackup.toPath(),
+        destino.toPath(),
+        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+    );
+
+    JOptionPane.showMessageDialog(null, "Copia de seguridad generada y guardada correctamente en Google Drive.");
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "Error al realizar el Backup:\n" + e.getMessage());
+    
+}
+
+
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     
     
@@ -708,6 +810,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel pagobt;
     private javax.swing.JPanel pagoinsbt;

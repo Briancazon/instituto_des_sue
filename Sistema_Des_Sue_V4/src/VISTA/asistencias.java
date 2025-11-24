@@ -2,8 +2,6 @@
 package VISTA;
 
 import VISTA.Pagos.Panel5;
-import MODELO_CONTROLADOR.TablaEstilo;
-import MODELO_CONTROLADOR.TablaEstilo2;
 import java.awt.event.ItemListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -344,6 +342,8 @@ public class asistencias extends javax.swing.JPanel {
                 botonGuardarMouseClicked(evt);
             }
         });
+
+        labelCodigoAlumno.setForeground(new java.awt.Color(255, 102, 102));
 
         recargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VISTA/Imagenes2/recargar.png"))); // NOI18N
         recargar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

@@ -2,7 +2,6 @@
 package VISTA;
 
 import VISTA.ABMs.ModificarA;
-import MODELO_CONTROLADOR.TablaEstilo;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;

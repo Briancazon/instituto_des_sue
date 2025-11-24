@@ -1,7 +1,6 @@
 
 package VISTA;
 
-import MODELO_CONTROLADOR.TablaEstilo;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.sql.Connection;
@@ -46,7 +45,9 @@ public class consultas2 extends javax.swing.JPanel {
     
     
     public void Conteo1(){
+        
         int cantidad = TablaServicio.getRowCount();
+     
         cantidad1.setText(String.valueOf(cantidad));
     }
     
@@ -273,59 +274,9 @@ public class consultas2 extends javax.swing.JPanel {
         }
     }
 
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
-
     
+
+    //metodo que muestra la cantidad de alumnos que estan activos en clases personalizadas
      public void mostrar1(){
     
      tabla.setRowCount(0);   
@@ -336,11 +287,14 @@ public class consultas2 extends javax.swing.JPanel {
          tabla.addColumn("Servicio"); 
          tabla.addColumn("Año"); 
         
-        
+        // Asignar el modelo vacio ANTES
+        TablaServicio.setModel(tabla);
          
          try{
-            
-             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarClasePersonalizada(cx);
+             int codigo_ciclo_lectivo=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx);  //obtener el codigo ciclo_lectvo actual
+             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarClasePersonalizada(cx,  codigo_ciclo_lectivo); //metodo que nos muestra los alumnos activos de clases personalizadas
+             
+             
               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
@@ -376,11 +330,12 @@ public class consultas2 extends javax.swing.JPanel {
          tabla.addColumn("Servicio"); 
          tabla.addColumn("Año"); 
         
-        
+          // Asignar el modelo vacio ANTES
+        TablaServicio.setModel(tabla);
          
          try{
-            
-             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarApoyoPedagogico(cx);
+              int codigo_ciclo_lectivo=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx); ///nos da el codigo ciclo_lectivo actual
+             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarApoyoPedagogico(cx, codigo_ciclo_lectivo);
               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
@@ -417,11 +372,12 @@ public class consultas2 extends javax.swing.JPanel {
          tabla.addColumn("Servicio"); 
          tabla.addColumn("Año"); 
         
-        
+          // Asignar el modelo vacio ANTES
+        TablaServicio.setModel(tabla);
          
          try{
-            
-             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarEducacionTemprana(cx);
+             int codigo_ciclo_lectivo=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx); /// obtener el codigo_ciclo_lectivo actual
+             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarEducacionTemprana(cx, codigo_ciclo_lectivo);
               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
@@ -454,11 +410,12 @@ public class consultas2 extends javax.swing.JPanel {
          tabla.addColumn("Servicio"); 
          tabla.addColumn("Año"); 
         
-        
+          // Asignar el modelo vacio ANTES
+        TablaServicio.setModel(tabla);
          
          try{
-            
-             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarAcompañamiento(cx);
+             int codigo_ciclo_lectivo=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx);
+             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarAcompañamiento(cx, codigo_ciclo_lectivo);
               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
@@ -492,11 +449,12 @@ public class consultas2 extends javax.swing.JPanel {
          tabla.addColumn("Servicio"); 
          tabla.addColumn("Año"); 
         
-        
+          // Asignar el modelo vacio ANTES
+        TablaServicio.setModel(tabla);
          
          try{
-            
-             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarItinerancia(cx);
+             int codigo_ciclo_lectivo=MODELO_CONTROLADOR.Inscripcion.obtenerCodigoCicloLectivo(cx);
+             rs=MODELO_CONTROLADOR.ConsultaServicios.mostrarItinerancia(cx,codigo_ciclo_lectivo);
               while(rs.next()){
                    datos[0]=rs.getString("al.nombre");
                    datos[1]=rs.getString("al.apellido");
@@ -653,7 +611,7 @@ public class consultas2 extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(cantidad5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(23, 23, 23)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 54, Short.MAX_VALUE)))
                 .addGap(23, 23, 23))
         );
         jPanel1Layout.setVerticalGroup(

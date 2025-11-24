@@ -1,7 +1,6 @@
 
 package VISTA;
 
-import MODELO_CONTROLADOR.TablaEstilo;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 
 

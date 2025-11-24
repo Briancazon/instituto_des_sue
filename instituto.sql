@@ -37,7 +37,7 @@ CREATE TABLE `alumno` (
   UNIQUE KEY `dni_UNIQUE` (`dni`),
   KEY `fk_alumno_obra_social1_idx` (`obra_social`),
   CONSTRAINT `fk_alumno_obra_social1` FOREIGN KEY (`obra_social`) REFERENCES `obra_social` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `alumno` (
 
 LOCK TABLES `alumno` WRITE;
 /*!40000 ALTER TABLE `alumno` DISABLE KEYS */;
-INSERT INTO `alumno` VALUES (1,'brian','Castillo','2003-08-04',44948098,'colegio San Juan Pablo','quinto','Primario',NULL,0),(2,'luca','cazon','2000-02-02',2323,'DSD','SDS','Primario',1,0),(5,'ezequiel','cazon','2004-04-04',1234,'fdfs','fdsfds','Inicial',4,0),(6,'ffsdffdsf','fdsfd','2004-04-05',3424,'fdsfds','fdsfs','Primario',5,0),(7,'miguel','merentiel','2000-03-03',65765,'fdfdsf','ghhgf','Inicial',5,0),(8,'lionel','messi','2000-01-01',101010,'barcelona','quinto','Inicial',1,0),(9,'rewrewr','rerewrew','2000-05-05',1313,'fdsfdsf','fdsfds','Inicial',1,0),(10,'maria','mamani','2005-06-06',111111,'fdsfds','Obra Social Vital Plus','Inicial',6,0),(16,'Ana ','mamani','2004-03-19',47152375,'n2','','Secundario',NULL,0),(17,'gonzalito','lopez','2004-03-04',3434,'comercial','quinto','Secundario',2,0),(18,'luca','lopez','2005-10-10',555,'gfdgfdgfd','fsdfdsfds','Inicial',1,1),(19,'mauro','argota','2000-10-10',2121,'vdsvsf','dfds','Inicial',1,1),(21,'ANGEL','di maria','2005-04-04',212121,'fdfs','fdsfs','Primario',NULL,1),(23,'fdsfs','fdsfs','2005-04-04',555453,'fdsfs','fdsfsf','Inicial',NULL,0),(25,'fdsfdsf fdssd ','eren','2018-10-20',4567,'fdsfs 432432 dfds','312dfs','Inicial',NULL,0),(26,'fdsf','fdsfs','2025-10-03',324,'fdsf','fdsfs','Primario',NULL,1),(27,'gonza','martinez','2016-10-14',777,'fdsfds','fdsfds','Inicial',NULL,0),(28,'lautaro','martinez','2019-10-18',543543,'fdsfs','fdsfds','Primario',1,0),(32,'anamaria','maamni','2019-11-02',121212,'comercial','3','Secundario',1,1),(33,'luis','mmiguel','2024-11-09',8989,'tecnica 1','cuarto','Primario',2,1),(34,'brian','cazon','2017-11-11',4948099,'sarmiento','sexto','Inicial',1,0),(36,'ezequiel','zeballos','2022-11-12',5567567,'samiento','quinto','Inicial',3,0),(37,'tamara','cazon','2016-11-24',34567678,'221','sexto','Inicial',1,0),(38,'ghgfhfg','hfghf','2025-11-14',5646,'hgfhf','hgfhf','Primario',NULL,0),(39,'gonza','lopez','2025-11-21',53435345,'gfdgfdgfd','gsdfgfdgdfg','Inicial',NULL,0);
+INSERT INTO `alumno` VALUES (40,'ezequiel','cazon','2022-11-12',44948099,'221','sexto','Primario',NULL,0),(42,'mundo','ghghghg','2022-11-12',5675765,'fdsfsdsf','dfsfdsf','Secundario',138,1),(43,'jhjhj','jhjhjh','2024-11-09',564645,'654gfdg','gdfgdg','Secundario',142,0),(44,'luca','lopez','2019-11-09',666666666,'gfdgd','gfdgdfg','Inicial',140,1),(45,'alberto','meee','2022-11-12',435435,'gfdgd','gdfgdfg','Secundario',NULL,0),(47,'loco','lopez','2020-11-15',6757567,'6gffd','gfdgdf','Secundario',145,1),(48,'JJJJJ','JJJJJ','2022-11-12',56,'hgfh','hgfh','Primario',NULL,0),(49,'ESTEBAN LOCÓ','DÍAZ','2023-11-11',554646,'hrthgfh','hghf','Primario',NULL,0),(50,'JORGE','CAYO','2023-11-11',453345,'gfdgfdf','gfdgdgfd','Primario',NULL,0);
 /*!40000 ALTER TABLE `alumno` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,7 +67,7 @@ CREATE TABLE `alumno_tutor` (
   KEY `fk_alumno_tutor_tutor1_idx` (`codigo_tutor`),
   CONSTRAINT `fk_alumno_tutor_alumno` FOREIGN KEY (`codigo_alumno`) REFERENCES `alumno` (`codigo`),
   CONSTRAINT `fk_alumno_tutor_tutor1` FOREIGN KEY (`codigo_tutor`) REFERENCES `tutor` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `alumno_tutor` (
 
 LOCK TABLES `alumno_tutor` WRITE;
 /*!40000 ALTER TABLE `alumno_tutor` DISABLE KEYS */;
-INSERT INTO `alumno_tutor` VALUES (1,1,1,'Padre'),(2,2,4,'padre'),(4,5,4,'padre'),(5,6,5,'fdsfdsfs'),(6,7,4,'padre'),(7,8,4,'padre'),(8,9,1,'padre'),(9,10,1,'padre'),(11,16,1,'padre'),(12,17,1,'padre'),(13,18,17,'padre'),(15,19,1,'padre'),(16,21,7,'padre'),(17,23,17,'fdsfs'),(18,25,7,'fdsfdsfs'),(19,26,9,'fdsf'),(20,27,7,'padre'),(21,28,1,'padre'),(22,32,1,'padre'),(23,33,17,'padre'),(24,34,7,'padre'),(25,36,7,'padre'),(26,37,7,'madre'),(27,38,12,'gfdgfd'),(28,39,19,'padre');
+INSERT INTO `alumno_tutor` VALUES (29,40,26,'madre'),(30,42,26,'padre'),(31,43,30,'madre'),(32,44,31,'padre'),(33,45,30,'padre'),(34,47,31,'madre'),(35,48,30,'ytryr'),(36,49,28,'hgfhfh'),(37,50,30,'dfsdfs');
 /*!40000 ALTER TABLE `alumno_tutor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +100,7 @@ CREATE TABLE `asistencias_mensuales` (
   CONSTRAINT `fk_asistencias_mensuales_ciclo_lectivo1` FOREIGN KEY (`codigo_ciclo_lectivo`) REFERENCES `ciclo_lectivo` (`codigo`),
   CONSTRAINT `fk_asistencias_mensuales_inscripcion1` FOREIGN KEY (`codigo_inscripcion`) REFERENCES `inscripcion` (`codigo`),
   CONSTRAINT `fk_asistencias_mensuales_meses1` FOREIGN KEY (`codigo_mes`) REFERENCES `meses` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +109,7 @@ CREATE TABLE `asistencias_mensuales` (
 
 LOCK TABLES `asistencias_mensuales` WRITE;
 /*!40000 ALTER TABLE `asistencias_mensuales` DISABLE KEYS */;
-INSERT INTO `asistencias_mensuales` VALUES (71,67,11,1,'SI'),(72,67,12,1,'NO'),(73,74,11,1,'SI'),(74,66,11,1,'SI'),(75,66,12,1,'NO'),(76,74,12,1,'SI'),(77,75,11,1,'SI'),(78,75,12,1,'SI'),(79,76,11,1,'SI'),(80,76,12,1,'SI'),(81,77,11,1,'SI'),(82,78,11,1,'SI'),(83,78,12,1,'SI'),(84,79,11,1,'SI');
+INSERT INTO `asistencias_mensuales` VALUES (85,80,11,1,'SI'),(86,80,12,1,'SI'),(87,81,11,1,'SI'),(88,87,11,1,'SI'),(89,81,12,1,'SI'),(90,89,11,1,'SI');
 /*!40000 ALTER TABLE `asistencias_mensuales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,11 +152,12 @@ CREATE TABLE `gastos` (
   `año` int NOT NULL,
   `borrado` tinyint NOT NULL,
   PRIMARY KEY (`codigo`),
+  UNIQUE KEY `gasto_unico_por_mes` (`nombre`,`codigo_mes`,`año`),
   KEY `fk_gastos_meses1_idx` (`codigo_mes`),
   KEY `fk_gastos_ciclo_lectivo1_idx` (`año`),
   CONSTRAINT `fk_gastos_ciclo_lectivo1` FOREIGN KEY (`año`) REFERENCES `ciclo_lectivo` (`codigo`),
   CONSTRAINT `fk_gastos_meses1` FOREIGN KEY (`codigo_mes`) REFERENCES `meses` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +166,7 @@ CREATE TABLE `gastos` (
 
 LOCK TABLES `gastos` WRITE;
 /*!40000 ALTER TABLE `gastos` DISABLE KEYS */;
-INSERT INTO `gastos` VALUES (1,'luz',10000,11,1,0),(2,'gas',10000,11,1,0),(3,'agua',100000,11,1,0),(4,'luz',10000,11,1,0),(5,'gyuvuy',4444,11,1,0),(6,'jkk',567567,11,1,0),(7,'fdfs',43432,11,1,0);
+INSERT INTO `gastos` VALUES (30,'luz',50000,11,1,1),(31,'alquiler',5000,11,1,1);
 /*!40000 ALTER TABLE `gastos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,7 +222,7 @@ CREATE TABLE `inscripcion` (
   CONSTRAINT `fk_inscripcion_ciclo_lectivo1` FOREIGN KEY (`codigo_ciclo_lectivo`) REFERENCES `ciclo_lectivo` (`codigo`),
   CONSTRAINT `fk_inscripcion_profesor1` FOREIGN KEY (`codigo_profesor`) REFERENCES `profesor` (`codigo`),
   CONSTRAINT `fk_inscripcion_servicios1` FOREIGN KEY (`codigo_servicio`) REFERENCES `servicios` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -230,7 +231,7 @@ CREATE TABLE `inscripcion` (
 
 LOCK TABLES `inscripcion` WRITE;
 /*!40000 ALTER TABLE `inscripcion` DISABLE KEYS */;
-INSERT INTO `inscripcion` VALUES (66,37,'Lunes - Miercoles',2,5,2,'2025-11-16',1,'INACTIVO'),(67,36,'Lunes - Miercoles',2,9,2,'2025-11-16',1,'ACTIVO'),(68,34,'Martes - Jueves',1,5,4,'2025-11-16',1,'ACTIVO'),(69,25,NULL,NULL,10,5,'2025-11-16',1,'ACTIVO'),(70,2,NULL,NULL,2,6,'2025-11-16',1,'INACTIVO'),(71,17,NULL,NULL,5,5,'2025-11-16',1,'ACTIVO'),(72,27,NULL,NULL,5,5,'2025-11-16',1,'INACTIVO'),(73,23,NULL,NULL,5,5,'2025-11-16',1,'ACTIVO'),(74,1,'Miercoles - Viernes',1,9,2,'2025-11-16',1,'ACTIVO'),(75,5,'Martes - Jueves',1,5,3,'2025-11-18',1,'ACTIVO'),(76,2,'Martes - Jueves',1,5,3,'2025-11-18',1,'ACTIVO'),(77,37,'Martes - Jueves',2,9,3,'2025-11-18',1,'INACTIVO'),(78,27,'Martes - Jueves',1,9,2,'2025-11-18',1,'ACTIVO'),(79,37,'Martes - Jueves',2,5,2,'2025-11-20',1,'ACTIVO');
+INSERT INTO `inscripcion` VALUES (80,47,'Miercoles - Viernes',3,18,2,'2025-11-24',1,'INACTIVO'),(81,45,'Miercoles - Viernes',2,21,3,'2025-11-24',1,'INACTIVO'),(82,44,'Martes - Jueves',1,18,4,'2025-11-24',1,'INACTIVO'),(83,43,NULL,NULL,21,5,'2025-11-24',1,'INACTIVO'),(84,40,NULL,NULL,18,6,'2025-11-24',1,'INACTIVO'),(85,40,NULL,NULL,19,5,'2025-11-24',1,'INACTIVO'),(86,40,NULL,NULL,20,6,'2025-11-24',1,'INACTIVO'),(87,47,'Martes - Jueves',2,18,3,'2025-11-24',1,'INACTIVO'),(88,40,NULL,NULL,18,6,'2025-11-24',1,'ACTIVO'),(89,45,'Martes - Jueves',3,19,2,'2025-11-24',1,'ACTIVO');
 /*!40000 ALTER TABLE `inscripcion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -295,7 +296,7 @@ CREATE TABLE `obra_social` (
   `borrado` tinyint NOT NULL,
   PRIMARY KEY (`codigo`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -304,7 +305,7 @@ CREATE TABLE `obra_social` (
 
 LOCK TABLES `obra_social` WRITE;
 /*!40000 ALTER TABLE `obra_social` DISABLE KEYS */;
-INSERT INTO `obra_social` VALUES (1,'Sanar',0),(2,'Obra Social Vida Plena',0),(3,'Obra Social Unión Médica',0),(4,'Obra Social Salud Total',0),(5,'Obra Social Bienestar',0),(6,'Obra Social Vital Plus',0),(7,'Obra Social Red Médica',0),(8,'Obra Social Protección Familiar',0),(9,'Obra Social MedIntegral',0),(10,'Obra Social Nova Salud',0),(11,'Obra Social Horizonte',0),(12,'Obra Social Futuro Salud',0),(13,'Obra Social Salud Argentina',0),(14,'Obra Social Medifácil',0),(15,'Obra Social Doctor Asistencia',0),(16,'Obra Social Vida Sana',0),(17,'Obra Social Salud y Vida',0),(18,'Obra Social Buena Salud',0),(19,'Obra Social Cobertura Total',0),(20,'Obra Social Salud Hogar',0),(21,'Obra Social Bien Cuidado',0),(22,'Obra Social Medicor',0),(23,'Obra Social Suma Salud',0),(24,'Obra Social Federal Salud',0),(25,'Obra Social Comunidad Médica',0),(26,'Obra Social Norte Médico',0),(27,'Obra Social Vital Médica',0),(28,'Obra Social Crecer Salud',0),(29,'Obra Social Asistencia Nacional',0),(30,'Obra Social Médica Jujeña',0),(31,'Obra Social Sanar Juntos',0),(32,'Obra Social Familia Protegida',0),(33,'Obra Social Confianza Médica',0),(34,'Obra Social Más Vida',0),(35,'Obra Social Asistir Hoy',0),(36,'Obra Social Vida Segura',0),(37,'Obra Social Cuidarte',0),(38,'Obra Social MedCare',0),(39,'Obra Social Red Integral',0),(40,'Obra Social Grupo Salud',0),(41,'Obra Social Compromiso Médico',0),(42,'Obra Social Médicos Unidos',0),(43,'Obra Social Central de Salud',0),(44,'Obra Social Nueva Esperanza',0),(45,'Obra Social Vida y Bienestar',0),(46,'Obra Social Integral Médica',0),(47,'Obra Social Protege',0),(48,'Obra Social Salud Pública',0),(49,'Obra Social Futuro Protegido',0),(50,'Obra Social TotalMed',0),(51,'Obra Social Preventiva',0),(52,'Obra Social Esperanza Médica',0),(53,'Obra Social Sanadora',0),(54,'Obra Social MedPlus',0),(55,'Obra Social Cuidarnos',0),(56,'Obra Social Cooperativa de Salud',0),(57,'Obra Social Medic Solidaria',0),(58,'Obra Social ProSalud',0),(59,'Obra Social Pami Ficción',0),(60,'Obra Social OSP Argentina',0),(61,'Obra Social Médica del Norte',0),(62,'Obra Social Bienestar Total',0),(63,'Obra Social Vida Protegida',0),(64,'Obra Social Clínica Popular',0),(65,'Obra Social Médica de Barrio',0),(66,'Obra Social del Pueblo',0),(67,'Obra Social Popular Médica',0),(68,'Obra Social Proteger',0),(69,'Obra Social MedFamiliar',0),(70,'Obra Social Opción Salud',0),(71,'Obra Social Nueva Vida',0),(72,'Obra Social Familias Unidas',0),(73,'Obra Social Médico Federal',0),(74,'Obra Social Médica Popular',0),(75,'Obra Social Argentina Saludable',0),(76,'Obra Social Plenitud Médica',0),(77,'Obra Social Todos por la Salud',0),(78,'Obra Social CoSalud',0),(79,'Obra Social Centro Médico Familiar',0),(80,'Obra Social Círculo Médico Federal',0),(81,'Obra Social Solidaria Argentina',0),(82,'Obra Social Médica de la Sierra',0),(83,'Obra Social La Salud Primero',0),(84,'Obra Social Siempre Sanos',0),(85,'Obra Social Sanar es Vivir',0),(86,'Obra Social Red Familiar',0),(87,'Obra Social Salud Ya',0),(88,'Obra Social MedVida',0),(89,'Obra Social Médicos por Todos',0),(90,'Obra Social Asistencia Global',0),(91,'Argentina Protegida',0),(92,'Obra Social Federal Vida',0),(93,'Obra Social Comunitaria Médica',0),(94,'Obra Social Unión Familiar',0),(95,'Obra Social Cuidado Total',0),(96,'Obra Social Salud Presente',0),(97,'Obra Social Siempre Contigo',0),(98,'Obra Social Jujuy Protege',0),(99,'Obra Social Santa María Salud',0),(100,'Obra Social Vida Plena Federal',0),(101,'Obra Social Horizonte Médico',0),(102,'Obra Social Proteger Argentina',0),(103,'Obra Social Viva la Salud',0),(104,'Obra Social Médico en Casa',0),(105,'IOSFA',0),(108,'OS entre rios',0),(109,'IOSE',0),(110,'OS JUJUY',0),(111,'',0),(112,'uihuihihui',0),(113,'plplplplplplp',0),(114,'SALUD',0),(115,'jjhghjg',0),(116,'jujuy os',0),(117,'okokokokokoko',0),(118,'medicina jujuy',0),(120,'gfdgfdg',0),(121,'SANAR SALUD 2',0),(122,'o2 plus',0),(130,'obra social rr',0),(131,'jujuy sana',0),(132,'aguante boca loco',0),(133,'san lorezno',1),(134,'jhgjhgjg',0),(135,'lanus viva',0),(137,'banfield',0);
+INSERT INTO `obra_social` VALUES (138,'IOSFAA',0),(139,'iose',1),(140,'ioioioioi',0),(141,'jujuy sana',1),(142,'iosfa',0),(144,'ttttttttthhhhhh',0),(145,'ghfhfhgfhfh',0),(146,'nnnnnnnnnnn',0),(147,'NOÁ',0);
 /*!40000 ALTER TABLE `obra_social` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,7 +338,7 @@ CREATE TABLE `pagos` (
   CONSTRAINT `fk_pagos_meses1` FOREIGN KEY (`codigo_mes`) REFERENCES `meses` (`codigo`),
   CONSTRAINT `fk_pagos_servicios1` FOREIGN KEY (`codigo_servicio`) REFERENCES `servicios` (`codigo`),
   CONSTRAINT `fk_pagos_tipo_pago1` FOREIGN KEY (`codigo_tipo_pago`) REFERENCES `tipo_pago` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,7 +347,7 @@ CREATE TABLE `pagos` (
 
 LOCK TABLES `pagos` WRITE;
 /*!40000 ALTER TABLE `pagos` DISABLE KEYS */;
-INSERT INTO `pagos` VALUES (60,1,66,'2025-11-18',2,0,11,1,'',30000),(61,1,78,'2025-11-18',2,0,11,1,'',30000),(62,1,68,'2025-11-20',4,0,NULL,1,'',9000),(63,1,77,'2025-11-20',3,0,11,1,'',30000);
+INSERT INTO `pagos` VALUES (64,1,80,'2025-11-24',2,0,11,1,'paga noviembre',30000),(65,1,80,'2025-11-24',2,0,12,1,'',30000),(66,1,82,'2025-11-24',4,0,NULL,1,'',9000),(67,1,87,'2025-11-24',3,0,11,1,'',30000),(68,1,81,'2025-11-24',3,0,11,1,'',30000),(69,1,81,'2025-11-24',3,0,12,1,'',30000);
 /*!40000 ALTER TABLE `pagos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -367,7 +368,7 @@ CREATE TABLE `profesor` (
   `borrado` tinyint NOT NULL,
   PRIMARY KEY (`codigo`),
   UNIQUE KEY `dni_UNIQUE` (`dni`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -376,7 +377,7 @@ CREATE TABLE `profesor` (
 
 LOCK TABLES `profesor` WRITE;
 /*!40000 ALTER TABLE `profesor` DISABLE KEYS */;
-INSERT INTO `profesor` VALUES (2,'ezequiel','bvvcb',666,'gfdsfds','fdsfds',0),(3,'fdfdsfs','hghfhgf',4324324,'jhgjhg','hfghfghf',0),(4,'fdsfdsf','fdsfsd',555,'fdfs','dfdsf',0),(5,'chino','maidana',1313,'fdsfds','fsfds',0),(6,'ezequiel','cazon',31221,'fsdfds','fdsfdsf',0),(9,'alejaddro','aguilar',45543543,'fgdgfdg','profeorw',0),(10,'hgghg','hgfhgf',765765,'hggf','hgfhf',1),(13,'chueco','lopez',67575,'oooooo','profeeeeeeeeeee',0),(14,'hjgj','jhgj',65,'hgfh','hgfgh',1),(15,'kjhk','kjhk',7868,'jhjg','uytut',0);
+INSERT INTO `profesor` VALUES (16,'oscar manuel','hoyos',3434,'tanto','profesor',0),(17,'fdsf','fdsf',43535,'fdsfsd','grtrete',1),(18,'juaco','lopez',7657657,'gfdgdf','gfdgdf',0),(19,'tytytyt','tytyty',564645654,'gfdgd','gfdhsgsfh',0),(20,'yoyoyoy','uuuuu',768686,'6757','hfgghgfhgfhf',0),(21,'TTTTTTTT','ALCÓ',444444444,'frfffffff','rtetrete',0),(22,'LINA','LÓPEZ',546465,'hgfhf','hgfhf',0);
 /*!40000 ALTER TABLE `profesor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -405,7 +406,7 @@ CREATE TABLE `servicios` (
 
 LOCK TABLES `servicios` WRITE;
 /*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
-INSERT INTO `servicios` VALUES (2,'Educación Temprana',30000,1),(3,'Apoyo Pedagógico',30000,1),(4,'Clases Personalizadas',9000,2),(5,'Inclusión Escolar: Acompañamiento',0,NULL),(6,'Inclusión Escolar: Itinerancia',0,NULL);
+INSERT INTO `servicios` VALUES (2,'Educación Temprana',30000,1),(3,'Apoyo Pedagógico',30000,1),(4,'Clases Personalizadas',10000,2),(5,'Inclusión Escolar: Acompañamiento',0,NULL),(6,'Inclusión Escolar: Itinerancia',0,NULL);
 /*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -450,7 +451,7 @@ CREATE TABLE `tutor` (
   PRIMARY KEY (`codigo`),
   UNIQUE KEY `dni_UNIQUE` (`dni`),
   UNIQUE KEY `telefono_UNIQUE` (`telefono`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -459,7 +460,7 @@ CREATE TABLE `tutor` (
 
 LOCK TABLES `tutor` WRITE;
 /*!40000 ALTER TABLE `tutor` DISABLE KEYS */;
-INSERT INTO `tutor` VALUES (1,'brian','cazon',12345678,'3888684916',0),(2,'mario albert','kempres',34567890,'1234',0),(3,'pablo','flores',432432,'11111111111',0),(4,'lionel','messi',10101010,'123423',0),(5,'luca','lopez',1212,'4324324',0),(6,'jose','cazon',1234,'344',0),(7,'lionel','messi',123456,'3888406652',0),(9,'nngh','jhgj',6757,'',0),(10,'','rgdfd',54353,'354',0),(12,'gfhg','',4534,'534',0),(16,'gfdg','gfdg',9998,'6565',1),(17,'Ana ','mamani',47152375,'543888684916',0),(18,'yyy','yyy',675,'64564',0),(19,'hhh','hhh',5464,'64656',0),(20,'rrrrrr','uuu',5646,'64546',1),(21,'jhgjg','jghjhg',756,'6757',1),(22,'yuyuy','uyuyu',6546,'56464',1),(23,'loco','JUARES',99898,'7775756',0);
+INSERT INTO `tutor` VALUES (26,'ana maria','mamani',47152375,'3888 630002',0),(27,'gonza','gdfg',4535435,'4535435',1),(28,'uuuuu','uuuuuuu',67575756,'54654646',0),(30,'fgd','gdfgfd',47152378,'3888630002',0),(31,'brian','CAZON',343536,'3888684916',0),(32,'RAMIRO ESTEBAN','FEDÉ',666666765,'4654645',0);
 /*!40000 ALTER TABLE `tutor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -472,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-21 10:59:02
+-- Dump completed on 2025-11-24  4:51:36

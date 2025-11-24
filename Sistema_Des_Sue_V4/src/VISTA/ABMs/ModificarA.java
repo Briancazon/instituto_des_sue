@@ -1,7 +1,7 @@
 
 package VISTA.ABMs;
 
-import MODELO_CONTROLADOR.TablaEstilo;
+import VISTA.TablaEstilo;
 import VISTA.buscarObraSocial;
 import VISTA.buscarTutor;
 import com.lowagie.text.Document;
@@ -1533,7 +1533,7 @@ dialog.setVisible(true);
     private void gradotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_gradotxtKeyTyped
          char c=evt.getKeyChar();
          // verificar si el carácter ingresado es unicamente letra y numeros
-      if ((!Character.isLetter(c) &&  !Character.isDigit(c)) || gradotxt.getText().length()>20) {
+      if ((!Character.isLetter(c) &&  !Character.isDigit(c)  && c != ' ') || gradotxt.getText().length()>20 ) {
         evt.consume(); 
     }  
     }//GEN-LAST:event_gradotxtKeyTyped
@@ -1578,7 +1578,7 @@ dialog.setVisible(true);
                documento.add(titulo);
 
                //  Subtítulo e información adicional
-               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Espacio Pedagógico Despertando Sueños"));
                documento.add(new Paragraph("Fecha: " + LocalDate.now()));
                documento.add(new Paragraph("\nListado de alumnos activos:\n"));
 

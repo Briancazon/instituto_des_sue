@@ -1,7 +1,6 @@
 
 package VISTA;
 
-import MODELO_CONTROLADOR.TablaEstilo;
 import VISTA.ABMs.ModificarP;
 import java.awt.Graphics;
 import java.awt.Image;

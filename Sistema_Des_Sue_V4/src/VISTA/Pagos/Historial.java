@@ -1,7 +1,7 @@
 
 package VISTA.Pagos;
 
-import MODELO_CONTROLADOR.TablaEstilo;
+import VISTA.TablaEstilo;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.sql.Connection;

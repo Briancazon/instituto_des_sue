@@ -1,5 +1,5 @@
 
-package MODELO_CONTROLADOR;
+package VISTA;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -39,19 +39,6 @@ public class TablaEstilo {
                     c.setForeground(Color.BLACK); // Texto normal
                 }
 
-              /*  if (!isSelected) {
-                    if (row % 2 == 0) {
-                        c.setBackground(colorPar);
-                    } else {
-                        c.setBackground(colorImpar);
-                    }
-                } else {
-                    // Color de selección
-                    c.setBackground(new Color(255, 51, 51));
-                    
-                }*/
-
-                // 🟢 Color del texto
               
 
                 // 🔠 Fuente opcional

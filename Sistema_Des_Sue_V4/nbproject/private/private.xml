@@ -3,18 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/Alumno.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/VISTA/asistencias.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/Pago.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/Inscripcion.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/Profesor.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/VISTA/ABMs/ModificarP.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/VISTA/Pagos/Historial.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/TablaEstilo.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/TablaEstilo2.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/VISTA/ABMs/ModificarA.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/VISTA/Pagos/pagosPendientes.java</file>
-            <file>file:/C:/Users/brian/OneDrive/Documentos/NetBeansProjects/Sistema_Des_Sue_V4/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/Asistencia.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/VISTA/Panel3.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/ConsultaNiveles.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/VISTA/Pagos/Panel5.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/ConsultaServicios.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/Inscripcion.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/ConsultaPofesor.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/MODELO_CONTROLADOR/Pago.java</file>
+            <file>file:/C:/Users/brian/instituto_des_sue/Sistema_Des_Sue_V4/src/VISTA/consultas4.java</file>
         </group>
     </open-files>
 </project-private>

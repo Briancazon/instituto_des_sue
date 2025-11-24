@@ -1215,6 +1215,22 @@ CardLayout cardLayout;
         txtFecha.setText(fechaFormateada);
          int codigo_alumno=MODELO_CONTROLADOR.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
          int codigo_inscripcion=MODELO_CONTROLADOR.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
+         
+         
+            ///VALIDACION, para que en caso de que si se inscribe en clase personalizda en 2025, y quiere pagar por una clase en 2026, que el sistema le avise al usuario de esto, luego le dirá que directamente realize una nueva inscripcion que se cargará con el nuevo ciclo lectivo...
+         int año_inscripcion=MODELO_CONTROLADOR.Inscripcion.obtenerAñoInscripcion(cx, Integer.parseInt(txtDni.getText()));///obtenemos el año de inscripcion del alumno de su actual inscripcion
+          int año_actual = LocalDate.now().getYear(); // Obtiene el año actual
+          
+          // si se trata de un servicio de clase personalizada, vericaremos que el pago corresponde al ciclo lectivo al que pertenece esa inscripcion, si por ej se inscribio en 2025 y quiere pagar con esa misma inscripcion clases personalizadas del 2026, el sistema
+          //le informara el usuario de esto y le pedirá que directamente realize otra inscripcion correspondiente a ese ciclo_lectivo..
+          if (modalidad_cobro == 2){
+               if(año_inscripcion != año_actual){
+                     JOptionPane.showMessageDialog(null, "Esta tratando de pagar un servicio de clase personalizada correspondiente a un ciclo lectivo viejo, realize una nueva inscripcion, la cual se cargará con el nuevo ciclo lectivo actual","ERROR",ERROR_MESSAGE);
+                     limpiar();
+                     return;
+               }              
+          }
+         
    
           //si la modalidad cobro del servicio del alumn es igual a 1, quiere decir que tiene un servicio mensual, por lo tanto se tendrá que cargar los meses que asistió en el box Meses
          if(modalidad_cobro==1){
@@ -1328,6 +1344,21 @@ CardLayout cardLayout;
         txtFecha.setText(fechaFormateada);
          int codigo_alumno=MODELO_CONTROLADOR.Alumno.obtenerCodigo(cx, Integer.parseInt(txtDni.getText()));   ///obtener el codigo del alumno
          int codigo_inscripcion=MODELO_CONTROLADOR.Inscripcion.buscarCodigo(cx, codigo_alumno); //obtener el codigo de inscripcion del alumno, nos devolvera su actual inscripcion
+         
+         
+         ///VALIDACION, para que en caso de que si se inscribe en clase personalizda en 2025, y quiere pagar por una clase en 2026, que el sistema le avise al usuario de esto, luego le dirá que directamente realize una nueva inscripcion que se cargará con el nuevo ciclo lectivo...
+         int año_inscripcion=MODELO_CONTROLADOR.Inscripcion.obtenerAñoInscripcion(cx, Integer.parseInt(txtDni.getText()));///obtenemos el año de inscripcion del alumno de su actual inscripcion
+          int año_actual = LocalDate.now().getYear(); // Obtiene el año actual
+          
+          // si se trata de un servicio de clase personalizada, vericaremos que el pago corresponde al ciclo lectivo al que pertenece esa inscripcion, si por ej se inscribio en 2025 y quiere pagar con esa misma inscripcion clases personalizadas del 2026, el sistema
+          //le informara el usuario de esto y le pedirá que directamente realize otra inscripcion correspondiente a ese ciclo_lectivo..
+          if (modalidad_cobro == 2){
+               if(año_inscripcion != año_actual){
+                     JOptionPane.showMessageDialog(null, "Esta tratando de pagar un servicio de clase personalizada correspondiente a un ciclo lectivo viejo, realize una nueva inscripcion, la cual se cargará con el nuevo ciclo lectivo actual","ERROR",ERROR_MESSAGE);
+                     limpiar();
+                     return;
+               }              
+          }
          
          //si la modalidad cobro del servicio del alumn es igual a 1, quiere decir que tiene un servicio mensual, por lo tanto se tendrá que cargar los meses que asistió en el box Meses
          if(modalidad_cobro==1){

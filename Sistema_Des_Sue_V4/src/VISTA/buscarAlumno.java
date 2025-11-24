@@ -2,7 +2,6 @@
 package VISTA;
 
 import VISTA.Pagos.Panel5;
-import MODELO_CONTROLADOR.TablaEstilo;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 import java.awt.Color;
 import java.awt.Frame;

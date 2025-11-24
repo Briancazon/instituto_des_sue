@@ -1,7 +1,7 @@
 
 package VISTA.ABMs;
 
-import MODELO_CONTROLADOR.TablaEstilo;
+import VISTA.TablaEstilo;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -990,7 +990,7 @@ public class OS extends javax.swing.JPanel {
                documento.add(titulo);
 
                //  Subtítulo e información adicional
-               documento.add(new Paragraph("Instituto Pedagógico Despertando Sueños"));
+               documento.add(new Paragraph("Espacio Pedagógico Despertando Sueños"));
                documento.add(new Paragraph("Fecha: " + LocalDate.now()));
                documento.add(new Paragraph("\nListado de obras sociales activas:\n"));
 

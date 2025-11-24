@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 public class Profesor {
      public static void cargar(Connection cx, String nombre, String apellido, int dni, String residencia, String titulo )throws Exception {
-        PreparedStatement stm=cx.prepareStatement("INSERT INTO profesor (nombre, apellido, dni, residencia, titulo, borrado) values (?, ?, ?, ?, ?, 0)");
+        PreparedStatement stm=cx.prepareStatement("INSERT INTO profesor (nombre, apellido, dni, residencia, titulo, borrado) values (UPPER(?), UPPER(?), ?, ?, ?, 0)");
         stm.setString(1, nombre);
         stm.setString(2, apellido );
         stm.setInt(3, dni);
@@ -45,7 +45,7 @@ public class Profesor {
     }
      
       public static void modificarProfe(Connection cx, String nombre, String apellido, int dni, String residencia, String titulo, int codigo)throws Exception{
-          PreparedStatement stm=cx.prepareStatement("update profesor set nombre=?, apellido=?, dni=?, residencia=?, titulo=? where codigo=?");
+          PreparedStatement stm=cx.prepareStatement("update profesor set nombre=UPPER(?), apellido=UPPER(?), dni=?, residencia=?, titulo=? where codigo=?");
           stm.setString(1, nombre);
           stm.setString(2, apellido);
           stm.setInt(3,dni);

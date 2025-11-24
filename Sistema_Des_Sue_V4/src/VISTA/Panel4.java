@@ -1,7 +1,6 @@
 
 package VISTA;
 
-import MODELO_CONTROLADOR.TablaEstilo;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
