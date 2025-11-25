@@ -84,7 +84,7 @@ public class ModificarA extends javax.swing.JPanel {
 
     private Image imagen;
         public void paint(Graphics g){
-            imagen= new ImageIcon(getClass().getResource("/VISTA//Imagenes2/2.jpg")).getImage();
+            imagen= new ImageIcon(getClass().getResource("/VISTA/Imagenes2/2.jpg")).getImage();
             g.drawImage(imagen,0,0,getWidth(),getHeight(), this);
             setOpaque(false);
             super.paint(g);

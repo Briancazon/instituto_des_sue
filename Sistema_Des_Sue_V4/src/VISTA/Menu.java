@@ -715,7 +715,7 @@ public class Menu extends javax.swing.JFrame {
     private Image imagen;
     @Override
         public void paint(Graphics g){
-            imagen= new ImageIcon(getClass().getResource("/VISTA/Imagenes/FondoFinal.png")).getImage();
+            imagen= new ImageIcon(getClass().getResource("/VISTA/Imagenes/fondo_chala.jpeg")).getImage();
             g.drawImage(imagen,0,0,getWidth(),getHeight(), this);
             setOpaque(false);
             super.paint(g);
